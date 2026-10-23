@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Говорящий Тенгиз</title>
+<meta name="description" content="Тыкай, корми тортом и говори в микрофон — Тенгиз повторит смешным голосом.">
+<meta name="theme-color" content="#121016">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="stylesheet" href="style.css">
+<script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
+</head>
+<body>
+<canvas id="scene" aria-label="Тенгиз. Тыкай в голову, живот, руки и ноги"></canvas>
+
+<header class="top">
+  <a class="logo" href="../">Говорящий <b>Тенгиз</b></a>
+  <button class="chip" id="voice" type="button" aria-label="Сменить голос">🐿 Бурундук</button>
+</header>
+
+<div class="bubble" id="bubble" role="status" aria-live="polite" hidden></div>
+<div class="listen" id="listen" hidden><i></i><span>Слушаю…</span></div>
+
+<nav class="bar" aria-label="Действия">
+  <button class="act" type="button" data-act="dance" aria-label="Танец"><span>💃</span><small>Танец</small></button>
+  <button class="act" type="button" data-act="fart" aria-label="Пук"><span>💨</span><small>Пук</small></button>
+  <button class="mic" id="mic" type="button" aria-pressed="false" aria-label="Говорить с Тенгизом">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15a3.5 3.5 0 0 0 3.5-3.5v-6a3.5 3.5 0 1 0-7 0v6A3.5 3.5 0 0 0 12 15Zm6-3.5a1 1 0 1 0-2 0 4 4 0 0 1-8 0 1 1 0 1 0-2 0 6 6 0 0 0 5 5.9V20H8.5a1 1 0 1 0 0 2h7a1 1 0 1 0 0-2H13v-2.6a6 6 0 0 0 5-5.9Z"/></svg>
+  </button>
+  <button class="act" type="button" data-act="cake" aria-label="Торт в лицо"><span>🥧</span><small>Торт</small></button>
+  <button class="act" type="button" id="typeBtn" aria-label="Написать, что сказать"><span>💬</span><small>Сказать</small></button>
+</nav>
+
+<form class="say" id="say" hidden>
+  <input id="sayText" type="text" maxlength="160" placeholder="Что сказать Тенгизу?" autocomplete="off" enterkeyhint="send">
+  <button type="submit">Сказать</button>
+</form>
+
+<div class="start" id="start">
+  <div class="card">
+    <h1>Говорящий<br><b>Тенгиз</b></h1>
+    <p>Тыкай в голову, живот, руки и ноги. Включи микрофон и скажи что-нибудь, он повторит смешным голосом.</p>
+    <button type="button" id="go" disabled>Загружаю…</button>
+  </div>
+</div>
+
+<script type="module" src="game.js"></script>
+</body>
+</html>

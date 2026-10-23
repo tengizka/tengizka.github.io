@@ -1,0 +1,144 @@
+:root {
+  --bg: #121016;
+  --glow: #3a1d63;
+  --purple: #7a35d0;
+  --purple-hi: #9d5cf0;
+  --skin: #f0b896;
+  --ink: #f4f1f8;
+  --muted: #b9b2c6;
+  --glass: rgba(30, 27, 38, 0.72);
+  --line: rgba(255, 255, 255, 0.09);
+  --f-body: 'Golos Text', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-brand: 'Unbounded', var(--f-body);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(120% 70% at 50% 42%, var(--glow) 0%, #1b1622 45%, var(--bg) 80%);
+  color: var(--ink);
+  font: 500 16px/1.4 var(--f-body);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+#scene { position: fixed; inset: 0; width: 100%; height: 100%; display: block; cursor: pointer; }
+
+button { font: inherit; color: inherit; cursor: pointer; }
+
+/* ── шапка ── */
+.top {
+  position: fixed; left: 0; right: 0; top: 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: calc(14px + var(--safe-t)) 16px 0;
+  pointer-events: none;
+}
+.top > * { pointer-events: auto; }
+.logo { text-decoration: none; font: 700 13px/1.1 var(--f-brand); letter-spacing: 0.02em; text-transform: uppercase; color: var(--muted); }
+.logo b { color: var(--ink); }
+.chip {
+  min-height: 44px; padding: 0 16px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--glass); backdrop-filter: blur(12px);
+  font-size: 14px; white-space: nowrap;
+}
+.chip:active { transform: scale(0.96); }
+
+/* ── нижняя панель ── */
+.bar {
+  position: fixed; left: 50%; bottom: calc(16px + var(--safe-b)); transform: translateX(-50%);
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px; border-radius: 999px;
+  background: var(--glass); border: 1px solid var(--line); backdrop-filter: blur(14px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+.act {
+  width: 58px; height: 58px; border: 0; border-radius: 50%; background: transparent;
+  display: grid; place-items: center; align-content: center; gap: 1px;
+  transition: background 0.2s, transform 0.15s;
+}
+.act span { font-size: 24px; line-height: 1; }
+.act small { font-size: 10px; color: var(--muted); }
+.act:hover { background: rgba(255, 255, 255, 0.06); }
+.act:active { transform: scale(0.9); }
+.act[aria-pressed='true'] { background: rgba(157, 92, 240, 0.22); }
+
+.mic {
+  width: 72px; height: 72px; margin: 0 4px; border: 0; border-radius: 50%;
+  background: linear-gradient(160deg, var(--purple-hi), var(--purple));
+  display: grid; place-items: center;
+  box-shadow: 0 6px 22px rgba(122, 53, 208, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: transform 0.15s, box-shadow 0.3s;
+}
+.mic svg { width: 30px; height: 30px; fill: #fff; }
+.mic:active { transform: scale(0.92); }
+.mic[aria-pressed='true'] { background: linear-gradient(160deg, #ff6b8b, #d93a62); box-shadow: 0 0 0 0 rgba(255, 90, 130, 0.6); animation: ring 1.6s infinite; }
+@keyframes ring { 70% { box-shadow: 0 0 0 16px rgba(255, 90, 130, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 90, 130, 0); } }
+
+/* ── поле «сказать» ── */
+.say {
+  position: fixed; left: 16px; right: 16px; bottom: calc(108px + var(--safe-b));
+  max-width: 480px; margin: 0 auto;
+  display: flex; gap: 8px; padding: 6px;
+  border-radius: 999px; background: var(--glass); border: 1px solid var(--line); backdrop-filter: blur(14px);
+}
+.say[hidden] { display: none; }
+.say input {
+  flex: 1; min-width: 0; height: 44px; padding: 0 16px; border: 0; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06); color: var(--ink); font: inherit; font-size: 16px; outline: none;
+}
+.say input::placeholder { color: var(--muted); }
+.say button { height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--purple); font-weight: 600; }
+
+/* ── реплики ── */
+.bubble {
+  position: fixed; left: 0; top: 0; z-index: 2;
+  max-width: min(260px, 70vw); padding: 10px 16px;
+  border-radius: 18px 18px 18px 4px; background: #fff; color: #17121f;
+  font-weight: 600; font-size: 16px; line-height: 1.25;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  pointer-events: none; transform-origin: 0 100%;
+  animation: pop 0.35s cubic-bezier(0.34, 1.5, 0.5, 1);
+}
+.bubble[hidden] { display: none; }
+@keyframes pop { from { opacity: 0; scale: 0.5; } }
+
+.listen {
+  position: fixed; left: 50%; top: calc(72px + var(--safe-t)); transform: translateX(-50%);
+  display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px;
+  background: var(--glass); border: 1px solid var(--line); font-size: 14px; color: var(--muted);
+}
+.listen[hidden] { display: none; }
+.listen i { width: 10px; height: 10px; border-radius: 50%; background: #ff5a82; transition: transform 0.08s; }
+.listen.rec span { color: var(--ink); }
+
+/* ── старт ── */
+.start {
+  position: fixed; inset: 0; z-index: 5; display: grid; place-items: center; padding: 16px;
+  background: rgba(10, 8, 14, 0.55); backdrop-filter: blur(6px);
+  transition: opacity 0.4s;
+}
+.start.out { opacity: 0; pointer-events: none; }
+.card {
+  width: min(380px, 100%); padding: 28px 24px 24px; border-radius: 28px; text-align: center;
+  background: rgba(24, 21, 31, 0.9); border: 1px solid var(--line);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+}
+.card h1 { margin: 0 0 12px; font: 700 26px/1.15 var(--f-brand); text-transform: uppercase; }
+.card h1 b { color: var(--purple-hi); }
+.card p { margin: 0 0 22px; color: var(--muted); font-size: 15px; }
+.card button {
+  width: 100%; height: 54px; border: 0; border-radius: 999px;
+  background: linear-gradient(160deg, var(--purple-hi), var(--purple)); font-weight: 600; font-size: 17px;
+}
+.card button:disabled { opacity: 0.6; cursor: wait; }
+
+@media (max-width: 360px) {
+  .act { width: 50px; height: 50px; }
+  .mic { width: 64px; height: 64px; }
+}
