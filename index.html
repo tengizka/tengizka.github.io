@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>tengizka — портфолио</title>
+<meta name="description" content="Дизайн, моушн и цифровые продукты.">
+<style>
+@font-face{font-family:Unbounded;src:url(assets/fonts/unbounded-cyrillic-wght-normal.woff2) format('woff2');font-weight:200 900;unicode-range:U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:Unbounded;src:url(assets/fonts/unbounded-latin-wght-normal.woff2) format('woff2');font-weight:200 900;unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122}
+:root{--bg:#000;--fg:#fff;--muted:#9a9a9a;--rule:#2a2a2b;--lime:#A3FF10}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--fg);font:400 16px/1.5 Unbounded,system-ui,sans-serif;min-height:100vh}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+header{display:flex;justify-content:space-between;align-items:center;padding:28px 0;border-bottom:2px solid var(--rule)}
+.logo{font-weight:800;letter-spacing:.04em;text-decoration:none}
+.logo b{color:var(--lime)}
+nav a{color:var(--muted);text-decoration:none;font-size:13px;margin-left:24px}
+nav a:hover{color:var(--fg)}
+.hero{padding:120px 0 96px}
+.hero h1{font-size:clamp(44px,9vw,120px);line-height:.95;font-weight:800;letter-spacing:-.02em;text-transform:uppercase}
+.hero h1 span{color:var(--lime)}
+.hero p{margin-top:32px;max-width:560px;color:var(--muted);font-size:18px}
+h2{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);padding:24px 0;border-top:2px solid var(--rule)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:2px;background:var(--rule);border:2px solid var(--rule);margin-bottom:96px}
+.card{background:var(--bg);padding:32px;text-decoration:none;display:flex;flex-direction:column;gap:16px;min-height:280px;transition:background .2s}
+.card:hover{background:#0c0c0c}
+.card .tag{align-self:flex-start;background:var(--lime);color:#000;font-size:11px;font-weight:700;letter-spacing:.1em;padding:6px 10px;text-transform:uppercase}
+.card h3{font-size:34px;font-weight:800;text-transform:uppercase}
+.card p{color:var(--muted);font-size:14px;flex:1}
+.card .go{font-size:13px;font-weight:700}
+.card .go::after{content:" →";color:var(--lime)}
+.card.soon{opacity:.5;pointer-events:none}
+.card.soon .tag{background:var(--rule);color:var(--fg)}
+footer{border-top:2px solid var(--rule);padding:28px 0 40px;color:var(--muted);font-size:13px}
+@media (max-width:600px){.hero{padding:72px 0 64px}nav a{margin-left:14px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="logo" href="/">tengizka<b>.</b>fun</a>
+    <nav><a href="#work">Работы</a><a href="#contact">Контакты</a></nav>
+  </header>
+  <section class="hero">
+    <h1>Дизайн<br>и цифровые<br><span>продукты</span></h1>
+    <p>Графический дизайн, моушн и приложения — от идеи и айдентики до работающего продукта.</p>
+  </section>
+  <h2 id="work">Работы</h2>
+  <div class="grid">
+    <a class="card" href="/1shot/">
+      <span class="tag">Кейс</span>
+      <h3>1SHOT</h3>
+      <p>Экосистема компьютерного клуба: мини-приложение в Telegram для гостей и программа Club Desk для администраторов.</p>
+      <span class="go">Смотреть кейс</span>
+    </a>
+    <div class="card soon">
+      <span class="tag">Скоро</span>
+      <h3>MapLink</h3>
+      <p>Кейс в работе.</p>
+    </div>
+  </div>
+  <footer id="contact">© tengizka · tengizka.fun</footer>
+</div>
+</body>
+</html>
