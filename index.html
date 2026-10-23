@@ -3,65 +3,316 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>tengizka — портфолио</title>
-<meta name="description" content="Дизайн, моушн и цифровые продукты.">
+<title>tengizka — графический дизайнер Тенгиз Чочишвили</title>
+<meta name="description" content="Айдентика, маскоты, моушн и интерфейсы. Кейсы 1SHOT, КУРСИЧ, MapLink и SMOTRA.">
+<meta property="og:title" content="tengizka — графический дизайнер">
+<meta property="og:description" content="Айдентика, маскоты, моушн и интерфейсы.">
+<meta property="og:image" content="https://tengizka.fun/icon-512.png">
+<meta name="theme-color" content="#0B0812">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/fonts.css">
 <style>
-@font-face{font-family:Unbounded;src:url(assets/fonts/unbounded-cyrillic-wght-normal.woff2) format('woff2');font-weight:200 900;unicode-range:U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
-@font-face{font-family:Unbounded;src:url(assets/fonts/unbounded-latin-wght-normal.woff2) format('woff2');font-weight:200 900;unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122}
-:root{--bg:#000;--fg:#fff;--muted:#9a9a9a;--rule:#2a2a2b;--lime:#A3FF10}
+:root{--bg:#0B0812;--ink:#F3EEFF;--muted:#A79BC6;--line:#2A2140;--violet:#8B5CFF;--lilac:#C9A8FF;--hot:#FF4FD8;--cyan:#5CF2FF}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--fg);font:400 16px/1.5 Unbounded,system-ui,sans-serif;min-height:100vh}
-a{color:inherit}
-.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
-header{display:flex;justify-content:space-between;align-items:center;padding:28px 0;border-bottom:2px solid var(--rule)}
-.logo{font-weight:800;letter-spacing:.04em;text-decoration:none}
-.logo b{color:var(--lime)}
-nav a{color:var(--muted);text-decoration:none;font-size:13px;margin-left:24px}
-nav a:hover{color:var(--fg)}
-.hero{padding:120px 0 96px}
-.hero h1{font-size:clamp(44px,9vw,120px);line-height:.95;font-weight:800;letter-spacing:-.02em;text-transform:uppercase}
-.hero h1 span{color:var(--lime)}
-.hero p{margin-top:32px;max-width:560px;color:var(--muted);font-size:18px}
-h2{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);padding:24px 0;border-top:2px solid var(--rule)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:2px;background:var(--rule);border:2px solid var(--rule);margin-bottom:96px}
-.card{background:var(--bg);padding:32px;text-decoration:none;display:flex;flex-direction:column;gap:16px;min-height:280px;transition:background .2s}
-.card:hover{background:#0c0c0c}
-.card .tag{align-self:flex-start;background:var(--lime);color:#000;font-size:11px;font-weight:700;letter-spacing:.1em;padding:6px 10px;text-transform:uppercase}
-.card h3{font-size:34px;font-weight:800;text-transform:uppercase}
-.card p{color:var(--muted);font-size:14px;flex:1}
-.card .go{font-size:13px;font-weight:700}
-.card .go::after{content:" →";color:var(--lime)}
-.card.soon{opacity:.5;pointer-events:none}
-.card.soon .tag{background:var(--rule);color:var(--fg)}
-footer{border-top:2px solid var(--rule);padding:28px 0 40px;color:var(--muted);font-size:13px}
-@media (max-width:600px){.hero{padding:72px 0 64px}nav a{margin-left:14px}}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--ink);font:400 17px/1.55 Inter,system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+::selection{background:var(--violet);color:#fff}
+.serif{font-family:'Instrument Serif',Lora,serif;font-style:italic;font-weight:400;letter-spacing:0}
+.wrap{max-width:1240px;margin-left:auto;margin-right:auto;padding-left:24px;padding-right:24px}
+
+/* ---------- ticker ---------- */
+.ticker{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;height:40px;background:#000;border-bottom:1px solid var(--line);overflow:hidden}
+.ticker .live{flex:none;display:flex;align-items:center;gap:8px;padding:0 16px;background:var(--violet);color:#fff;font:800 12px/1 Unbounded;letter-spacing:.14em;text-transform:uppercase;position:relative;z-index:2}
+.ticker .live i{width:8px;height:8px;border-radius:50%;background:#fff;animation:pulse 1.2s infinite}
+.ticker .live::after{content:"";position:absolute;right:-14px;top:0;border-left:14px solid var(--violet);border-top:20px solid transparent;border-bottom:20px solid transparent}
+@keyframes pulse{50%{opacity:.25}}
+.ticker .run{display:flex;align-items:center;white-space:nowrap;animation:run 60s linear infinite;padding-left:28px}
+.ticker:hover .run{animation-play-state:paused}
+.ticker .run span{font:600 13px/1 Unbounded;letter-spacing:.04em;text-transform:uppercase;padding-right:28px}
+.ticker .run b{color:var(--lilac);font-weight:800}
+.ticker .run em{font-style:normal;color:var(--violet);padding-right:28px}
+@keyframes run{to{transform:translateX(-50%)}}
+
+/* ---------- nav ---------- */
+nav.top{position:fixed;top:40px;left:0;right:0;z-index:40;mix-blend-mode:difference}
+nav.top .wrap{display:flex;justify-content:space-between;align-items:center;height:72px}
+.brand{font:800 20px/1 Unbounded;letter-spacing:-.01em;color:#fff}
+.brand .serif{font-size:26px;color:#fff}
+nav.top ul{display:flex;gap:28px;list-style:none}
+nav.top a{font:600 13px/1 Unbounded;color:#fff;letter-spacing:.02em}
+@media(max-width:720px){nav.top ul{display:none}}
+
+/* ---------- background ---------- */
+.bg{position:fixed;inset:0;z-index:-2;overflow:hidden}
+.bg .blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;animation:float 22s ease-in-out infinite alternate}
+.bg .b1{width:620px;height:620px;left:-160px;top:-120px;background:radial-gradient(circle at 30% 30%,#8B5CFF,transparent 65%)}
+.bg .b2{width:520px;height:520px;right:-140px;top:30vh;background:radial-gradient(circle at 50% 50%,#FF4FD8,transparent 65%);animation-duration:28s;opacity:.32}
+.bg .b3{width:700px;height:700px;left:20vw;bottom:-320px;background:radial-gradient(circle,#3A12B8,transparent 65%);animation-duration:34s}
+@keyframes float{to{transform:translate(80px,60px) scale(1.15)}}
+.grain{position:fixed;inset:-50%;z-index:60;pointer-events:none;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain 1s steps(6) infinite}
+@keyframes grain{to{transform:translate(8%,-6%)}}
+.cursor{position:fixed;width:340px;height:340px;margin:-170px 0 0 -170px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,255,.32),transparent 60%);pointer-events:none;z-index:-1;transition:transform .12s linear}
+
+/* ---------- hero ---------- */
+.hero{min-height:100vh;padding-top:150px;padding-bottom:60px;position:relative;overflow-x:clip;display:flex;flex-direction:column;justify-content:center}
+.hero h1{font:900 calc((min(100vw,1240px) - 48px)/5.2)/.9 Unbounded;letter-spacing:-.06em;white-space:nowrap;position:relative;z-index:2}
+.hero h1 .chrome{background:linear-gradient(100deg,#fff 0%,#C9A8FF 22%,#8B5CFF 40%,#fff 55%,#FF4FD8 72%,#C9A8FF 88%,#fff 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 7s ease-in-out infinite alternate;filter:url(#liquid)}
+@keyframes sheen{to{background-position:100% 0}}
+.hero .lede{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;margin-top:56px;align-items:end;position:relative;z-index:2}
+.hero .lede p{font-size:clamp(18px,1.8vw,24px);line-height:1.45;max-width:560px}
+.hero .lede p .serif{font-size:1.25em;color:var(--lilac)}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:18px 26px;border-radius:999px;font:700 14px/1 Unbounded;letter-spacing:.02em;transition:transform .2s,background .2s}
+.btn.main{background:var(--violet);color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.2) inset,0 20px 60px -20px #8B5CFF}
+.btn.main:hover{transform:translateY(-3px) rotate(-1deg);background:#9B70FF}
+.btn.ghost{border:1px solid rgba(255,255,255,.25)}
+.btn.ghost:hover{background:rgba(255,255,255,.08)}
+@media(max-width:820px){.hero .lede{grid-template-columns:1fr}.hero .cta{justify-content:flex-start}}
+.orb{position:absolute;right:4%;top:118px;width:min(42vw,520px);aspect-ratio:1;z-index:1;pointer-events:none}
+.orb svg{width:100%;height:100%;overflow:visible}
+.ring{position:absolute;right:calc(4% + min(42vw,520px)*.06);top:calc(118px + min(42vw,520px)*.06);width:calc(min(42vw,520px)*.88);aspect-ratio:1;animation:spin 30s linear infinite;z-index:1;opacity:.75;pointer-events:none}
+.ring text{font:700 13px Unbounded;letter-spacing:.32em;fill:#fff;text-transform:uppercase}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sticker{position:absolute;z-index:4;padding:10px 16px;border-radius:999px;font:700 13px/1 Unbounded;letter-spacing:.02em;white-space:nowrap;box-shadow:0 10px 30px -10px rgba(0,0,0,.6)}
+.s1{background:#C9A8FF;color:#160A33;transform:rotate(-8deg);top:190px;right:38%}
+.s2{background:#fff;color:#0B0812;transform:rotate(6deg);top:52%;right:6%}
+.s3{background:#FF4FD8;color:#fff;transform:rotate(-4deg);top:36%;right:2%}
+.s4{background:transparent;border:1px solid #fff;color:#fff;transform:rotate(10deg);top:62%;right:30%}
+@media(max-width:820px){.orb{opacity:.55;right:-20%;width:90vw}.ring{display:none}.sticker{display:none}}
+
+/* ---------- facts ---------- */
+.facts{border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr)}
+.facts div{padding:30px 24px;border-right:1px solid var(--line)}
+.facts div:last-child{border-right:0}
+.facts b{display:block;font:800 clamp(34px,4vw,56px)/1 Unbounded;letter-spacing:-.03em}
+.facts b .serif{font-family:'Instrument Serif',serif;font-weight:400;color:var(--lilac)}
+.facts span{display:block;margin-top:10px;color:var(--muted);font-size:14px}
+@media(max-width:820px){.facts{grid-template-columns:1fr 1fr}.facts div:nth-child(2){border-right:0}.facts div:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+
+/* ---------- section heads ---------- */
+section{padding-top:120px;padding-bottom:40px}
+@media(max-width:720px){section{padding-top:80px}}
+.head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:48px;flex-wrap:wrap}
+.head h2{font:900 clamp(44px,7vw,104px)/.9 Unbounded;letter-spacing:-.04em;text-transform:uppercase}
+.head h2 .serif{text-transform:none;font-size:1.05em;color:var(--lilac)}
+.head p{max-width:380px;color:var(--muted)}
+.idx{font:600 12px/1 Unbounded;letter-spacing:.2em;color:var(--violet);margin-bottom:14px;display:block}
+
+/* ---------- works ---------- */
+.works{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
+.case{position:relative;border-radius:28px;overflow:hidden;min-height:560px;display:flex;flex-direction:column;justify-content:space-between;padding:28px;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.case:hover{transform:translateY(-6px) rotate(-.4deg)}
+.case .meta{position:relative;z-index:2;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.case .tags{display:flex;gap:6px;flex-wrap:wrap}
+.case .tags span{font:700 11px/1 Unbounded;letter-spacing:.06em;text-transform:uppercase;padding:8px 10px;border-radius:999px}
+.case .yr{font:700 12px/1 Unbounded;opacity:.7}
+.case .bottom{position:relative;z-index:2}
+.case h3{font-size:clamp(46px,6vw,92px);line-height:.9;letter-spacing:-.03em}
+.case p{max-width:420px;margin-top:14px;font-size:16px}
+.case .go{display:inline-flex;margin-top:18px;font:700 13px/1 Unbounded;padding:14px 18px;border-radius:999px}
+.c-1shot{grid-column:span 7;background:#000;color:#fff;border:1px solid #1d1d1d}
+.c-1shot h3{font-family:ReSquare,Unbounded;text-transform:uppercase}
+.c-1shot .tags span{background:#A3FF10;color:#000;border-radius:0}
+.c-1shot .go{background:#A3FF10;color:#000;border-radius:0}
+.c-1shot .art{position:absolute;right:-30px;top:60px;width:62%;display:flex;gap:14px;transform:rotate(-8deg)}
+.c-1shot .art img{width:50%;border:2px solid #2A2A2B}
+.c-1shot .art img:nth-child(2){margin-top:70px}
+.c-1shot .rain{position:absolute;inset:0;opacity:.25;background:repeating-linear-gradient(90deg,transparent 0 38px,rgba(163,255,16,.12) 38px 39px)}
+.c-kursich{grid-column:span 5;background:#58CC02;color:#fff}
+.c-kursich h3{font-family:Nunito;font-weight:900;text-shadow:0 5px 0 #46A302}
+.c-kursich .tags span{background:#fff;color:#46A302}
+.c-kursich .go{background:#fff;color:#46A302;box-shadow:0 5px 0 #d7d7d7}
+.c-kursich .art{position:absolute;inset:70px 0 160px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:0 24px;align-content:center}
+.c-kursich .art img{width:100%;filter:drop-shadow(0 6px 0 rgba(0,0,0,.12));transition:transform .3s}
+.c-kursich:hover .art img:nth-child(odd){transform:translateY(-8px) rotate(-6deg)}
+.c-maplink{grid-column:span 5;background:#FBF3EE;color:#3A2E2B}
+.c-maplink h3{font-family:Fraunces,Lora,serif;font-weight:600;color:#A85D6B;letter-spacing:-.02em}
+.c-maplink p{font-family:Lora,serif}
+.c-maplink .tags span{background:#F4DCD6;color:#A85D6B}
+.c-maplink .go{background:#C57B85;color:#fff}
+.c-maplink .art{position:absolute;right:22px;top:80px;width:62%}
+.c-smotra{grid-column:span 7;background:#0C0E16;color:#fff}
+.c-smotra h3{font-family:Unbounded;font-weight:900}
+.c-smotra .tags span{background:rgba(124,107,255,.2);color:#BDB4FF;border:1px solid rgba(124,107,255,.4)}
+.c-smotra .go{background:#7C6BFF;color:#fff}
+.c-smotra .art{position:absolute;right:20px;top:40px;display:flex;gap:14px}
+.c-smotra .art img{width:170px;border-radius:24px;box-shadow:0 30px 60px -20px rgba(124,107,255,.6)}
+.c-smotra .art img:nth-child(1){transform:rotate(-8deg) translateY(40px)}
+.c-smotra .art img:nth-child(3){transform:rotate(8deg) translateY(40px)}
+.c-smotra .logo3d{position:absolute;left:24px;top:84px;width:120px;filter:drop-shadow(0 20px 40px rgba(124,107,255,.5))}
+@media(max-width:980px){.case{grid-column:1/-1!important;min-height:520px}.c-smotra .art{top:76px;right:50%;transform:translateX(50%);gap:8px}.c-smotra .art img{width:96px;border-radius:16px}.c-smotra .logo3d{display:none}.c-smotra{min-height:600px}}
+
+/* ---------- pass card (MapLink artifact preview) ---------- */
+.pass{background:#FFFDFB;border-radius:22px;box-shadow:0 24px 50px -24px rgba(168,93,107,.6);padding:18px 20px;transform:rotate(5deg);position:relative}
+.pass .row{display:flex;justify-content:space-between;align-items:end}
+.pass small{font:700 9px/1 Nunito;letter-spacing:.18em;color:#8C7A73;text-transform:uppercase}
+.pass .city{font:600 32px/1 Fraunces,Lora,serif;color:#3A2E2B}
+.pass .plane{font-size:22px;color:#C57B85}
+.pass hr{border:0;border-top:2px dashed #F4DCD6;margin:14px -20px}
+.pass .q{font:700 22px/1.1 Caveat;color:#A85D6B}
+
+/* ---------- services ---------- */
+.svc{border-top:1px solid var(--line)}
+.svc li{list-style:none;border-bottom:1px solid var(--line);display:grid;grid-template-columns:90px 1fr 1fr;gap:24px;padding:34px 0;align-items:baseline;position:relative;transition:padding .3s}
+.svc li:hover{padding-left:16px}
+.svc .n{font:600 13px/1 Unbounded;color:var(--violet)}
+.svc h4{font:800 clamp(30px,4.2vw,58px)/1 Unbounded;letter-spacing:-.03em;text-transform:uppercase}
+.svc li:hover h4{background:linear-gradient(90deg,#fff,#C9A8FF,#FF4FD8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.svc p{color:var(--muted);max-width:460px}
+.svc p b{color:var(--ink);font-weight:600}
+@media(max-width:820px){.svc li{grid-template-columns:1fr;gap:10px}}
+
+/* ---------- tape ---------- */
+.tape{margin:90px 0;transform:rotate(-3deg);background:var(--lilac);color:#160A33;overflow:hidden;padding:18px 0;border-top:2px solid #160A33;border-bottom:2px solid #160A33}
+.tape .run{display:flex;white-space:nowrap;animation:run 30s linear infinite}
+.tape span{font:900 34px/1 Unbounded;text-transform:uppercase;padding-right:30px;letter-spacing:-.02em}
+.tape span.serif{font-family:'Instrument Serif',serif;font-weight:400;text-transform:none;font-size:44px}
+
+/* ---------- about ---------- */
+.about{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:center}
+.portrait{aspect-ratio:4/5;border-radius:36px;overflow:hidden;position:relative;background:radial-gradient(circle at 30% 25%,#C9A8FF,#8B5CFF 35%,#2A0F7A 70%,#0B0812);display:flex;align-items:center;justify-content:center}
+.portrait .mono{font:900 min(48vw,380px)/1 Unbounded;color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.85);letter-spacing:-.06em;filter:url(#liquid)}
+.portrait .tag{position:absolute;left:20px;bottom:20px;right:20px;display:flex;justify-content:space-between;font:700 12px/1 Unbounded;letter-spacing:.1em;text-transform:uppercase}
+.about h3{font:800 clamp(30px,3.6vw,48px)/1.05 Unbounded;letter-spacing:-.03em}
+.about h3 .serif{font-size:1.15em;color:var(--lilac);font-weight:400}
+.about p{margin-top:22px;font-size:19px;color:#D9D1EE;max-width:560px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.chips span{border:1px solid var(--line);padding:10px 14px;border-radius:999px;font-size:14px;color:var(--muted)}
+@media(max-width:820px){.about{grid-template-columns:1fr}}
+
+/* ---------- contact ---------- */
+.contact{padding-top:140px;padding-bottom:60px;text-align:center}
+.contact .big{display:block;font:900 clamp(48px,10vw,160px)/.88 Unbounded;letter-spacing:-.05em;text-transform:uppercase}
+.contact .big .serif{text-transform:none;color:var(--lilac);font-size:1.1em}
+.contact .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:44px}
+footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .9s,transform .9s cubic-bezier(.2,.8,.2,1)}
+.reveal.on{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <a class="logo" href="/">tengizka<b>.</b>fun</a>
-    <nav><a href="#work">Работы</a><a href="#contact">Контакты</a></nav>
-  </header>
-  <section class="hero">
-    <h1>Дизайн<br>и цифровые<br><span>продукты</span></h1>
-    <p>Графический дизайн, моушн и приложения — от идеи и айдентики до работающего продукта.</p>
-  </section>
-  <h2 id="work">Работы</h2>
-  <div class="grid">
-    <a class="card" href="/1shot/">
-      <span class="tag">Кейс</span>
-      <h3>1SHOT</h3>
-      <p>Экосистема компьютерного клуба: мини-приложение в Telegram для гостей и программа Club Desk для администраторов.</p>
-      <span class="go">Смотреть кейс</span>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="liquid"><feTurbulence type="fractalNoise" baseFrequency="0.008 0.02" numOctaves="2" seed="4"><animate attributeName="baseFrequency" dur="18s" values="0.008 0.02;0.014 0.03;0.008 0.02" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" scale="14"/></filter></svg>
+<div class="bg"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="cursor" id="cursor"></div>
+<div class="grain"></div>
+
+<div class="ticker" role="marquee" aria-label="Новости">
+  <div class="live"><i></i>Live</div>
+  <div class="run" id="run"></div>
+</div>
+
+<nav class="top"><div class="wrap">
+  <a class="brand" href="/"><span class="serif">t</span>engizka</a>
+  <ul><li><a href="#work">Работы</a></li><li><a href="#services">Что делаю</a></li><li><a href="#about">Обо мне</a></li><li><a href="#contact">Написать</a></li></ul>
+</div></nav>
+
+<header class="hero wrap" id="top">
+  <div class="orb" aria-hidden="true">
+    <svg viewBox="0 0 400 400"><defs>
+      <radialGradient id="o1" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#fff"/><stop offset=".18" stop-color="#E6D6FF"/><stop offset=".45" stop-color="#8B5CFF"/><stop offset=".75" stop-color="#2A0F7A"/><stop offset="1" stop-color="#0B0812"/></radialGradient>
+      <linearGradient id="o2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5CF2FF" stop-opacity=".0"/><stop offset=".5" stop-color="#FF4FD8" stop-opacity=".55"/><stop offset="1" stop-color="#5CF2FF" stop-opacity=".35"/></linearGradient>
+      <filter id="wob"><feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="7"><animate attributeName="seed" dur="9s" values="7;9;7" repeatCount="indefinite"/><animate attributeName="baseFrequency" dur="14s" values="0.010;0.018;0.010" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" scale="46"/></filter>
+    </defs>
+      <g filter="url(#wob)"><circle cx="200" cy="200" r="150" fill="url(#o1)"/><circle cx="200" cy="200" r="150" fill="url(#o2)" style="mix-blend-mode:screen"/><ellipse cx="150" cy="135" rx="52" ry="26" fill="#fff" opacity=".55" transform="rotate(-30 150 135)"/></g>
+    </svg>
+  </div>
+  <svg class="ring" viewBox="0 0 400 400" aria-hidden="true"><defs><path id="circ" d="M200,200 m-176,0 a176,176 0 1,1 352,0 a176,176 0 1,1 -352,0"/></defs><text><textPath href="#circ">айдентика ✦ маскоты ✦ моушн ✦ интерфейсы ✦ айдентика ✦ маскоты ✦ моушн ✦ интерфейсы ✦</textPath></text></svg>
+  <span class="sticker s1">графический дизайнер</span>
+  <span class="sticker s2">от логотипа до продукта</span>
+  <span class="sticker s3">открыт к проектам</span>
+  <span class="sticker s4">бренды · маскоты · UI</span>
+
+  <h1 aria-label="tengizka"><span class="chrome">tengizka</span></h1>
+  <div class="lede">
+    <p>Графический дизайнер. Придумываю бренды, рисую маскотов, собираю моушн и интерфейсы, а потом довожу всё это до <span class="serif">живого</span> продукта, которым пользуются люди.</p>
+    <div class="cta"><a class="btn main" href="#work">Смотреть работы ↓</a><a class="btn ghost" href="https://t.me/teng1zka" target="_blank" rel="noopener">Telegram</a></div>
+  </div>
+</header>
+
+<div class="wrap reveal"><div class="facts">
+  <div><b>4</b><span>продукта в работе у живых людей</span></div>
+  <div><b>30<span class="serif">×</span></b><span>эмоций у маскота КУРСИЧ</span></div>
+  <div><b>144</b><span>урока в обучающем приложении</span></div>
+  <div><b>5</b><span>промо-роликов для клуба 1SHOT</span></div>
+</div></div>
+
+<section id="work" class="wrap">
+  <div class="head reveal"><div><span class="idx">01 / РАБОТЫ</span><h2>Избранные <span class="serif">кейсы</span></h2></div><p>Каждый проект живёт в своём стиле. Карточки ниже говорят его языком.</p></div>
+  <div class="works">
+    <a class="case c-1shot reveal" href="/work/1shot/">
+      <div class="rain"></div>
+      <div class="art"><img src="/work/1shot/img/04-hall.webp" alt="Карта зала в мини-приложении 1SHOT"><img src="/work/1shot/img/session.webp" alt="Экран активной сессии"></div>
+      <div class="meta"><div class="tags"><span>Айдентика</span><span>Моушн</span><span>UI</span></div><span class="yr">2025–2026</span></div>
+      <div class="bottom"><h3>1SHOT</h3><p>Экосистема компьютерного клуба: фирменный стиль, маскот, мини-приложение для гостей, программа для администраторов и промо-ролики.</p><span class="go">Смотреть кейс →</span></div>
     </a>
-    <div class="card soon">
-      <span class="tag">Скоро</span>
-      <h3>MapLink</h3>
-      <p>Кейс в работе.</p>
+    <a class="case c-kursich reveal" href="/work/kursich/">
+      <div class="art"><img src="/work/kursich/mascot/m-happy.svg" alt=""><img src="/work/kursich/mascot/o-financier.svg" alt=""><img src="/work/kursich/mascot/m-genius.svg" alt=""><img src="/work/kursich/mascot/o-cosmonaut.svg" alt=""><img src="/work/kursich/mascot/m-wink.svg" alt=""><img src="/work/kursich/mascot/o-detective.svg" alt=""></div>
+      <div class="meta"><div class="tags"><span>Персонаж</span><span>UI</span></div><span class="yr">2026</span></div>
+      <div class="bottom"><h3>курсич</h3><p>Короткие уроки по пять минут в день и маскот, который радуется, думает и переодевается вместе с учеником.</p><span class="go">Смотреть кейс →</span></div>
+    </a>
+    <a class="case c-maplink reveal" href="/work/maplink/">
+      <div class="art"><div class="pass"><div class="row"><div><small>откуда</small><div class="city">Сочи</div></div><span class="plane">✈</span><div style="text-align:right"><small>куда</small><div class="city">Весь мир</div></div></div><hr><div class="q">«Собирай моменты, а не вещи»</div></div></div>
+      <div class="meta"><div class="tags"><span>Визуальный стиль</span><span>UI</span></div><span class="yr">2026</span></div>
+      <div class="bottom"><h3>MapLink</h3><p>Карта путешествий: отмечаешь места, где был, и смотришь, как растёт твой мир.</p><span class="go">Смотреть кейс →</span></div>
+    </a>
+    <a class="case c-smotra reveal" href="/work/smotra/">
+      <img class="logo3d" src="/work/smotra/img/logo.png" alt="">
+      <div class="art"><img src="/work/smotra/img/feed-emerald.webp" alt=""><img src="/work/smotra/img/feed-neon.webp" alt=""><img src="/work/smotra/img/feed-rose.webp" alt=""></div>
+      <div class="meta"><div class="tags"><span>Логотип</span><span>UI</span><span>Темы</span></div><span class="yr">2026</span></div>
+      <div class="bottom"><h3>SMOTRA</h3><p>Кино выбирают свайпом, как сторис: мимо, чекнуть, смотрю, смотрел.</p><span class="go">Смотреть кейс →</span></div>
+    </a>
+  </div>
+</section>
+
+<div class="tape" aria-hidden="true"><div class="run" id="tape"></div></div>
+
+<section id="services" class="wrap">
+  <div class="head reveal"><div><span class="idx">02 / ЧТО ДЕЛАЮ</span><h2>Делаю <span class="serif">руками</span></h2></div><p>Беру проект целиком или его часть. Везде дохожу до вещи, которую можно открыть, потрогать или повесить на стену.</p></div>
+  <ul class="svc">
+    <li class="reveal"><span class="n">01</span><h4>Айдентика</h4><p>Логотип, шрифтовая пара, палитра и правила. В <b>1SHOT</b> один стиль держится везде: в постах, роликах, на экране брони и в программе на стойке.</p></li>
+    <li class="reveal"><span class="n">02</span><h4>Маскоты</h4><p>Персонажи с характером и системой эмоций. У <b>Курсича</b> 30 эмоций и 12 образов, у маскота 1SHOT прописаны правила анимации.</p></li>
+    <li class="reveal"><span class="n">03</span><h4>Моушн и SMM</h4><p>Промо-ролики, посты и сторис. Для <b>1SHOT</b> пять роликов: вертикальные под соцсети и горизонтальный для показа владельцам.</p></li>
+    <li class="reveal"><span class="n">04</span><h4>Интерфейсы</h4><p>Мини-приложения в Telegram, сайты и программы под Windows. Рисую экраны и собираю их в работающий продукт.</p></li>
+  </ul>
+</section>
+
+<section id="about" class="wrap">
+  <div class="about">
+    <div class="portrait reveal" aria-hidden="true"><span class="mono">tz</span><div class="tag"><span>Тенгиз Чочишвили</span><span>tengizka</span></div></div>
+    <div class="reveal">
+      <span class="idx">03 / ОБО МНЕ</span>
+      <h3>Привет, я Тенгиз Чочишвили. В сети <span class="serif">tengizka</span>.</h3>
+      <p>Я графический дизайнер по образованию. Мне нравится, когда работа выходит за пределы макета: логотип становится вывеской клуба, персонаж встречает ученика в приложении, а экран превращается в кнопку, на которую каждый день жмут живые люди.</p>
+      <p>Поэтому я веду проект от первой идеи до запуска: стиль, персонажи, ролики, интерфейс и сама сборка.</p>
+      <div class="chips"><span>Айдентика</span><span>Персонажи</span><span>Моушн-дизайн</span><span>SMM-визуал</span><span>UI/UX</span><span>Telegram Mini Apps</span><span>Сайты</span></div>
     </div>
   </div>
-  <footer id="contact">© tengizka · tengizka.fun</footer>
-</div>
+</section>
+
+<section id="contact" class="contact wrap">
+  <span class="idx reveal">04 / НАПИСАТЬ</span>
+  <a class="big reveal" href="https://t.me/teng1zka" target="_blank" rel="noopener">Есть <span class="serif">идея?</span><br>Пишите</a>
+  <div class="btns reveal"><a class="btn main" href="https://t.me/teng1zka" target="_blank" rel="noopener">Telegram · @teng1zka</a><a class="btn ghost" href="https://www.behance.net/tengizka" target="_blank" rel="noopener">Behance</a><a class="btn ghost" href="https://instagram.com/tengizka" target="_blank" rel="noopener">Instagram</a></div>
+</section>
+
+<footer><div class="wrap"><span>© 2026 Тенгиз Чочишвили · tengizka.fun</span><span>Сделано вручную, с любовью к деталям</span></div></footer>
+
+<script>
+const news=[['1SHOT','гости клуба бронируют ПК сами, прямо в Telegram'],['КУРСИЧ','144 урока и маскот с 30 эмоциями'],['SMOTRA','кино выбирают свайпом, как сторис'],['MapLink','мир собирается на карте из мест, где ты был'],['Срочно','tengizka открыт для новых проектов'],['1SHOT','пять промо-роликов для клуба'],['Курсич','получил 12 новых образов'],['Айдентика','маскоты · моушн · интерфейсы']];
+const one=news.map(([a,b])=>`<span><b>${a}:</b> ${b}</span><em>✦</em>`).join('');
+document.getElementById('run').innerHTML=one+one;
+const tp=['Айдентика','<span class="serif">маскоты</span>','Моушн','<span class="serif">интерфейсы</span>','SMM','<span class="serif">сайты</span>'].map(x=>x.startsWith('<')?x.replace('class="serif"','class="serif"'):`<span>${x}</span>`).join('<span>✦</span>');
+document.getElementById('tape').innerHTML=tp+'<span>✦</span>'+tp+'<span>✦</span>'+tp+'<span>✦</span>'+tp;
+const c=document.getElementById('cursor');addEventListener('pointermove',e=>{c.style.transform=`translate(${e.clientX}px,${e.clientY}px)`});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+document.querySelectorAll('.case').forEach(el=>{el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform=`perspective(1200px) rotateY(${x*5}deg) rotateX(${-y*5}deg) translateY(-6px)`});el.addEventListener('pointerleave',()=>{el.style.transform=''})});
+</script>
 </body>
 </html>

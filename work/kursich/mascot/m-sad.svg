@@ -1,0 +1,40 @@
+
+  <svg class="mascot-svg" viewBox="0 22 220 142" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Курсич">
+    <g class="m-head">
+      <circle cx="57" cy="107" r="9.5" fill="#ffd3a6"/><circle cx="163" cy="107" r="9.5" fill="#ffd3a6"/>
+      <ellipse cx="110" cy="105" rx="53" ry="49" fill="#ffd3a6"/>
+      <ellipse cx="73" cy="122" rx="8.5" ry="5" fill="#fb9a7a" opacity=".55"/>
+      <ellipse cx="147" cy="122" rx="8.5" ry="5" fill="#fb9a7a" opacity=".55"/>
+      <path d="M108 113 Q112 118 108 122" stroke="#e09a5f" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      
+  <g class="m-blink">
+    <circle cx="86" cy="104" r="5.6" fill="#221d18"/>
+    <circle cx="134" cy="104" r="5.6" fill="#221d18"/>
+    <circle cx="88.2" cy="101.8" r="1.9" fill="#fff"/>
+    <circle cx="136.2" cy="101.8" r="1.9" fill="#fff"/>
+  </g>
+      <path d="M99 137 Q110 128 121 137" stroke="#221d18" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+      <g stroke="#221d18" stroke-width="3.4">
+        <circle cx="86" cy="104" r="20.5" fill="#fff" fill-opacity="0.05"/>
+        <circle cx="134" cy="104" r="20.5" fill="#fff" fill-opacity="0.05"/>
+        <path d="M106.5 100 Q110 96.5 113.5 100" fill="none" stroke-linecap="round"/>
+        <path d="M65.5 100 L55 95 M154.5 100 L165 95" stroke-linecap="round"/>
+      </g>
+      <path d="M73 91 Q80 84 91 85" stroke="#fff" stroke-width="2.8" opacity=".4" fill="none" stroke-linecap="round"/>
+      <g class="m-hair">
+        <g fill="#17120e">
+          <circle cx="63" cy="67" r="14.5"/><circle cx="79" cy="53" r="16.5"/><circle cx="99" cy="45" r="17.5"/>
+          <circle cx="121" cy="45" r="16.5"/><circle cx="141" cy="53" r="15.5"/><circle cx="156" cy="67" r="13.5"/>
+          <circle cx="55" cy="84" r="11.5"/><circle cx="165" cy="84" r="11.5"/>
+        </g>
+        <g fill="#241c16">
+          <circle cx="87" cy="59" r="12.5"/><circle cx="110" cy="55" r="13.5"/><circle cx="132" cy="59" r="11.5"/>
+          <circle cx="73" cy="71" r="8.5"/><circle cx="147" cy="71" r="8.5"/><circle cx="104" cy="41" r="8.5"/>
+        </g>
+        <path d="M84 49 Q92 43 100 48" stroke="#57463a" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+        <path d="M122 47 Q130 42 137 47" stroke="#57463a" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+      </g>
+      <path d="M63 114 q-5 11 0 15 q5 -4 0 -15Z" fill="#38bdf8" class="m-tear"/>
+      
+    </g>
+  </svg>

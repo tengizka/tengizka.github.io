@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SMOTRA · кейс · tengizka</title>
+<meta name="description" content="Логотип, пять тем и интерфейс приложения, где кино выбирают свайпом.">
+<meta property="og:image" content="https://tengizka.fun/work/smotra/img/logo.png">
+<meta name="theme-color" content="#0C0E16">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="stylesheet" href="/assets/case.css">
+<style>
+:root{--bg:#0C0E16;--bg2:#12141F;--ink:#F4F6FF;--muted:#9AA0B8;--line:rgba(255,255,255,.1);--accent:#7C6BFF;--accent2:#4F8BFF;--radius:22px;--frame:#1A1C28}
+body{transition:background .6s}
+.kicker{color:var(--accent);transition:color .6s}
+.h2{font-weight:900}
+.glow{position:fixed;width:70vw;height:70vw;left:15vw;top:-30vw;border-radius:50%;background:radial-gradient(circle,var(--accent),transparent 60%);opacity:.18;filter:blur(40px);pointer-events:none;z-index:-1;transition:background .6s}
+
+.hero{min-height:calc(100vh - 44px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-top:60px;padding-bottom:60px;position:relative}
+.hero .s3d{width:min(220px,46vw);border-radius:24%;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 30px 80px -20px var(--accent);animation:float 5s ease-in-out infinite;filter:drop-shadow(0 40px 60px rgba(0,0,0,.6))}
+@keyframes float{50%{transform:translateY(-16px) rotate(-4deg)}}
+.hero h1{font:900 clamp(64px,13vw,200px)/.9 Unbounded;letter-spacing:-.03em;margin-top:10px;background:linear-gradient(100deg,#fff 20%,var(--accent) 45%,#fff 55%,var(--accent2) 80%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 6s linear infinite;filter:drop-shadow(0 6px 0 rgba(0,0,0,.4))}
+@keyframes sheen{to{background-position:-250% 0}}
+.hero p{font-size:clamp(18px,1.7vw,22px);color:var(--muted);max-width:560px;margin-top:22px}
+
+.themes{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:40px}
+.themes button{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:999px;border:1px solid var(--line);background:var(--bg2);color:var(--ink);font:700 13px/1 Unbounded;cursor:pointer;transition:border-color .3s}
+.themes button i{width:16px;height:16px;border-radius:50%}
+.themes button.on{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 30%,transparent)}
+.showcase{display:grid;grid-template-columns:auto minmax(0,1fr);gap:50px;align-items:center}
+.showcase .phone{width:300px;margin:0 auto}
+.showcase .phone img{transition:filter .5s}
+.showcase .note b{display:block;font:900 clamp(34px,4vw,56px)/1 Unbounded;color:var(--accent);transition:color .6s}
+.showcase .note span{color:var(--muted)}
+@media(max-width:820px){.showcase{grid-template-columns:minmax(0,1fr);gap:26px;text-align:center}.showcase .phone{width:240px}}
+
+.swipe{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:50px;align-items:center}
+.deck{position:relative;height:440px;display:grid;place-items:center;touch-action:none;user-select:none}
+.card{width:260px;height:380px;border-radius:24px;background:var(--bg2);position:absolute;cursor:grab;box-shadow:0 40px 80px -30px rgba(0,0,0,.8);overflow:hidden;transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .35s}
+.card.drag{transition:none;cursor:grabbing}
+.card:not(:last-child){transform:scale(.94) translateY(18px);filter:brightness(.7)}
+.card .poster{position:absolute;inset:0;background:radial-gradient(circle at 30% 25%,var(--c1),transparent 55%),radial-gradient(circle at 75% 80%,var(--c2),transparent 60%),#111}
+.card .poster::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),transparent 55%)}
+.card h4{position:absolute;left:20px;bottom:44px;font:900 26px/1 Unbounded;z-index:1}
+.card small{position:absolute;left:20px;bottom:20px;color:#C6CBE0;z-index:1;font-size:13px}
+.card .stamp{position:absolute;top:22px;left:50%;transform:translateX(-50%) rotate(-8deg);padding:8px 14px;border:3px solid;border-radius:10px;font:900 18px/1 Unbounded;letter-spacing:.06em;text-transform:uppercase;opacity:0;z-index:2;background:rgba(0,0,0,.35)}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.legend div{border:1px solid var(--line);background:var(--bg2);border-radius:18px;padding:18px}
+.legend b{display:block;font:900 18px/1 Unbounded;margin-bottom:8px}
+.legend span{color:var(--muted);font-size:15px;line-height:1.45}
+.legend em{font-style:normal;font:700 22px/1 Unbounded;float:right;opacity:.6}
+@media(max-width:820px){.swipe{grid-template-columns:minmax(0,1fr)}.deck{height:410px}}
+
+.logos{display:grid;grid-template-columns:.8fr 1.2fr;gap:20px}
+.logos>div{border:1px solid var(--line);background:var(--bg2);border-radius:26px;padding:34px;display:flex;flex-direction:column;justify-content:space-between;gap:20px;min-height:340px}
+.logos img{width:100%;max-width:240px;margin:0 auto;border-radius:24%}
+.logos img.word{border-radius:16px}
+.logos .word{max-width:100%}
+.logos p{color:var(--muted);font-size:15px}
+@media(max-width:820px){.logos{grid-template-columns:minmax(0,1fr)}}
+.swatches .sw b{font-family:Unbounded}
+.next strong{font-family:ReSquare,Unbounded;font-weight:700;color:#A3FF10}
+</style>
+</head>
+<body>
+<div class="glow" aria-hidden="true"></div>
+<div class="pf"><a class="home" href="/"><i></i>tengizka</a><span class="crumb">Кейс 04 / 04 · SMOTRA</span><a href="/work/1shot/">Следующий →</a></div>
+
+<header class="hero wrap">
+  <img class="s3d" src="img/logo.png" alt="Логотип SMOTRA">
+  <h1>SMOTRA</h1>
+  <p>Приложение, где фильмы и сериалы выбирают свайпом, как сторис. Отметки складываются в списки, за просмотры растёт уровень, рядом друзья и подборки.</p>
+</header>
+
+<section class="wrap">
+  <div class="facts reveal">
+    <div><small>Роль</small><b>Логотип, темы, интерфейс, сборка</b></div>
+    <div><small>Год</small><b>2026</b></div>
+    <div><small>Платформа</small><b>Telegram Mini App</b></div>
+    <div><small>Темы</small><b>5 цветовых настроений</b></div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="swipe">
+    <div class="reveal">
+      <span class="kicker">Механика</span>
+      <h2 class="h2" style="margin-bottom:18px">Четыре жеста вместо кнопок</h2>
+      <p class="lead" style="margin-bottom:28px">Каждый жест сразу кладёт тайтл в нужный список. Попробуй потянуть карточку в любую сторону.</p>
+      <div class="legend">
+        <div><em>←</em><b>Мимо</b><span>Не твоё. Больше не покажется.</span></div>
+        <div><em>→</em><b>Смотрел</b><span>Уже видел и понравилось.</span></div>
+        <div><em>↑</em><b>Чекнуть</b><span>Отложить на потом.</span></div>
+        <div><em>↓</em><b>Смотрю</b><span>Смотрю прямо сейчас.</span></div>
+      </div>
+    </div>
+    <div class="deck reveal" id="deck"></div>
+  </div>
+</section>
+
+<section class="wrap">
+  <span class="kicker reveal" style="text-align:center">Пять тем</span>
+  <h2 class="h2 reveal" style="text-align:center;margin-bottom:30px">Одно приложение, пять настроений</h2>
+  <div class="themes reveal" id="themes"></div>
+  <div class="showcase reveal">
+    <figure class="phone"><img id="feed" src="img/feed-neon.webp" alt="Лента SMOTRA"></figure>
+    <div class="note"><b id="tname">Синий</b><span id="tnote">Неон и космос</span><p class="lead" style="margin-top:22px">Тема меняет акцент, фон и рисунок в настройках. Эта страница тоже переключается: нажми на тему выше. Обложки на скриншотах — демонстрационные.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap"><span class="kicker reveal">Интерфейс</span><h2 class="h2 reveal" style="margin-bottom:40px">Заставка, жанры, лента</h2></div>
+  <div class="phones reveal">
+    <figure class="phone"><img src="img/splash.webp" alt="" loading="lazy"><figcaption>Заставка</figcaption></figure>
+    <figure class="phone"><img src="img/genres.webp" alt="" loading="lazy"><figcaption>Выбор жанров</figcaption></figure>
+    <figure class="phone"><img src="img/feed-emerald.webp" alt="" loading="lazy"><figcaption>Лента · Изумруд</figcaption></figure>
+    <figure class="phone"><img src="img/feed-amber.webp" alt="" loading="lazy"><figcaption>Лента · Янтарь</figcaption></figure>
+    <figure class="phone"><img src="img/feed-rose.webp" alt="" loading="lazy"><figcaption>Лента · Роза</figcaption></figure>
+  </div>
+</section>
+
+<section class="wrap">
+  <span class="kicker reveal">Логотип</span>
+  <h2 class="h2 reveal" style="margin-bottom:36px">Глянцевая S и живая надпись</h2>
+  <div class="logos">
+    <div class="reveal"><img src="img/logo.png" alt=""><p>Объёмная буква S — иконка приложения и аватар бота.</p></div>
+    <div class="reveal"><img class="word" src="img/word.webp" alt=""><p>На заставке надпись набрана живым текстом Unbounded 900. Объём дают пять слоёв тени, по глянцу медленно едет блик, а за буквами пульсирует свечение в цвет темы.</p></div>
+  </div>
+  <div class="swatches reveal" style="margin-top:20px">
+    <div class="sw" style="background:#7C6BFF;color:#fff"><b>#7C6BFF</b>Синий</div>
+    <div class="sw" style="background:#E3A63E;color:#1A1408"><b>#E3A63E</b>Янтарь</div>
+    <div class="sw" style="background:#2FC08D;color:#04170F"><b>#2FC08D</b>Изумруд</div>
+    <div class="sw" style="background:#FF5FA2;color:#1B0714"><b>#FF5FA2</b>Роза</div>
+    <div class="sw" style="background:#A3ADBD;color:#0F1116"><b>#A3ADBD</b>Графит</div>
+  </div>
+</section>
+
+<a class="next wrap" href="/work/1shot/"><small>Снова к началу</small><strong>1SHOT →</strong></a>
+<footer><div class="wrap"><span>© 2026 tengizka</span><a href="/">← Все работы</a></div></footer>
+<script>
+const T=[{id:'neon',name:'Синий',note:'Неон и космос',a:'#7c6bff',b:'#4f8bff',bg:'#0c0e16',bg2:'#12141f'},{id:'amber',name:'Янтарь',note:'Тёплое кино',a:'#e3a63e',b:'#c9832a',bg:'#131110',bg2:'#1a1714'},{id:'emerald',name:'Изумруд',note:'Спокойный зелёный',a:'#2fc08d',b:'#19a7b8',bg:'#08120f',bg2:'#0d1a16'},{id:'rose',name:'Роза',note:'Ягодный вечер',a:'#ff5fa2',b:'#c05cff',bg:'#150a12',bg2:'#1d0f19'},{id:'graphite',name:'Графит',note:'Строгий монохром',a:'#a3adbd',b:'#6f7b8d',bg:'#0d0d10',bg2:'#131317'}];
+const root=document.documentElement,feed=document.getElementById('feed'),box=document.getElementById('themes');
+function setTheme(t){root.style.setProperty('--accent',t.a);root.style.setProperty('--accent2',t.b);root.style.setProperty('--bg',t.bg);root.style.setProperty('--bg2',t.bg2);
+  feed.src='img/feed-'+(t.id==='graphite'?'neon':t.id)+'.webp';feed.style.filter=t.id==='graphite'?'grayscale(1)':'';
+  document.getElementById('tname').textContent=t.name;document.getElementById('tnote').textContent=t.note;
+  box.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.id===t.id))}
+T.forEach(t=>{const b=document.createElement('button');b.dataset.id=t.id;b.innerHTML=`<i style="background:${t.a}"></i>${t.name}`;b.onclick=()=>setTheme(t);box.appendChild(b)});
+box.firstChild.classList.add('on');
+
+const FILMS=[['Ночной поезд','драма · 2h 4m','#7c6bff','#ff5fa2'],['Глубина','триллер · 1h 52m','#19a7b8','#2fc08d'],['Последний кадр','детектив · 8 серий','#e3a63e','#c05cff'],['Тихий берег','мелодрама · 1h 40m','#ff5fa2','#4f8bff'],['Сигнал','фантастика · 2h 11m','#2fc08d','#7c6bff']];
+const ACT={left:['Мимо','#ff6b6b'],right:['Смотрел','#2fc08d'],up:['Чекнуть','#e3a63e'],down:['Смотрю','#7c6bff']};
+const deck=document.getElementById('deck');let fi=0;
+function makeCard(){const f=FILMS[fi++%FILMS.length];const c=document.createElement('div');c.className='card';c.style.setProperty('--c1',f[2]);c.style.setProperty('--c2',f[3]);
+  c.innerHTML=`<div class="poster"></div><span class="stamp"></span><h4>${f[0]}</h4><small>${f[1]}</small>`;deck.prepend(c);bind(c);return c}
+function bind(c){let sx,sy,dx=0,dy=0,on=false;const st=c.querySelector('.stamp');
+  const dir=()=>Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up');
+  c.addEventListener('pointerdown',e=>{if(c!==deck.lastElementChild)return;on=true;sx=e.clientX;sy=e.clientY;c.classList.add('drag');c.setPointerCapture(e.pointerId)});
+  c.addEventListener('pointermove',e=>{if(!on)return;dx=e.clientX-sx;dy=e.clientY-sy;c.style.transform=`translate(${dx}px,${dy}px) rotate(${dx/14}deg)`;
+    const d=Math.hypot(dx,dy);if(d>20){const a=ACT[dir()];st.textContent=a[0];st.style.color=a[1];st.style.borderColor=a[1];st.style.opacity=Math.min(1,d/110)}else st.style.opacity=0});
+  const end=()=>{if(!on)return;on=false;c.classList.remove('drag');
+    if(Math.hypot(dx,dy)>110){const d=dir(),k=1.8;c.style.transform=`translate(${dx*k+(d==='left'?-300:d==='right'?300:0)}px,${dy*k+(d==='up'?-300:d==='down'?300:0)}px) rotate(${dx/8}deg)`;c.style.opacity=0;setTimeout(()=>{c.remove();makeCard()},350)}
+    else{c.style.transform='';st.style.opacity=0}dx=dy=0};
+  c.addEventListener('pointerup',end);c.addEventListener('pointercancel',end)}
+for(let i=0;i<3;i++)makeCard();
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{threshold:.1});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

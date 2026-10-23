@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>КУРСИЧ · кейс · tengizka</title>
+<meta name="description" content="Мини-приложение с короткими уроками и маскотом Курсичем: 30 эмоций, 12 образов, 26 курсов.">
+<meta property="og:image" content="https://tengizka.fun/work/kursich/img/splash.webp">
+<meta name="theme-color" content="#58CC02">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="stylesheet" href="/assets/case.css">
+<style>
+:root{--bg:#F4F7F0;--ink:#263238;--muted:#6E8290;--line:#E2E8DC;--accent:#58CC02;--radius:22px;--display:Nunito,sans-serif;--body:Nunito,sans-serif;--frame:#fff}
+body{font-weight:600}
+.kicker{font-weight:900;letter-spacing:.12em}
+.h2{font-weight:900;letter-spacing:-.02em}
+.btn3d{display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:16px;font:900 16px/1 Nunito;text-transform:uppercase;letter-spacing:.04em;background:var(--accent);color:#fff;box-shadow:0 5px 0 #46A302;transition:transform .1s,box-shadow .1s}
+.btn3d:active{transform:translateY(5px);box-shadow:0 0 0 #46A302}
+.btn3d.white{background:#fff;color:var(--accent);box-shadow:0 5px 0 #E2E8DC;border:2px solid #E2E8DC}
+
+.hero{background:linear-gradient(160deg,#58CC02,#8EE000);color:#fff;overflow:hidden;position:relative}
+.hero .wrap{min-height:calc(100vh - 44px);display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:30px;padding-top:60px;padding-bottom:60px}
+.hero h1{font:900 clamp(80px,13vw,190px)/.85 Nunito;letter-spacing:-.04em;text-transform:lowercase;text-shadow:0 10px 0 #46A302}
+.hero p{font-size:clamp(18px,1.8vw,23px);line-height:1.45;max-width:520px;margin:26px 0 30px;font-weight:700}
+.hero .stage{position:relative;aspect-ratio:1;display:grid;place-items:center}
+.hero .stage::before{content:"";position:absolute;inset:6%;border-radius:50%;background:rgba(255,255,255,.18)}
+.hero .stage img{position:relative;width:86%;cursor:pointer;animation:bob 2.6s ease-in-out infinite;filter:drop-shadow(0 18px 0 rgba(0,0,0,.08))}
+.hero .bubble{position:absolute;top:6%;left:0;background:#fff;color:var(--ink);padding:14px 18px;border-radius:18px;font:800 17px/1.3 Nunito;box-shadow:0 4px 0 rgba(0,0,0,.12);max-width:240px}
+.hero .bubble::after{content:"";position:absolute;right:30px;bottom:-12px;border:12px solid transparent;border-top-color:#fff;border-bottom:0}
+.hero .hint{position:absolute;bottom:4%;right:4%;font:800 13px/1 Nunito;opacity:.85}
+@keyframes bob{50%{transform:translateY(-12px)}}
+@media(max-width:820px){.hero .wrap{grid-template-columns:minmax(0,1fr);min-height:0}.hero .stage{max-width:380px;width:100%;margin:0 auto}}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat{background:#fff;border:2px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 4px 0 var(--line)}
+.stat b{display:block;font:900 clamp(40px,4.6vw,64px)/1 Nunito}
+.stat span{color:var(--muted);font-weight:700}
+.stat:nth-child(1) b{color:#58CC02}.stat:nth-child(2) b{color:#1CB0F6}.stat:nth-child(3) b{color:#CE82FF}.stat:nth-child(4) b{color:#FF9600}
+@media(max-width:820px){.stats{grid-template-columns:1fr 1fr}}
+
+.emo{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:10px}
+.emo button{overflow-wrap:anywhere;border:2px solid var(--line);background:#fff;border-radius:18px;padding:6px 4px 8px;box-shadow:0 4px 0 var(--line);cursor:pointer;transition:transform .15s;font:800 11px/1.2 Nunito;color:var(--muted)}
+.emo button:hover{transform:translateY(-4px) rotate(-3deg);border-color:#58CC02;color:#58CC02}
+.emo img{width:100%;aspect-ratio:1}
+@media(max-width:980px){.emo{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(max-width:520px){.emo{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+.outfits{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}
+.outfits figure{border-radius:24px;padding:12px 10px 14px;text-align:center;color:#fff;font:900 14px/1.2 Nunito;box-shadow:0 5px 0 rgba(0,0,0,.14)}
+.outfits img{width:100%;aspect-ratio:1;margin-bottom:6px;transition:transform .3s}
+.outfits figure:hover img{transform:scale(1.08) rotate(4deg)}
+@media(max-width:980px){.outfits{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:520px){.outfits{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+.cats{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.cats span{padding:12px 18px;border-radius:999px;color:#fff;font:900 15px/1 Nunito;box-shadow:0 4px 0 rgba(0,0,0,.15)}
+.phones .phone{border:2px solid var(--line);box-shadow:0 6px 0 var(--line)}
+.next strong{font-family:Fraunces,Lora,serif;font-weight:600;color:#A85D6B;letter-spacing:-.02em}
+.swatches .sw{color:#fff;box-shadow:0 5px 0 rgba(0,0,0,.14)}
+.swatches .sw b{font-family:Nunito;font-weight:900}
+</style>
+</head>
+<body>
+<div class="pf"><a class="home" href="/"><i></i>tengizka</a><span class="crumb">Кейс 02 / 04 · КУРСИЧ</span><a href="/work/maplink/">Следующий →</a></div>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <h1>курсич</h1>
+      <p>Мини-приложение в Telegram: короткие уроки по пять минут, карта-путь, серии дней и кудрявый парень в очках, который проходит всё это вместе с тобой.</p>
+      <a class="btn3d white" href="/kursich/" target="_blank" rel="noopener">Открыть приложение</a>
+    </div>
+    <div class="stage">
+      <div class="bubble" id="say">Привет! Нажми на меня</div>
+      <img id="hero-m" src="mascot/m-happy.svg" alt="Курсич">
+      <span class="hint">клик = новая эмоция</span>
+    </div>
+  </div>
+</header>
+
+<section class="wrap">
+  <div class="facts reveal">
+    <div><small>Роль</small><b>Персонаж, интерфейс, сборка</b></div>
+    <div><small>Год</small><b>2026</b></div>
+    <div><small>Платформа</small><b>Telegram Mini App</b></div>
+    <div><small>Маскот</small><b>Чистый SVG, собирается кодом</b></div>
+  </div>
+  <div class="stats reveal" style="margin-top:28px">
+    <div class="stat"><b>30</b><span>эмоций</span></div>
+    <div class="stat"><b>12</b><span>образов</span></div>
+    <div class="stat"><b>26</b><span>курсов</span></div>
+    <div class="stat"><b>144</b><span>урока</span></div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="split">
+    <div class="reveal"><span class="kicker">Идея</span><h2 class="h2">Учиться легче, когда рядом <span style="color:var(--accent)">кто-то есть</span></h2></div>
+    <div class="reveal lead">
+      <p>Курсич реагирует на каждый шаг: радуется верному ответу, чешет затылок над сложным вопросом, грустит, когда серия прерывается, и празднует конец раздела.</p>
+      <p>Персонаж нарисован в SVG и собирается из частей. Эмоция — это набор глаз, бровей и рта, образ — это одежда и аксессуары поверх. Поэтому любую эмоцию можно надеть на любой образ.</p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <span class="kicker reveal">Система эмоций</span>
+  <h2 class="h2 reveal" style="margin-bottom:36px">30 состояний одного лица</h2>
+  <div class="emo reveal" id="emo"></div>
+</section>
+
+<section class="wrap">
+  <span class="kicker reveal">Гардероб</span>
+  <h2 class="h2 reveal" style="margin-bottom:12px">12 образов под темы курсов</h2>
+  <p class="lead reveal" style="margin-bottom:36px">Образ открывается, когда проходишь курс. Прошёл «Инвестиции» — получил костюм финансиста.</p>
+  <div class="outfits reveal" id="outfits"></div>
+</section>
+
+<section>
+  <div class="wrap"><span class="kicker reveal">Интерфейс</span><h2 class="h2 reveal">Как Duolingo, только про жизнь</h2>
+  <p class="lead reveal" style="margin:16px 0 0">Онбординг, каталог по темам, карта-путь с уроками, профиль с наградами. Крупные кнопки с объёмом, которые хочется нажимать.</p>
+  <div class="cats reveal"><span style="background:#58CC02">Финансы</span><span style="background:#1CB0F6">Технологии</span><span style="background:#FF9600">Карьера</span><span style="background:#38BDF8">Языки</span><span style="background:#CE82FF">Творчество</span></div></div>
+  <div class="phones reveal" style="margin-top:40px">
+    <figure class="phone"><img src="img/splash.webp" alt="" loading="lazy"><figcaption>Заставка</figcaption></figure>
+    <figure class="phone"><img src="img/k-1.webp" alt="" loading="lazy"><figcaption>Знакомство</figcaption></figure>
+    <figure class="phone"><img src="img/k-2.webp" alt="" loading="lazy"><figcaption>Цель</figcaption></figure>
+    <figure class="phone"><img src="img/k-3.webp" alt="" loading="lazy"><figcaption>Темп</figcaption></figure>
+    <figure class="phone"><img src="img/k-4.webp" alt="" loading="lazy"><figcaption>Готово</figcaption></figure>
+    <figure class="phone"><img src="img/catalog.webp" alt="" loading="lazy"><figcaption>Каталог</figcaption></figure>
+    <figure class="phone"><img src="img/topic.webp" alt="" loading="lazy"><figcaption>Тема</figcaption></figure>
+    <figure class="phone"><img src="img/path.webp" alt="" loading="lazy"><figcaption>Карта-путь</figcaption></figure>
+    <figure class="phone"><img src="img/profile.webp" alt="" loading="lazy"><figcaption>Профиль</figcaption></figure>
+  </div>
+</section>
+
+<section class="wrap">
+  <span class="kicker reveal">Цвет</span>
+  <h2 class="h2 reveal" style="margin-bottom:36px">У каждого курса свой цвет</h2>
+  <div class="swatches reveal">
+    <div class="sw" style="background:#58CC02"><b>#58CC02</b>Основной</div>
+    <div class="sw" style="background:#1CB0F6"><b>#1CB0F6</b>Синий</div>
+    <div class="sw" style="background:#CE82FF"><b>#CE82FF</b>Фиолетовый</div>
+    <div class="sw" style="background:#FF9600"><b>#FF9600</b>Огонь серии</div>
+    <div class="sw" style="background:#FF4B4B"><b>#FF4B4B</b>Сердечки</div>
+    <div class="sw" style="background:#FFC800;color:#263238"><b>#FFC800</b>Награды</div>
+  </div>
+</section>
+
+<a class="next wrap" href="/work/maplink/"><small>Следующий кейс</small><strong>MapLink →</strong></a>
+<footer><div class="wrap"><span>© 2026 tengizka</span><a href="/">← Все работы</a></div></footer>
+<script>
+const EMO={idle:'спокоен',happy:'радость',think:'думает',celebrate:'праздник',sad:'грусть',oops:'упс',surprised:'удивлён',proud:'гордость',sleepy:'сонный',wink:'подмигивает',love:'влюблён',star:'звезда',laugh:'смех',cool:'крутой',dizzy:'голова кругом',worried:'волнуется',angry:'злится',shy:'смущён',money:'деньги',excited:'в восторге',cry:'плачет',determined:'решителен',confused:'не понял',amazed:'поражён',bored:'скучает',kiss:'поцелуй',party:'вечеринка',dreamy:'мечтает',genius:'гений',silly:'дурачится'};
+const OUT=[['financier','Финансист','#58CC02'],['detective','Детектив','#1CB0F6'],['builder','Строитель','#FF9600'],['cosmonaut','Космонавт','#3E5CE9'],['artist','Художник','#FF86D0'],['coder','Программист','#263238'],['seller','Продавец','#FF4B4B'],['traveler','Путешественник','#1CB0F6'],['blogger','Блогер','#CE82FF'],['hacker','Хакер','#2B3A2B'],['graduate','Выпускник','#58CC02'],['none','Без образа','#8A9BA5']];
+const LINES={happy:'Верно! Так держать',think:'Хм, дай подумать…',celebrate:'Раздел пройден!',sad:'Серия прервалась…',oops:'Упс, почти!',proud:'Я тобой горжусь',sleepy:'Пять минут, и спать',genius:'Это было гениально',money:'Подушка безопасности!',party:'Новая награда!',love:'Обожаю этот урок',cool:'Легко',confused:'Не понял вопрос',determined:'Ещё один урок!'};
+const keys=Object.keys(EMO),hero=document.getElementById('hero-m'),say=document.getElementById('say');
+function setEmo(k){hero.src='mascot/m-'+k+'.svg';say.textContent=LINES[k]||EMO[k][0].toUpperCase()+EMO[k].slice(1);hero.animate([{transform:'scale(.9)'},{transform:'scale(1.04)'},{transform:'scale(1)'}],{duration:350})}
+let i=0;hero.addEventListener('click',()=>{i=(i+1)%keys.length;setEmo(keys[i])});
+const emo=document.getElementById('emo');
+keys.forEach(k=>{const b=document.createElement('button');b.innerHTML=`<img src="mascot/m-${k}.svg" alt="" loading="lazy">${EMO[k]}`;b.onclick=()=>{setEmo(k);window.scrollTo({top:0,behavior:'smooth'})};emo.appendChild(b)});
+const of=document.getElementById('outfits');
+OUT.forEach(([k,n,c])=>{const f=document.createElement('figure');f.style.background=c;f.innerHTML=`<img src="mascot/o-${k}.svg" alt="" loading="lazy">${n}`;of.appendChild(f)});
+keys.forEach(k=>{const im=new Image();im.src='mascot/m-'+k+'.svg'});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{threshold:.1});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
