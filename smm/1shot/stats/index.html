@@ -266,7 +266,7 @@ function render(d,from,to){
  const money=T.spend>0; // spend is added by hand only when Tengiz sends it
  const k=[
   ['Визиты на сайт',num(T.visits),'Яндекс Метрика'],
-  ['Перешли к брони',num(T.bot),T.visits?`${pct(T.bot/T.visits)} от визитов`:'кнопка «в бота»'],
+  ['Маршрут или звонок',num(T.bot),T.visits?`${pct(T.bot/T.visits)} от визитов`:'кнопки на сайте'],
   ['Анкеты',num(T.forms),T.waiting?`ждут подтверждения: ${num(T.waiting)}`:'все обработаны'],
   ['Пришли в клуб',num(T.done),T.forms?`${pct(T.done/T.forms)} от анкет`:'подтверждены в Desk',true],
   ['Вернулись',num(T.returned),'играли 2+ разных дня'],
@@ -277,7 +277,7 @@ function render(d,from,to){
  const cell=v=>v?v:'<span class="dash">—</span>';
  const mh=money?'<th>Расход</th><th>Цена гостя</th>':'';
  const mc=r=>money?`<td>${cell(r.spend&&rub(r.spend))}</td><td>${r.code==='GG'?'<span class="dash">без рекламы</span>':cell(r.done&&r.spend&&rub(r.spend/r.done))}</td>`:'';
- $('byCode').innerHTML=`<tr><th>Промокод</th><th>Визиты</th><th>К брони</th><th>Анкеты</th><th>Ждут</th><th>Пришли</th>${mh}<th>Вернулись</th><th>Потратили</th></tr>`+
+ $('byCode').innerHTML=`<tr><th>Промокод</th><th>Визиты</th><th>Маршрут/звонок</th><th>Анкеты</th><th>Ждут</th><th>Пришли</th>${mh}<th>Вернулись</th><th>Потратили</th></tr>`+
   rows.map(r=>`<tr><td><span class="code" style="color:${COLORS[r.code]||'#EDEDE8'}">${esc(r.code)}</span><span class="chan">${esc(r.channel||'')}</span></td>
    <td>${cell(r.visits&&num(r.visits))}</td><td>${cell(r.bot&&num(r.bot))}</td><td>${cell(r.forms&&num(r.forms))}</td><td>${cell(r.waiting&&num(r.waiting))}</td><td>${cell(r.done&&num(r.done))}</td>${mc(r)}
    <td>${cell(r.returned&&num(r.returned))}</td><td>${cell(r.revenue&&rub(r.revenue))}</td></tr>`).join('')+
