@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<title>1SHOT · статистика рекламы</title>
+<title>1SHOT · статистика</title>
 <meta name="theme-color" content="#0B0B0C">
 <link rel="icon" href="/1shot/landing/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/fonts.css">
@@ -65,7 +65,7 @@ h2{font-family:Unbounded,sans-serif;font-weight:700;font-size:22px;margin:0}
 .legend{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:10px}
 .legend span{font-size:13px;color:var(--mu)}.legend i{display:inline-block;width:10px;height:10px;margin-right:7px;vertical-align:0}
 svg text{font-family:var(--mono);font-size:11px;fill:#6E6E74}
-.src{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ln);border-left:1px solid var(--ln)}
+.src{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid var(--ln);border-left:1px solid var(--ln)}
 .src div{padding:14px 16px;border-right:1px solid var(--ln);border-bottom:1px solid var(--ln);font-size:13px;line-height:1.45;color:var(--mu);min-width:0;overflow-wrap:anywhere}
 .src b{display:block;color:var(--tx);font-size:14px;margin-bottom:4px}
 .dot{display:inline-block;width:8px;height:8px;margin-right:8px;background:var(--mu)}.dot.ok{background:var(--ac)}.dot.bad{background:var(--or)}
@@ -83,7 +83,7 @@ svg text{font-family:var(--mono);font-size:11px;fill:#6E6E74}
 <div class="wrap">
  <header class="top">
   <img class="logo" src="/1shot/landing/logo.svg" alt="1SHOT">
-  <span class="lbl mid">статистика рекламы</span>
+  <span class="lbl mid">статистика сайта и клуба</span>
   <span class="lbl" id="who"></span>
  </header>
 
@@ -125,7 +125,7 @@ svg text{font-family:var(--mono);font-size:11px;fill:#6E6E74}
  <!-- DASHBOARD -->
  <main id="dash" class="hidden">
   <p class="lbl ac" style="margin-top:28px"><span class="sq"></span><span id="periodLabel">последние 14 дней</span></p>
-  <h1>Реклама → гости</h1>
+  <h1>Сайт → гости</h1>
   <p class="sub" id="fresh">Загружаю…</p>
   <div class="bar">
    <div class="chips" id="chips"><button data-d="7" type="button">7 дней</button><button data-d="14" class="on" type="button">14 дней</button><button data-d="30" type="button">30 дней</button><button data-d="all" type="button">Всё время</button></div>
@@ -134,7 +134,7 @@ svg text{font-family:var(--mono);font-size:11px;fill:#6E6E74}
   <div class="kpis" id="kpis"></div>
 
   <section>
-   <div class="head"><h2>По площадкам</h2><span class="lbl">показы и клики — в кабинетах</span></div>
+   <div class="head"><h2>По площадкам</h2><span class="lbl">промокод = источник</span></div>
    <div class="scroll"><table class="tbl" id="byCode"></table></div>
    <p class="sub" style="margin-top:10px;font-size:13px">«Вернулись» и «Потратили» — за всё время, из Gizmo через Desk.</p>
   </section>
@@ -142,7 +142,7 @@ svg text{font-family:var(--mono);font-size:11px;fill:#6E6E74}
   <section>
    <div class="head"><h2>По дням</h2><span class="lbl" id="chartNote"></span></div>
    <div class="chart">
-    <div class="legend"><span><i style="background:var(--ac)"></i>Расход, ₽</span><span><i style="background:var(--pk)"></i>Пришли в клуб</span></div>
+    <div class="legend"><span><i style="background:var(--ac)"></i>Визиты на сайт</span><span><i style="background:var(--pk)"></i>Пришли в клуб</span></div>
     <div id="chart"></div>
    </div>
   </section>
@@ -168,7 +168,7 @@ const SUPABASE_URL='https://zqhfvtgktbfnxcclqqny.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxaGZ2dGdrdGJmbnhjY2xxcW55Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyMDEwMzIsImV4cCI6MjEwNTc3NzAzMn0.sMsWU4xcNiww0sNYRpPGcdqOyoQlYNhhoNH3195NiOs';
 const START='2026-11-01';
 const COLORS={HEADSHOT:'#A3FF10',LEVELUP:'#FFB10B',RESPAWN:'#FF8A1F',GG:'#8A8A90'};
-const SRC={direct:'Яндекс Директ',vk:'VK Реклама',desk:'Desk (Gizmo)'};
+const SRC={metrika:'Яндекс Метрика',desk:'Desk (Gizmo)'};
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=id=>document.getElementById(id);
 const nf=new Intl.NumberFormat('ru-RU');
@@ -261,22 +261,27 @@ function render(d,from,to){
  const rows=Object.values(by).sort((a,b)=>['HEADSHOT','LEVELUP','RESPAWN','GG'].indexOf(a.code)-['HEADSHOT','LEVELUP','RESPAWN','GG'].indexOf(b.code));
  const cl=Object.fromEntries((d.club||[]).map(c=>[c.code,c]));
  rows.forEach(r=>{const c=cl[r.code]||{};r.returned=+c.returned||0;r.revenue=+c.revenue||0;});
- const T={spend:sum(rows,'spend'),forms:sum(rows,'forms'),done:sum(rows,'done'),waiting:sum(rows,'waiting'),returned:sum(rows,'returned'),revenue:sum(rows,'revenue')};
+ const T={spend:sum(rows,'spend'),visits:sum(rows,'visits'),bot:sum(rows,'bot'),forms:sum(rows,'forms'),done:sum(rows,'done'),waiting:sum(rows,'waiting'),returned:sum(rows,'returned'),revenue:sum(rows,'revenue')};
  const paidDone=rows.filter(r=>r.code!=='GG').reduce((s,r)=>s+r.done,0);
- $('kpis').innerHTML=[
-  ['Расход на рекламу',rub(T.spend),'Директ + VK'],
+ const money=T.spend>0; // spend is added by hand only when Tengiz sends it
+ const k=[
+  ['Визиты на сайт',num(T.visits),'Яндекс Метрика'],
+  ['Перешли к брони',num(T.bot),T.visits?`${pct(T.bot/T.visits)} от визитов`:'кнопка «в бота»'],
   ['Анкеты',num(T.forms),T.waiting?`ждут подтверждения: ${num(T.waiting)}`:'все обработаны'],
-  ['Пришли в клуб',num(T.done),T.forms?`${pct(T.done/T.forms)} от анкет`:'подтверждены в Desk'],
-  ['Цена гостя',paidDone?rub(T.spend/paidDone):'—',`гостей с рекламы: ${num(paidDone)}`,true],
+  ['Пришли в клуб',num(T.done),T.forms?`${pct(T.done/T.forms)} от анкет`:'подтверждены в Desk',true],
   ['Вернулись',num(T.returned),'играли 2+ разных дня'],
-  ['Потратили гости',rub(T.revenue),'после бесплатного часа']
- ].map(([l,v,s,hl])=>`<div class="kpi${hl?' hl':''}"><span class="lbl">${l}</span><b>${v}</b><small>${esc(s)}</small></div>`).join('');
+  ['Потратили гости',rub(T.revenue),'после бесплатного часа']];
+ if(money)k.splice(4,0,['Цена гостя',paidDone?rub(T.spend/paidDone):'—',`расход ${rub(T.spend)}`]);
+ $('kpis').style.gridTemplateColumns=money&&innerWidth>900?'repeat(7,1fr)':'';
+ $('kpis').innerHTML=k.map(([l,v,s,hl])=>`<div class="kpi${hl?' hl':''}"><span class="lbl">${l}</span><b>${v}</b><small>${esc(s)}</small></div>`).join('');
  const cell=v=>v?v:'<span class="dash">—</span>';
- $('byCode').innerHTML=`<tr><th>Промокод</th><th>Расход</th><th>Анкеты</th><th>Ждут</th><th>Пришли</th><th>Цена гостя</th><th>Вернулись</th><th>Потратили</th></tr>`+
+ const mh=money?'<th>Расход</th><th>Цена гостя</th>':'';
+ const mc=r=>money?`<td>${cell(r.spend&&rub(r.spend))}</td><td>${r.code==='GG'?'<span class="dash">без рекламы</span>':cell(r.done&&r.spend&&rub(r.spend/r.done))}</td>`:'';
+ $('byCode').innerHTML=`<tr><th>Промокод</th><th>Визиты</th><th>К брони</th><th>Анкеты</th><th>Ждут</th><th>Пришли</th>${mh}<th>Вернулись</th><th>Потратили</th></tr>`+
   rows.map(r=>`<tr><td><span class="code" style="color:${COLORS[r.code]||'#EDEDE8'}">${esc(r.code)}</span><span class="chan">${esc(r.channel||'')}</span></td>
-   <td>${cell(r.spend&&rub(r.spend))}</td><td>${cell(r.forms&&num(r.forms))}</td><td>${cell(r.waiting&&num(r.waiting))}</td><td>${cell(r.done&&num(r.done))}</td>
-   <td>${r.code==='GG'?'<span class="dash">без рекламы</span>':cell(r.done&&r.spend&&rub(r.spend/r.done))}</td><td>${cell(r.returned&&num(r.returned))}</td><td>${cell(r.revenue&&rub(r.revenue))}</td></tr>`).join('')+
-  `<tr class="total"><td>Итого</td><td>${rub(T.spend)}</td><td>${num(T.forms)}</td><td>${num(T.waiting)}</td><td>${num(T.done)}</td><td>${paidDone?rub(T.spend/paidDone):'—'}</td><td>${num(T.returned)}</td><td>${rub(T.revenue)}</td></tr>`;
+   <td>${cell(r.visits&&num(r.visits))}</td><td>${cell(r.bot&&num(r.bot))}</td><td>${cell(r.forms&&num(r.forms))}</td><td>${cell(r.waiting&&num(r.waiting))}</td><td>${cell(r.done&&num(r.done))}</td>${mc(r)}
+   <td>${cell(r.returned&&num(r.returned))}</td><td>${cell(r.revenue&&rub(r.revenue))}</td></tr>`).join('')+
+  `<tr class="total"><td>Итого</td><td>${num(T.visits)}</td><td>${num(T.bot)}</td><td>${num(T.forms)}</td><td>${num(T.waiting)}</td><td>${num(T.done)}</td>${money?`<td>${rub(T.spend)}</td><td>${paidDone?rub(T.spend/paidDone):'—'}</td>`:''}<td>${num(T.returned)}</td><td>${rub(T.revenue)}</td></tr>`;
  chart(d,from,to);
  const sync=Object.fromEntries((d.sync||[]).map(s=>[s.source,s]));
  $('src').innerHTML=Object.entries(SRC).map(([k,n])=>{const s=sync[k];const when=s?new Date(s.updated_at).toLocaleString('ru-RU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'';
@@ -289,14 +294,14 @@ function chart(d,from,to){
  const S={},V={},G={};
  for(const a of d.ads||[])S[a.day]=(S[a.day]||0)+ +a.spend;for(const s of d.site||[])V[s.day]=(V[s.day]||0)+ +s.visits;for(const f of d.forms||[])G[f.day]=(G[f.day]||0)+ +f.done;
  const W=Math.max($('chart').clientWidth||640,list.length*24),H=240,pl=8,pr=8,pt=12,pb=26,cw=(W-pl-pr)/list.length;
- const ms=Math.max(1,...list.map(x=>S[x]||0)),mg=Math.max(1,...list.map(x=>G[x]||0));
+ const ms=Math.max(1,...list.map(x=>V[x]||0)),mg=Math.max(1,...list.map(x=>G[x]||0));
  const y=(v,m)=>pt+(H-pt-pb)*(1-v/m);
  let bars='',dots='',labels='';
  list.forEach((x,i)=>{const cx=pl+i*cw;
-  if(S[x])bars+=`<rect x="${cx+cw*.18}" y="${y(S[x],ms)}" width="${cw*.64}" height="${H-pb-y(S[x],ms)}" fill="#A3FF10"><title>${x}: ${rub(S[x])}</title></rect>`;
+  if(V[x])bars+=`<rect x="${cx+cw*.18}" y="${y(V[x],ms)}" width="${cw*.64}" height="${H-pb-y(V[x],ms)}" fill="#A3FF10"><title>${x}: визитов ${num(V[x])}</title></rect>`;
   if(G[x])dots+=`<rect x="${cx+cw/2-5}" y="${y(G[x],mg)-5}" width="10" height="10" fill="#E93E97"><title>${x}: пришли ${G[x]}</title></rect>`;
   if(i%Math.max(1,Math.ceil(44/cw))===0)labels+=`<text x="${cx+cw/2}" y="${H-8}" text-anchor="middle">${x.slice(8,10)}.${x.slice(5,7)}</text>`;});
- $('chart').innerHTML=`<div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="display:block" role="img" aria-label="Расход и пришедшие гости по дням">
+ $('chart').innerHTML=`<div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="display:block" role="img" aria-label="Визиты и пришедшие гости по дням">
   <line x1="${pl}" x2="${W-pr}" y1="${H-pb}" y2="${H-pb}" stroke="#26262A"/>${bars}${dots}${labels}</svg></div>`;
  $('chartNote').textContent='наведи на столбик — будет число';
 }
