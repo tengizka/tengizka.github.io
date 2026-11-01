@@ -65,7 +65,7 @@ h2{font-family:Unbounded,sans-serif;font-weight:700;font-size:22px;margin:0}
 .legend{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:10px}
 .legend span{font-size:13px;color:var(--mu)}.legend i{display:inline-block;width:10px;height:10px;margin-right:7px;vertical-align:0}
 svg text{font-family:var(--mono);font-size:11px;fill:#6E6E74}
-.src{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--ln);border-left:1px solid var(--ln)}
+.src{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ln);border-left:1px solid var(--ln)}
 .src div{padding:14px 16px;border-right:1px solid var(--ln);border-bottom:1px solid var(--ln);font-size:13px;line-height:1.45;color:var(--mu);min-width:0;overflow-wrap:anywhere}
 .src b{display:block;color:var(--tx);font-size:14px;margin-bottom:4px}
 .dot{display:inline-block;width:8px;height:8px;margin-right:8px;background:var(--mu)}.dot.ok{background:var(--ac)}.dot.bad{background:var(--or)}
@@ -134,21 +134,17 @@ svg text{font-family:var(--mono);font-size:11px;fill:#6E6E74}
   <div class="kpis" id="kpis"></div>
 
   <section>
-   <div class="head"><h2>По площадкам</h2><span class="lbl">промокод = источник</span></div>
+   <div class="head"><h2>По площадкам</h2><span class="lbl">показы и клики — в кабинетах</span></div>
    <div class="scroll"><table class="tbl" id="byCode"></table></div>
+   <p class="sub" style="margin-top:10px;font-size:13px">«Вернулись» и «Потратили» — за всё время, из Gizmo через Desk.</p>
   </section>
 
   <section>
    <div class="head"><h2>По дням</h2><span class="lbl" id="chartNote"></span></div>
    <div class="chart">
-    <div class="legend"><span><i style="background:var(--ac)"></i>Расход, ₽</span><span><i style="background:var(--bl)"></i>Визиты на сайт</span><span><i style="background:var(--pk)"></i>Пришли в клуб</span></div>
+    <div class="legend"><span><i style="background:var(--ac)"></i>Расход, ₽</span><span><i style="background:var(--pk)"></i>Пришли в клуб</span></div>
     <div id="chart"></div>
    </div>
-  </section>
-
-  <section>
-   <div class="head"><h2>Гости по промокодам</h2><span class="lbl">за всё время · из Gizmo</span></div>
-   <div class="scroll"><table class="tbl" id="club"></table></div>
   </section>
 
   <section>
@@ -172,7 +168,7 @@ const SUPABASE_URL='https://zqhfvtgktbfnxcclqqny.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxaGZ2dGdrdGJmbnhjY2xxcW55Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyMDEwMzIsImV4cCI6MjEwNTc3NzAzMn0.sMsWU4xcNiww0sNYRpPGcdqOyoQlYNhhoNH3195NiOs';
 const START='2026-11-01';
 const COLORS={HEADSHOT:'#A3FF10',LEVELUP:'#FFB10B',RESPAWN:'#FF8A1F',GG:'#8A8A90'};
-const SRC={metrika:'Яндекс Метрика',vk:'VK Реклама',direct:'Яндекс Директ',desk:'Desk (Gizmo)'};
+const SRC={direct:'Яндекс Директ',vk:'VK Реклама',desk:'Desk (Gizmo)'};
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=id=>document.getElementById(id);
 const nf=new Intl.NumberFormat('ru-RU');
@@ -263,27 +259,25 @@ function render(d,from,to){
  for(const s of d.site||[]){const r=ensure(s.code);r.visits+=+s.visits;r.bot+=+s.bot_opens;}
  for(const f of d.forms||[]){const r=ensure(f.code);r.forms+=+f.forms;r.done+=+f.done;r.waiting+=+f.waiting;}
  const rows=Object.values(by).sort((a,b)=>['HEADSHOT','LEVELUP','RESPAWN','GG'].indexOf(a.code)-['HEADSHOT','LEVELUP','RESPAWN','GG'].indexOf(b.code));
- const T={spend:sum(rows,'spend'),impressions:sum(rows,'impressions'),clicks:sum(rows,'clicks'),visits:sum(rows,'visits'),bot:sum(rows,'bot'),forms:sum(rows,'forms'),done:sum(rows,'done')};
+ const cl=Object.fromEntries((d.club||[]).map(c=>[c.code,c]));
+ rows.forEach(r=>{const c=cl[r.code]||{};r.returned=+c.returned||0;r.revenue=+c.revenue||0;});
+ const T={spend:sum(rows,'spend'),forms:sum(rows,'forms'),done:sum(rows,'done'),waiting:sum(rows,'waiting'),returned:sum(rows,'returned'),revenue:sum(rows,'revenue')};
  const paidDone=rows.filter(r=>r.code!=='GG').reduce((s,r)=>s+r.done,0);
  $('kpis').innerHTML=[
-  ['Расход',rub(T.spend),T.clicks?`клик ≈ ${rub(T.spend/T.clicks)}`:'по API рекламы'],
-  ['Клики',num(T.clicks),T.impressions?`CTR ${pct(T.clicks/T.impressions)}`:'показы: '+num(T.impressions)],
-  ['Визиты на сайт',num(T.visits),'Яндекс Метрика'],
-  ['Перешли к брони',num(T.bot),T.visits?`${pct(T.bot/T.visits)} от визитов`:'кнопка «в бота»'],
-  ['Анкеты',num(T.forms),`пришли ${num(T.done)}`],
-  ['Цена гостя',paidDone?rub(T.spend/paidDone):'—',`гостей с рекламы: ${num(paidDone)}`,true]
+  ['Расход на рекламу',rub(T.spend),'Директ + VK'],
+  ['Анкеты',num(T.forms),T.waiting?`ждут подтверждения: ${num(T.waiting)}`:'все обработаны'],
+  ['Пришли в клуб',num(T.done),T.forms?`${pct(T.done/T.forms)} от анкет`:'подтверждены в Desk'],
+  ['Цена гостя',paidDone?rub(T.spend/paidDone):'—',`гостей с рекламы: ${num(paidDone)}`,true],
+  ['Вернулись',num(T.returned),'играли 2+ разных дня'],
+  ['Потратили гости',rub(T.revenue),'после бесплатного часа']
  ].map(([l,v,s,hl])=>`<div class="kpi${hl?' hl':''}"><span class="lbl">${l}</span><b>${v}</b><small>${esc(s)}</small></div>`).join('');
  const cell=v=>v?v:'<span class="dash">—</span>';
- $('byCode').innerHTML=`<tr><th>Промокод</th><th>Расход</th><th>Показы</th><th>Клики</th><th>Цена клика</th><th>Визиты</th><th>К брони</th><th>Анкеты</th><th>Ждут</th><th>Пришли</th><th>Цена гостя</th></tr>`+
+ $('byCode').innerHTML=`<tr><th>Промокод</th><th>Расход</th><th>Анкеты</th><th>Ждут</th><th>Пришли</th><th>Цена гостя</th><th>Вернулись</th><th>Потратили</th></tr>`+
   rows.map(r=>`<tr><td><span class="code" style="color:${COLORS[r.code]||'#EDEDE8'}">${esc(r.code)}</span><span class="chan">${esc(r.channel||'')}</span></td>
-   <td>${cell(r.spend&&rub(r.spend))}</td><td>${cell(r.impressions&&num(r.impressions))}</td><td>${cell(r.clicks&&num(r.clicks))}</td><td>${cell(r.clicks&&r.spend&&rub(r.spend/r.clicks))}</td>
-   <td>${cell(r.visits&&num(r.visits))}</td><td>${cell(r.bot&&num(r.bot))}</td><td>${cell(r.forms&&num(r.forms))}</td><td>${cell(r.waiting&&num(r.waiting))}</td><td>${cell(r.done&&num(r.done))}</td>
-   <td>${r.code==='GG'?'<span class="dash">без рекламы</span>':cell(r.done&&r.spend&&rub(r.spend/r.done))}</td></tr>`).join('')+
-  `<tr class="total"><td>Итого</td><td>${rub(T.spend)}</td><td>${num(T.impressions)}</td><td>${num(T.clicks)}</td><td>${T.clicks?rub(T.spend/T.clicks):'—'}</td><td>${num(T.visits)}</td><td>${num(T.bot)}</td><td>${num(T.forms)}</td><td>${num(sum(rows,'waiting'))}</td><td>${num(T.done)}</td><td>${paidDone?rub(T.spend/paidDone):'—'}</td></tr>`;
+   <td>${cell(r.spend&&rub(r.spend))}</td><td>${cell(r.forms&&num(r.forms))}</td><td>${cell(r.waiting&&num(r.waiting))}</td><td>${cell(r.done&&num(r.done))}</td>
+   <td>${r.code==='GG'?'<span class="dash">без рекламы</span>':cell(r.done&&r.spend&&rub(r.spend/r.done))}</td><td>${cell(r.returned&&num(r.returned))}</td><td>${cell(r.revenue&&rub(r.revenue))}</td></tr>`).join('')+
+  `<tr class="total"><td>Итого</td><td>${rub(T.spend)}</td><td>${num(T.forms)}</td><td>${num(T.waiting)}</td><td>${num(T.done)}</td><td>${paidDone?rub(T.spend/paidDone):'—'}</td><td>${num(T.returned)}</td><td>${rub(T.revenue)}</td></tr>`;
  chart(d,from,to);
- const club=d.club||[];const cl=Object.fromEntries(club.map(c=>[c.code,c]));
- $('club').innerHTML=`<tr><th>Промокод</th><th>Пришли</th><th>Вернулись</th><th>Доля вернувшихся</th><th>Потратили</th><th>В среднем на гостя</th></tr>`+
-  rows.map(r=>{const c=cl[r.code]||{};const g=+c.guests||0;return `<tr><td><span class="code" style="color:${COLORS[r.code]||'#EDEDE8'}">${esc(r.code)}</span></td><td>${cell(g&&num(g))}</td><td>${cell(c.returned&&num(c.returned))}</td><td>${g?pct((+c.returned||0)/g):'<span class="dash">—</span>'}</td><td>${cell(+c.revenue&&rub(c.revenue))}</td><td>${g&&+c.revenue?rub(c.revenue/g):'<span class="dash">—</span>'}</td></tr>`;}).join('');
  const sync=Object.fromEntries((d.sync||[]).map(s=>[s.source,s]));
  $('src').innerHTML=Object.entries(SRC).map(([k,n])=>{const s=sync[k];const when=s?new Date(s.updated_at).toLocaleString('ru-RU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'';
   return `<div><b><span class="dot ${s?(s.ok?'ok':'bad'):''}"></span>${n}</b>${s?esc(s.message)+'<br>'+when:(k==='desk'?'ждём первую отправку из Desk':'ещё не запускалось')}</div>`;}).join('');
@@ -295,16 +289,15 @@ function chart(d,from,to){
  const S={},V={},G={};
  for(const a of d.ads||[])S[a.day]=(S[a.day]||0)+ +a.spend;for(const s of d.site||[])V[s.day]=(V[s.day]||0)+ +s.visits;for(const f of d.forms||[])G[f.day]=(G[f.day]||0)+ +f.done;
  const W=Math.max($('chart').clientWidth||640,list.length*24),H=240,pl=8,pr=8,pt=12,pb=26,cw=(W-pl-pr)/list.length;
- const ms=Math.max(1,...list.map(x=>S[x]||0)),mv=Math.max(1,...list.map(x=>Math.max(V[x]||0,(G[x]||0)*5)));
+ const ms=Math.max(1,...list.map(x=>S[x]||0)),mg=Math.max(1,...list.map(x=>G[x]||0));
  const y=(v,m)=>pt+(H-pt-pb)*(1-v/m);
- let bars='',line='',dots='',labels='';
+ let bars='',dots='',labels='';
  list.forEach((x,i)=>{const cx=pl+i*cw;
   if(S[x])bars+=`<rect x="${cx+cw*.18}" y="${y(S[x],ms)}" width="${cw*.64}" height="${H-pb-y(S[x],ms)}" fill="#A3FF10"><title>${x}: ${rub(S[x])}</title></rect>`;
-  line+=(i?'L':'M')+(cx+cw/2)+' '+y(V[x]||0,mv);
-  if(G[x])dots+=`<rect x="${cx+cw/2-5}" y="${y(G[x]*5,mv)-5}" width="10" height="10" fill="#E93E97"><title>${x}: пришли ${G[x]}</title></rect>`;
+  if(G[x])dots+=`<rect x="${cx+cw/2-5}" y="${y(G[x],mg)-5}" width="10" height="10" fill="#E93E97"><title>${x}: пришли ${G[x]}</title></rect>`;
   if(i%Math.max(1,Math.ceil(44/cw))===0)labels+=`<text x="${cx+cw/2}" y="${H-8}" text-anchor="middle">${x.slice(8,10)}.${x.slice(5,7)}</text>`;});
- $('chart').innerHTML=`<div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="display:block" role="img" aria-label="Расход, визиты и пришедшие гости по дням">
-  <line x1="${pl}" x2="${W-pr}" y1="${H-pb}" y2="${H-pb}" stroke="#26262A"/>${bars}<path d="${line}" fill="none" stroke="#5B7BFF" stroke-width="2"/>${dots}${labels}</svg></div>`;
+ $('chart').innerHTML=`<div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="display:block" role="img" aria-label="Расход и пришедшие гости по дням">
+  <line x1="${pl}" x2="${W-pr}" y1="${H-pb}" y2="${H-pb}" stroke="#26262A"/>${bars}${dots}${labels}</svg></div>`;
  $('chartNote').textContent='наведи на столбик — будет число';
 }
 
