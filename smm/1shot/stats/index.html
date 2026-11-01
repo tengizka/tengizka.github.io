@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>1SHOT · статистика</title>
+<meta name="theme-color" content="#0B0B0C">
+<link rel="icon" href="/1shot/landing/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/fonts.css">
+<style>
+:root{--bg:#0B0B0C;--bg2:#141416;--bg3:#1C1C1F;--tx:#EDEDE8;--mu:#8A8A90;--ln:#26262A;--ac:#A3FF10;--pk:#E93E97;--or:#FF8A1F;--bl:#5B7BFF;--mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:'Golos Text',Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:48px 48px}
+button,input{font:inherit;color:inherit}
+.wrap{max-width:1240px;margin:0 auto;padding:28px 24px 64px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:20px;border-bottom:1px solid var(--ln)}
+.top .logo{height:22px;display:block}
+.lbl{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mu)}
+.lbl.ac{color:var(--ac)}
+.lbl .sq{display:inline-block;width:9px;height:9px;background:currentColor;margin-right:9px;vertical-align:1px}
+h1{font-family:Unbounded,sans-serif;font-weight:800;font-size:clamp(30px,5vw,56px);line-height:1.02;margin:26px 0 8px;letter-spacing:-.01em}
+.sub{color:var(--mu);font-size:15px;line-height:1.5;margin:0}
+.btn{background:var(--ac);color:#0B0B0C;border:0;padding:13px 18px;font-weight:700;font-size:14px;cursor:pointer;letter-spacing:.02em}
+.btn.ghost{background:transparent;color:var(--tx);border:1px solid var(--ln)}
+.btn.sm{padding:8px 12px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:default}
+.link{background:none;border:0;color:var(--mu);cursor:pointer;padding:0;font-size:14px;text-decoration:underline;text-underline-offset:3px}
+/* auth */
+.auth{max-width:420px;margin:8vh auto 0}
+.auth form{display:grid;gap:12px;margin-top:28px}
+.field{display:grid;gap:6px}
+.field input{background:var(--bg2);border:1px solid var(--ln);padding:14px;font-size:16px;outline:none;border-radius:0}
+.field input:focus{border-color:var(--ac)}
+.tabs{display:flex;gap:0;margin-top:28px;border:1px solid var(--ln)}
+.tabs button{flex:1;background:none;border:0;padding:12px;cursor:pointer;color:var(--mu);font-size:14px}
+.tabs button.on{background:var(--bg3);color:var(--tx)}
+.msg{font-size:14px;line-height:1.5;padding:12px 14px;border-left:3px solid var(--ac);background:rgba(163,255,16,.06);margin-top:16px}
+.msg.err{border-color:var(--pk);background:rgba(233,62,151,.08)}
+/* dashboard */
+.bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin:26px 0 18px}
+.chips{display:flex;border:1px solid var(--ln)}
+.chips button{background:none;border:0;padding:10px 14px;cursor:pointer;color:var(--mu);font-size:14px}
+.chips button.on{background:var(--ac);color:#0B0B0C;font-weight:700}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid var(--ln);border-left:1px solid var(--ln)}
+.kpi{padding:18px 18px 20px;border-right:1px solid var(--ln);border-bottom:1px solid var(--ln);min-width:0}
+.kpi b{display:block;font-family:Unbounded,sans-serif;font-weight:700;font-size:clamp(22px,2.4vw,32px);margin-top:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kpi small{display:block;color:var(--mu);font-size:13px;margin-top:6px}
+.kpi.hl{background:var(--ac);color:#0B0B0C}.kpi.hl .lbl,.kpi.hl small{color:#0B0B0C}
+section{margin-top:44px}
+section>.head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+h2{font-family:Unbounded,sans-serif;font-weight:700;font-size:22px;margin:0}
+.tbl{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:14px}
+.scroll{overflow-x:auto;border:1px solid var(--ln)}
+.tbl th{font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);text-align:right;padding:12px 14px;border-bottom:1px solid var(--ln);white-space:nowrap}
+.tbl td{padding:14px;text-align:right;border-bottom:1px solid var(--ln);white-space:nowrap}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tr.total td{background:var(--bg2);font-weight:700}
+.code{font-family:Unbounded,sans-serif;font-weight:800;font-size:15px}
+.chan{display:block;color:var(--mu);font-size:12px;margin-top:3px}
+.dash{color:#55555B}
+.chart{border:1px solid var(--ln);padding:18px 18px 10px;background:rgba(20,20,22,.6)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:10px}
+.legend span{font-size:13px;color:var(--mu)}.legend i{display:inline-block;width:10px;height:10px;margin-right:7px;vertical-align:0}
+svg text{font-family:var(--mono);font-size:11px;fill:#6E6E74}
+.src{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid var(--ln);border-left:1px solid var(--ln)}
+.src div{padding:14px 16px;border-right:1px solid var(--ln);border-bottom:1px solid var(--ln);font-size:13px;line-height:1.45;color:var(--mu);min-width:0;overflow-wrap:anywhere}
+.src b{display:block;color:var(--tx);font-size:14px;margin-bottom:4px}
+.dot{display:inline-block;width:8px;height:8px;margin-right:8px;background:var(--mu)}.dot.ok{background:var(--ac)}.dot.bad{background:var(--or)}
+.admin .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--ln);flex-wrap:wrap}
+.admin .row:last-child{border-bottom:0}
+.admin .who{font-size:14px}.admin .who small{display:block;color:var(--mu)}
+.admin .acts{display:flex;gap:8px;flex-wrap:wrap}
+.foot{margin-top:56px;padding-top:18px;border-top:1px solid var(--ln);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.hidden{display:none!important}
+@media (max-width:900px){.kpis{grid-template-columns:repeat(3,1fr)}.src{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){section>.head .lbl{display:none}.wrap{padding:20px 16px 48px}.kpis{grid-template-columns:1fr 1fr}.src{grid-template-columns:1fr}.top .lbl.mid{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <header class="top">
+  <img class="logo" src="/1shot/landing/logo.svg" alt="1SHOT">
+  <span class="lbl mid">статистика сайта и клуба</span>
+  <span class="lbl" id="who"></span>
+ </header>
+
+ <!-- AUTH -->
+ <main id="auth" class="auth hidden">
+  <p class="lbl ac"><span class="sq"></span>Закрытый раздел</p>
+  <h1>Статистика 1SHOT</h1>
+  <p class="sub">Реклама, сайт и гости клуба в одном месте. Доступ только для своих.</p>
+  <div class="tabs"><button id="tabIn" class="on" type="button">Вход</button><button id="tabUp" type="button">Запросить доступ</button></div>
+  <form id="authForm" autocomplete="on" novalidate>
+   <label class="field hidden" id="nameField"><span class="lbl">Как тебя зовут</span><input id="name" autocomplete="name" enterkeyhint="done" maxlength="80"></label>
+   <label class="field"><span class="lbl">Почта</span><input id="email" type="email" autocomplete="email" enterkeyhint="done" inputmode="email"></label>
+   <label class="field" id="passField"><span class="lbl">Пароль</span><input id="pass" type="password" autocomplete="current-password" enterkeyhint="done" minlength="8"></label>
+   <button class="btn" id="authBtn" type="button">Войти</button>
+   <button class="link" id="forgot" type="button">Забыли пароль?</button>
+  </form>
+  <div id="authMsg"></div>
+ </main>
+
+ <!-- NEW PASSWORD -->
+ <main id="recover" class="auth hidden">
+  <p class="lbl ac"><span class="sq"></span>Новый пароль</p>
+  <h1>Придумай пароль</h1>
+  <form autocomplete="off" novalidate>
+   <label class="field"><span class="lbl">Новый пароль, от 8 символов</span><input id="newPass" type="password" autocomplete="new-password" enterkeyhint="done" minlength="8"></label>
+   <button class="btn" id="newPassBtn" type="button">Сохранить</button>
+  </form>
+  <div id="recoverMsg"></div>
+ </main>
+
+ <!-- WAITING FOR ACCESS -->
+ <main id="pending" class="auth hidden">
+  <p class="lbl ac"><span class="sq"></span>Заявка отправлена</p>
+  <h1>Ждём подтверждения</h1>
+  <p class="sub">Тенгиз увидит заявку и откроет доступ. Потом просто обнови эту страницу.</p>
+  <p style="margin-top:24px"><button class="btn ghost" type="button" data-logout>Выйти</button></p>
+ </main>
+
+ <!-- DASHBOARD -->
+ <main id="dash" class="hidden">
+  <p class="lbl ac" style="margin-top:28px"><span class="sq"></span><span id="periodLabel">последние 14 дней</span></p>
+  <h1>Сайт → гости</h1>
+  <p class="sub" id="fresh">Загружаю…</p>
+  <div class="bar">
+   <div class="chips" id="chips"><button data-d="7" type="button">7 дней</button><button data-d="14" class="on" type="button">14 дней</button><button data-d="30" type="button">30 дней</button><button data-d="all" type="button">Всё время</button></div>
+   <button class="btn ghost sm hidden" id="syncBtn" type="button">Обновить данные</button>
+  </div>
+  <div class="kpis" id="kpis"></div>
+
+  <section>
+   <div class="head"><h2>По площадкам</h2><span class="lbl">промокод = источник</span></div>
+   <div class="scroll"><table class="tbl" id="byCode"></table></div>
+   <p class="sub" style="margin-top:10px;font-size:13px">«Вернулись» и «Потратили» — за всё время, из Gizmo через Desk.</p>
+  </section>
+
+  <section>
+   <div class="head"><h2>По дням</h2><span class="lbl" id="chartNote"></span></div>
+   <div class="chart">
+    <div class="legend"><span><i style="background:var(--ac)"></i>Визиты на сайт</span><span><i style="background:var(--pk)"></i>Пришли в клуб</span></div>
+    <div id="chart"></div>
+   </div>
+  </section>
+
+  <section>
+   <div class="head"><h2>Источники данных</h2></div>
+   <div class="src" id="src"></div>
+  </section>
+
+  <section id="admin" class="admin hidden">
+   <div class="head"><h2>Доступ</h2><span class="lbl">видно только админу</span></div>
+   <div id="requests"></div>
+   <div id="viewers" style="margin-top:18px"></div>
+  </section>
+
+  <div class="foot"><span class="lbl">1SHOT · Мытищи, ул. Мира, 37</span><button class="link" type="button" data-logout>Выйти</button></div>
+ </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL='https://zqhfvtgktbfnxcclqqny.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxaGZ2dGdrdGJmbnhjY2xxcW55Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyMDEwMzIsImV4cCI6MjEwNTc3NzAzMn0.sMsWU4xcNiww0sNYRpPGcdqOyoQlYNhhoNH3195NiOs';
+const START='2026-11-01';
+const COLORS={HEADSHOT:'#A3FF10',LEVELUP:'#FFB10B',RESPAWN:'#FF8A1F',GG:'#8A8A90'};
+const SRC={metrika:'Яндекс Метрика',desk:'Desk (Gizmo)'};
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const $=id=>document.getElementById(id);
+const nf=new Intl.NumberFormat('ru-RU');
+const rub=v=>v==null?'—':nf.format(Math.round(v))+' ₽';
+const num=v=>v==null?'—':nf.format(Math.round(v));
+const pct=v=>v==null||!isFinite(v)?'—':(v*100).toFixed(1).replace('.',',')+'%';
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let mode='in',days='14',role=null,recovering=false;
+
+// Done instead of Enter: Enter only hides the keyboard, nothing is submitted.
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'){e.preventDefault();e.target.blur();}});
+document.querySelectorAll('form').forEach(f=>f.addEventListener('submit',e=>e.preventDefault()));
+
+function show(id){for(const s of ['auth','recover','pending','dash'])$(s).classList.toggle('hidden',s!==id);}
+function note(el,text,err){$(el).innerHTML=text?`<div class="msg${err?' err':''}">${esc(text)}</div>`:'';}
+function human(e){const m=String(e?.message||e||'');
+ if(/Invalid login/i.test(m))return 'Неверная почта или пароль';
+ if(/Email not confirmed/i.test(m))return 'Почта ещё не подтверждена: открой письмо и нажми ссылку';
+ if(/already registered/i.test(m))return 'Такая почта уже есть, войди во вкладке «Вход»';
+ if(/Password should be/i.test(m))return 'Пароль слишком короткий: нужно от 8 символов';
+ if(/rate limit/i.test(m))return 'Слишком много попыток, подожди пару минут';
+ return m||'Что-то пошло не так';}
+
+function setMode(m){mode=m;$('tabIn').classList.toggle('on',m==='in');$('tabUp').classList.toggle('on',m==='up');
+ $('nameField').classList.toggle('hidden',m!=='up');$('forgot').classList.toggle('hidden',m!=='in');
+ $('pass').autocomplete=m==='up'?'new-password':'current-password';$('authBtn').textContent=m==='up'?'Запросить доступ':'Войти';note('authMsg','');}
+$('tabIn').onclick=()=>setMode('in');$('tabUp').onclick=()=>setMode('up');
+
+$('authBtn').onclick=async()=>{
+ const email=$('email').value.trim(),password=$('pass').value,name=$('name').value.trim();
+ if(!/^\S+@\S+\.\S+$/.test(email))return note('authMsg','Проверь почту',true);
+ if(password.length<8)return note('authMsg','Пароль — от 8 символов',true);
+ if(mode==='up'&&!name)return note('authMsg','Напиши, как тебя зовут: так Тенгиз поймёт, кому открыть доступ',true);
+ $('authBtn').disabled=true;
+ try{
+  if(mode==='in'){const {error}=await sb.auth.signInWithPassword({email,password});if(error)throw error;}
+  else{
+   const {data,error}=await sb.auth.signUp({email,password,options:{data:{name},emailRedirectTo:location.origin+location.pathname}});if(error)throw error;
+   if(!data.session){note('authMsg','Мы отправили письмо на '+email+'. Подтверди почту, потом войди здесь — заявка уйдёт Тенгизу.');return;}
+  }
+  await route();
+ }catch(e){note('authMsg',human(e),true);}finally{$('authBtn').disabled=false;}
+};
+$('forgot').onclick=async()=>{
+ const email=$('email').value.trim();if(!/^\S+@\S+\.\S+$/.test(email))return note('authMsg','Впиши почту, и мы пришлём ссылку для нового пароля',true);
+ const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+ note('authMsg',error?human(error):'Ссылка для нового пароля отправлена на '+email,!!error);
+};
+$('newPassBtn').onclick=async()=>{
+ const p=$('newPass').value;if(p.length<8)return note('recoverMsg','Пароль — от 8 символов',true);
+ const {error}=await sb.auth.updateUser({password:p});
+ if(error)return note('recoverMsg',human(error),true);
+ recovering=false;history.replaceState(null,'',location.pathname);await route();
+};
+document.querySelectorAll('[data-logout]').forEach(b=>b.onclick=async()=>{await sb.auth.signOut();role=null;$('who').textContent='';setMode('in');show('auth');});
+
+async function route(){
+ if(recovering)return show('recover');
+ const {data:{session}}=await sb.auth.getSession();
+ if(!session){show('auth');$('who').textContent='';return;}
+ $('who').textContent=session.user.email;
+ const {data:r,error}=await sb.rpc('smm_role');
+ if(error){show('auth');return note('authMsg',human(error),true);}
+ role=r;
+ if(!role){await sb.rpc('smm_request_access',{p_name:session.user.user_metadata?.name||''});show('pending');return;}
+ show('dash');$('syncBtn').classList.toggle('hidden',role!=='admin');$('admin').classList.toggle('hidden',role!=='admin');
+ await load();if(role==='admin')loadAdmin();
+}
+
+// ---------- dashboard ----------
+const iso=d=>d.toISOString().slice(0,10);
+function range(){const to=new Date(Date.now()+3*3600e3);if(days==='all')return {from:START,to:iso(to)};const f=new Date(to.getTime()-(Number(days)-1)*86400e3);return {from:iso(f)<START?START:iso(f),to:iso(to)};}
+$('chips').onclick=e=>{const b=e.target.closest('button');if(!b)return;days=b.dataset.d;[...$('chips').children].forEach(x=>x.classList.toggle('on',x===b));
+ $('periodLabel').textContent=days==='all'?'всё время':`последние ${days} дней`;load();};
+
+async function load(){
+ const {from,to}=range();
+ const {data,error}=await sb.rpc('smm_dashboard',{p_from:from,p_to:to});
+ if(error){$('fresh').textContent='Не удалось загрузить: '+human(error);return;}
+ render(data,from,to);
+}
+function sum(arr,f){return arr.reduce((s,x)=>s+Number(x[f]||0),0);}
+function render(d,from,to){
+ const codes=(d.codes||[]).filter(c=>c.active||true);
+ const by={};const ensure=c=>by[c]??={code:c,channel:(codes.find(x=>x.code===c)||{}).channel||'',spend:0,impressions:0,clicks:0,visits:0,bot:0,forms:0,done:0,waiting:0};
+ codes.forEach(c=>ensure(c.code));
+ for(const a of d.ads||[]){const r=ensure(a.code);r.spend+=+a.spend;r.impressions+=+a.impressions;r.clicks+=+a.clicks;}
+ for(const s of d.site||[]){const r=ensure(s.code);r.visits+=+s.visits;r.bot+=+s.bot_opens;}
+ for(const f of d.forms||[]){const r=ensure(f.code);r.forms+=+f.forms;r.done+=+f.done;r.waiting+=+f.waiting;}
+ const rows=Object.values(by).sort((a,b)=>['HEADSHOT','LEVELUP','RESPAWN','GG'].indexOf(a.code)-['HEADSHOT','LEVELUP','RESPAWN','GG'].indexOf(b.code));
+ const cl=Object.fromEntries((d.club||[]).map(c=>[c.code,c]));
+ rows.forEach(r=>{const c=cl[r.code]||{};r.returned=+c.returned||0;r.revenue=+c.revenue||0;});
+ const T={spend:sum(rows,'spend'),visits:sum(rows,'visits'),bot:sum(rows,'bot'),forms:sum(rows,'forms'),done:sum(rows,'done'),waiting:sum(rows,'waiting'),returned:sum(rows,'returned'),revenue:sum(rows,'revenue')};
+ const paidDone=rows.filter(r=>r.code!=='GG').reduce((s,r)=>s+r.done,0);
+ const money=T.spend>0; // spend is added by hand only when Tengiz sends it
+ const k=[
+  ['Визиты на сайт',num(T.visits),'Яндекс Метрика'],
+  ['Маршрут или звонок',num(T.bot),T.visits?`${pct(T.bot/T.visits)} от визитов`:'кнопки на сайте'],
+  ['Анкеты',num(T.forms),T.waiting?`ждут подтверждения: ${num(T.waiting)}`:'все обработаны'],
+  ['Пришли в клуб',num(T.done),T.forms?`${pct(T.done/T.forms)} от анкет`:'подтверждены в Desk',true],
+  ['Вернулись',num(T.returned),'играли 2+ разных дня'],
+  ['Потратили гости',rub(T.revenue),'после бесплатного часа']];
+ if(money)k.splice(4,0,['Цена гостя',paidDone?rub(T.spend/paidDone):'—',`расход ${rub(T.spend)}`]);
+ $('kpis').style.gridTemplateColumns=money&&innerWidth>900?'repeat(7,1fr)':'';
+ $('kpis').innerHTML=k.map(([l,v,s,hl])=>`<div class="kpi${hl?' hl':''}"><span class="lbl">${l}</span><b>${v}</b><small>${esc(s)}</small></div>`).join('');
+ const cell=v=>v?v:'<span class="dash">—</span>';
+ const mh=money?'<th>Расход</th><th>Цена гостя</th>':'';
+ const mc=r=>money?`<td>${cell(r.spend&&rub(r.spend))}</td><td>${r.code==='GG'?'<span class="dash">без рекламы</span>':cell(r.done&&r.spend&&rub(r.spend/r.done))}</td>`:'';
+ $('byCode').innerHTML=`<tr><th>Промокод</th><th>Визиты</th><th>Маршрут/звонок</th><th>Анкеты</th><th>Ждут</th><th>Пришли</th>${mh}<th>Вернулись</th><th>Потратили</th></tr>`+
+  rows.map(r=>`<tr><td><span class="code" style="color:${COLORS[r.code]||'#EDEDE8'}">${esc(r.code)}</span><span class="chan">${esc(r.channel||'')}</span></td>
+   <td>${cell(r.visits&&num(r.visits))}</td><td>${cell(r.bot&&num(r.bot))}</td><td>${cell(r.forms&&num(r.forms))}</td><td>${cell(r.waiting&&num(r.waiting))}</td><td>${cell(r.done&&num(r.done))}</td>${mc(r)}
+   <td>${cell(r.returned&&num(r.returned))}</td><td>${cell(r.revenue&&rub(r.revenue))}</td></tr>`).join('')+
+  `<tr class="total"><td>Итого</td><td>${num(T.visits)}</td><td>${num(T.bot)}</td><td>${num(T.forms)}</td><td>${num(T.waiting)}</td><td>${num(T.done)}</td>${money?`<td>${rub(T.spend)}</td><td>${paidDone?rub(T.spend/paidDone):'—'}</td>`:''}<td>${num(T.returned)}</td><td>${rub(T.revenue)}</td></tr>`;
+ chart(d,from,to);
+ const sync=Object.fromEntries((d.sync||[]).map(s=>[s.source,s]));
+ $('src').innerHTML=Object.entries(SRC).map(([k,n])=>{const s=sync[k];const when=s?new Date(s.updated_at).toLocaleString('ru-RU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'';
+  return `<div><b><span class="dot ${s?(s.ok?'ok':'bad'):''}"></span>${n}</b>${s?esc(s.message)+'<br>'+when:(k==='desk'?'ждём первую отправку из Desk':'ещё не запускалось')}</div>`;}).join('');
+ const last=(d.sync||[]).map(s=>s.updated_at).sort().pop();
+ $('fresh').textContent=(last?'Обновлено '+new Date(last).toLocaleString('ru-RU',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})+'. ':'')+'Данные обновляются каждый час.';
+}
+function chart(d,from,to){
+ const list=[];for(let t=new Date(from+'T00:00:00Z');iso(t)<=to;t=new Date(t.getTime()+86400e3))list.push(iso(t));
+ const S={},V={},G={};
+ for(const a of d.ads||[])S[a.day]=(S[a.day]||0)+ +a.spend;for(const s of d.site||[])V[s.day]=(V[s.day]||0)+ +s.visits;for(const f of d.forms||[])G[f.day]=(G[f.day]||0)+ +f.done;
+ const W=Math.max($('chart').clientWidth||640,list.length*24),H=240,pl=8,pr=8,pt=12,pb=26,cw=(W-pl-pr)/list.length;
+ const ms=Math.max(1,...list.map(x=>V[x]||0)),mg=Math.max(1,...list.map(x=>G[x]||0));
+ const y=(v,m)=>pt+(H-pt-pb)*(1-v/m);
+ let bars='',dots='',labels='';
+ list.forEach((x,i)=>{const cx=pl+i*cw;
+  if(V[x])bars+=`<rect x="${cx+cw*.18}" y="${y(V[x],ms)}" width="${cw*.64}" height="${H-pb-y(V[x],ms)}" fill="#A3FF10"><title>${x}: визитов ${num(V[x])}</title></rect>`;
+  if(G[x])dots+=`<rect x="${cx+cw/2-5}" y="${y(G[x],mg)-5}" width="10" height="10" fill="#E93E97"><title>${x}: пришли ${G[x]}</title></rect>`;
+  if(i%Math.max(1,Math.ceil(44/cw))===0)labels+=`<text x="${cx+cw/2}" y="${H-8}" text-anchor="middle">${x.slice(8,10)}.${x.slice(5,7)}</text>`;});
+ $('chart').innerHTML=`<div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="display:block" role="img" aria-label="Визиты и пришедшие гости по дням">
+  <line x1="${pl}" x2="${W-pr}" y1="${H-pb}" y2="${H-pb}" stroke="#26262A"/>${bars}${dots}${labels}</svg></div>`;
+ $('chartNote').textContent='наведи на столбик — будет число';
+}
+
+// ---------- admin ----------
+async function loadAdmin(){
+ const {data,error}=await sb.rpc('smm_admin_list');if(error)return;
+ const req=data.requests||[],vw=data.viewers||[];
+ $('requests').innerHTML=`<p class="lbl">Заявки${req.length?' · '+req.length:''}</p>`+(req.length?req.map(r=>`<div class="row"><div class="who">${esc(r.name||'Без имени')}<small>${esc(r.email)}</small></div><div class="acts">
+  <button class="btn sm" data-u="${r.user_id}" data-r="viewer" type="button">Дать доступ</button><button class="btn ghost sm" data-u="${r.user_id}" data-r="admin" type="button">Сделать админом</button><button class="btn ghost sm" data-u="${r.user_id}" data-r="" type="button">Отклонить</button></div></div>`).join(''):'<div class="row"><div class="who"><small>Новых заявок нет</small></div></div>');
+ $('viewers').innerHTML=`<p class="lbl">С доступом · ${vw.length}</p>`+vw.map(v=>`<div class="row"><div class="who">${esc(v.name||v.email)} · ${v.role==='admin'?'админ':'просмотр'}<small>${esc(v.email)}</small></div><div class="acts">${v.email===$('who').textContent?'<small class="lbl">это ты</small>':`<button class="btn ghost sm" data-u="${v.user_id}" data-r="" type="button">Убрать доступ</button>`}</div></div>`).join('');
+}
+$('admin').onclick=async e=>{const b=e.target.closest('button[data-u]');if(!b)return;
+ if(b.dataset.r===''&&!b.dataset.sure){b.dataset.sure=1;b.textContent='Точно?';return;}
+ b.disabled=true;const {error}=await sb.rpc('smm_admin_set',{p_user:b.dataset.u,p_role:b.dataset.r||null});if(error)alert(human(error));loadAdmin();};
+$('syncBtn').onclick=async()=>{const b=$('syncBtn');b.disabled=true;b.textContent='Обновляю…';
+ try{const {data:{session}}=await sb.auth.getSession();
+  await fetch(SUPABASE_URL+'/functions/v1/smm-sync',{method:'POST',headers:{Authorization:'Bearer '+session.access_token,apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:'{}'});
+  await load();}finally{b.disabled=false;b.textContent='Обновить данные';}};
+
+sb.auth.onAuthStateChange((event)=>{if(event==='PASSWORD_RECOVERY'){recovering=true;show('recover');}});
+route();
+</script>
+</body>
+</html>
