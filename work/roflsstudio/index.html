@@ -75,7 +75,6 @@
 @keyframes shake{0%,70%,100%{transform:none}75%{transform:rotate(-5deg) scale(1.08)}85%{transform:rotate(5deg) scale(1.08)}}
 @media(max-width:900px){.posters{grid-template-columns:minmax(0,1fr)}.poster{aspect-ratio:auto;min-height:420px}}
 
-.next strong{color:var(--blk)}
 @media(prefers-reduced-motion:reduce){.hero .spin,.poster .cr{animation:none}}
 </style>
 </head>
@@ -134,7 +133,7 @@
 <section class="wrap" style="padding-top:20px">
   <span class="kicker reveal">Сайт</span>
   <h2 class="h2 reveal" style="margin-bottom:16px">Сайт, который работает</h2>
-  <p class="lead reveal" style="margin-bottom:36px">Внутри настоящий генератор мемов: сто шаблонов, свой текст, скачивание в PNG. Два языка. Можно полистать прямо здесь.</p>
+  <p class="lead reveal" style="margin-bottom:36px">Внутри настоящий генератор мемов. Создавай кринж и забирай его в PNG. Два языка, можно полистать прямо здесь.</p>
   <div class="browser reveal">
     <div class="chrome"><i></i><i></i><i></i><span>tengizka.fun/roflsstudio</span></div>
     <iframe src="/roflsstudio/" title="Сайт rofls studio" loading="lazy"></iframe>
@@ -152,7 +151,7 @@
   </div>
 </section>
 
-<a class="next wrap" href="/work/1shot/"><small>Снова к началу</small><strong>1SHOT →</strong></a>
+<a class="next wrap" href="/work/1shot/"><small>Снова к началу</small><strong>1SHOT <i>→</i></strong></a>
 <footer><div class="wrap"><span>© 2026 tengizka</span><a href="/">← Все работы</a></div></footer>
 <script>
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{threshold:.1});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));

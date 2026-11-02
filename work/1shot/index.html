@@ -70,7 +70,6 @@ body{background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px
 .marq div{display:flex;white-space:nowrap;animation:m 26s linear infinite;width:max-content}
 .marq span{font:700 26px/1 var(--display);text-transform:uppercase;padding-right:40px}
 @keyframes m{to{transform:translateX(-50%)}}
-.next strong{font-family:Nunito,Unbounded;font-weight:900;color:#58CC02;text-transform:lowercase}
 </style>
 </head>
 <body>
@@ -164,7 +163,7 @@ body{background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px
   </div>
 </section>
 
-<a class="next wrap" href="/work/kursich/"><small>Следующий кейс</small><strong>курсич →</strong></a>
+<a class="next wrap" href="/work/kursich/"><small>Следующий кейс</small><strong>Курсич <i>→</i></strong></a>
 <footer><div class="wrap"><span>© 2026 tengizka</span><a href="/">← Все работы</a></div></footer>
 <script>
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{threshold:.1});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));

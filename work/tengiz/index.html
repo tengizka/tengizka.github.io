@@ -71,7 +71,6 @@
 .final{text-align:center}
 .final .lead{margin:18px auto 34px}
 
-.next strong{text-transform:uppercase;color:var(--accent)}
 </style>
 </head>
 <body>
@@ -160,7 +159,7 @@
   <a class="play reveal" href="/tengiz/play/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.6v12.8a1 1 0 0 0 1.5.86l10.2-6.4a1 1 0 0 0 0-1.72L9.5 4.74A1 1 0 0 0 8 5.6Z"/></svg>Играть</a>
 </section>
 
-<a class="next wrap" href="/work/roflsstudio/"><small>Следующий кейс</small><strong>rofls studio →</strong></a>
+<a class="next wrap" href="/work/roflsstudio/"><small>Следующий кейс</small><strong>rofls studio <i>→</i></strong></a>
 <footer><div class="wrap"><span>© 2026 tengizka</span><a href="/">← Все работы</a></div></footer>
 <script>
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{threshold:.1});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));

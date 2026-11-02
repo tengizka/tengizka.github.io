@@ -68,83 +68,99 @@ section{padding-top:120px}
 .sec .label{text-align:right}
 @media(max-width:700px){.sec{grid-template-columns:auto 1fr}.sec .label{grid-column:1/-1;text-align:left}}
 
-/* работы: сетка плиток, у каждой обложка и название в стиле проекта */
+/* работы: компактная сетка, у каждой плитки обложка и название в стиле проекта, на наведении своя анимация */
 .tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
 .tile{display:block}
-.art{position:relative;aspect-ratio:4/4.4;overflow:hidden;display:grid;place-items:center;transition:transform .45s cubic-bezier(.2,.9,.3,1.2)}
-.art .nm{position:relative;z-index:2;text-align:center}
-.cap{display:flex;gap:12px;padding-top:12px;font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.art{position:relative;aspect-ratio:16/10;overflow:hidden;container-type:inline-size;display:grid;place-items:center}
+.art .nm{position:relative;z-index:2;text-align:center;line-height:1}
+.cap{display:flex;gap:12px;padding-top:10px;font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
 .cap b{font:600 12px/1 Unbounded;color:var(--ink)}
 .cap .ar{margin-left:auto;transition:transform .25s,color .2s}
 .tile:hover .cap .ar{transform:translateX(4px);color:var(--violet)}
 @media(max-width:980px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:560px){.tiles{grid-template-columns:minmax(0,1fr);gap:28px}.art{aspect-ratio:4/3.6}}
+@media(max-width:600px){.tiles{grid-template-columns:minmax(0,1fr);gap:24px}}
 
-/* 01 · 1SHOT: чёрная сетка, белый логотип, салатовый прицел */
-.k1 .art{background:#000;background-image:linear-gradient(#191919 1px,transparent 1px),linear-gradient(90deg,#191919 1px,transparent 1px);background-size:28px 28px}
-.k1 .nm img{width:min(62%,280px);margin:0 auto}
-.k1 .nm small{display:inline-block;margin-top:18px;background:#A3FF10;color:#000;font:700 11px/1 Unbounded;letter-spacing:.08em;text-transform:uppercase;padding:7px 9px}
-.k1 .aim{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px;border:2px solid #A3FF10;border-radius:50%;animation:aim 4.5s ease-in-out infinite}
+/* 01 · 1SHOT: прицел бродит по сетке, на наведении ловит логотип */
+.k1 .art{background:#000;background-image:linear-gradient(#191919 1px,transparent 1px),linear-gradient(90deg,#191919 1px,transparent 1px);background-size:6cqw 6cqw}
+.k1 .nm img{width:46cqw;margin:0 auto}
+.k1 .aim{position:absolute;left:50%;top:50%;width:13cqw;height:13cqw;margin:-6.5cqw;border:2px solid #A3FF10;border-radius:50%;z-index:3;animation:aim 5s ease-in-out infinite}
 .k1 .aim::before,.k1 .aim::after{content:"";position:absolute;background:#A3FF10}
-.k1 .aim::before{width:2px;height:74px;left:24px;top:-12px}.k1 .aim::after{height:2px;width:74px;top:24px;left:-12px}
-@keyframes aim{0%,100%{transform:translate(-110px,-90px)}30%{transform:translate(100px,-70px)}60%{transform:translate(70px,95px)}80%{transform:translate(-90px,80px)}}
+.k1 .aim::before{width:2px;height:18cqw;left:calc(50% - 1px);top:-2.5cqw}.k1 .aim::after{height:2px;width:18cqw;top:calc(50% - 1px);left:-2.5cqw}
+@keyframes aim{0%,100%{transform:translate(-32cqw,-16cqw)}30%{transform:translate(30cqw,-18cqw)}60%{transform:translate(28cqw,18cqw)}80%{transform:translate(-30cqw,16cqw)}}
+.k1:hover .aim{animation:lock .45s cubic-bezier(.2,.9,.3,1.3) forwards}
+.k1:hover .nm img{animation:glitch .5s steps(2) .35s 2}
+@keyframes lock{from{transform:translate(-26cqw,-14cqw) scale(1.6);opacity:.4}to{transform:none;opacity:1}}
+@keyframes glitch{0%{transform:translate(1.2cqw,0) skewX(-12deg);filter:drop-shadow(-.8cqw 0 #A3FF10)}50%{transform:translate(-1cqw,0)}100%{transform:none}}
 
-/* 02 · КУРСИЧ: зелёный, Nunito, маскот меняет эмоции */
+/* 02 · курсич: голова прямо над надписью, на наведении прыжок с переворотом */
 .k2 .art{background:#58CC02}
-.k2 .nm{font:900 clamp(44px,5.4vw,76px)/.9 Nunito;color:#fff;letter-spacing:-.04em;text-transform:lowercase;text-shadow:0 6px 0 #46A302;margin-top:42%}
-.k2 .mas{position:absolute;left:50%;top:12%;width:40%;aspect-ratio:1;margin-left:-20%;animation:hop 1.6s cubic-bezier(.3,0,.3,1) infinite}
+.k2 .stack{display:flex;flex-direction:column;align-items:center;gap:1cqw}
+.k2 .mas{position:relative;width:32cqw;aspect-ratio:1;margin:-3cqw 0 -3.5cqw;animation:hop 1.6s cubic-bezier(.3,0,.3,1) infinite}
 .k2 .mas img{position:absolute;inset:0;width:100%;height:100%;opacity:0;animation:emo 6s steps(1) infinite}
 .k2 .mas img:nth-child(2){animation-delay:1.5s}.k2 .mas img:nth-child(3){animation-delay:3s}.k2 .mas img:nth-child(4){animation-delay:4.5s}
+.k2 .nm{font:900 14cqw/.9 Nunito;color:#fff;letter-spacing:-.03em;text-shadow:0 1cqw 0 #46A302}
 @keyframes emo{0%{opacity:1}25%,100%{opacity:0}}
-@keyframes hop{0%,100%{transform:translateY(0) scale(1.05,.95)}50%{transform:translateY(-14px)}}
+@keyframes hop{0%,100%{transform:translateY(0) scale(1.05,.95)}50%{transform:translateY(-2.5cqw)}}
+.k2:hover .mas{animation:flip .8s cubic-bezier(.3,0,.3,1)}
+.k2:hover .nm{animation:squash .8s cubic-bezier(.3,0,.3,1)}
+@keyframes flip{40%{transform:translateY(-7cqw) rotate(180deg)}80%{transform:translateY(0) rotate(360deg) scale(1.08,.92)}100%{transform:rotate(360deg)}}
+@keyframes squash{75%{transform:scale(1.06,.9)}}
 
-/* 03 · MapLink: бумага, Fraunces, маршрут и самолётик */
+/* 03 · MapLink: ровный круг-маршрут вокруг названия, самолёт летит носом вперёд */
 .k3 .art{background:#FBF3EE}
-.k3 .nm{font:600 clamp(42px,5vw,70px)/1 Fraunces,Lora,serif;color:#A85D6B;letter-spacing:-.03em}
+.k3 .route,.k3 .orbit{position:absolute;left:50%;top:50%;width:48cqw;height:48cqw;margin:-24cqw}
+.k3 .route{border:2px dashed #E7C3BA;border-radius:50%}
+.k3 .orbit{animation:orbit 8s linear infinite}
+.k3 .orbit svg{position:absolute;left:50%;top:0;width:5.5cqw;height:5.5cqw;margin:-2.75cqw;fill:#C57B85}
+.k3 .nm{font:600 10.5cqw/1 Fraunces,Lora,serif;color:#A85D6B;letter-spacing:-.02em}
 .k3 .nm em{font-style:italic;font-weight:400;color:#3A2E2B}
-.k3 .route{position:absolute;inset:14%;border:2px dashed #E7C3BA;border-radius:50%}
-.k3 .plane{position:absolute;left:50%;top:14%;width:0;height:72%;animation:orbit 7s linear infinite}
-.k3 .plane::before{content:"✈";position:absolute;left:-12px;top:-14px;font-size:22px;color:#C57B85;transform:rotate(90deg)}
-.k3 .stamp{position:absolute;right:9%;bottom:9%;width:66px;height:66px;border:2px solid #8FA283;border-radius:50%;color:#8FA283;font:700 9px/1 Montserrat;letter-spacing:.12em;display:grid;place-items:center;text-transform:uppercase;animation:wob 5s ease-in-out infinite}
+.k3 .stamp{position:absolute;right:5cqw;bottom:5cqw;width:13cqw;height:13cqw;border:2px solid #8FA283;border-radius:50%;color:#8FA283;font:700 1.9cqw/1 Montserrat;letter-spacing:.12em;display:grid;place-items:center;text-transform:uppercase;transform:rotate(-12deg);opacity:.75}
 @keyframes orbit{to{transform:rotate(360deg)}}
-@keyframes wob{50%{transform:rotate(-14deg) scale(1.05)}}
+.k3:hover .orbit{animation-duration:2.2s}
+.k3:hover .stamp{animation:thump .45s cubic-bezier(.2,.9,.3,1.4) forwards}
+@keyframes thump{from{transform:rotate(-30deg) scale(1.8);opacity:0}to{transform:rotate(-12deg) scale(1);opacity:1}}
 
-/* 04 · SMOTRA: тёмный, глянцевая S, Unbounded */
+/* 04 · SMOTRA: S над названием, на наведении карточки улетают свайпом */
 .k4 .art{background:#0C0E16}
-.k4 .nm{font:900 clamp(38px,4.4vw,62px)/1 Unbounded;color:#F4F6FF;letter-spacing:-.03em;margin-top:44%}
-.k4 .s3d{position:absolute;left:50%;top:13%;width:36%;margin-left:-18%;border-radius:24%;box-shadow:0 26px 60px -18px #7C6BFF;animation:float 4.5s ease-in-out infinite}
-.k4 .card{position:absolute;width:22%;aspect-ratio:3/4;border-radius:12px;background:#1C1F33;top:20%}
-.k4 .card.l{left:8%;transform:rotate(-12deg);animation:swl 4.5s ease-in-out infinite}
-.k4 .card.r{right:8%;transform:rotate(12deg);background:#7C6BFF;opacity:.5;animation:swr 4.5s ease-in-out infinite}
-@keyframes float{50%{transform:translateY(-12px) rotate(-5deg)}}
-@keyframes swl{50%{transform:rotate(-20deg) translateX(-8px)}}
-@keyframes swr{50%{transform:rotate(20deg) translateX(8px)}}
+.k4 .stack{display:flex;flex-direction:column;align-items:center;gap:2.5cqw}
+.k4 .logo-s{position:relative;width:20cqw;aspect-ratio:1}
+.k4 .s3d{position:relative;z-index:2;width:100%;border-radius:24%;box-shadow:0 4cqw 9cqw -3cqw #7C6BFF;animation:float 4.5s ease-in-out infinite}
+.k4 .card{position:absolute;top:8%;width:62%;height:84%;border-radius:2.5cqw;background:#1C1F33;transition:transform .5s cubic-bezier(.3,1.4,.5,1),opacity .4s}
+.k4 .card.l{left:-38%;transform:rotate(-14deg)}
+.k4 .card.r{right:-38%;transform:rotate(14deg);background:#3B3480}
+.k4 .nm{font:900 9cqw/1 Unbounded;color:#F4F6FF;letter-spacing:-.02em}
+@keyframes float{50%{transform:translateY(-1.5cqw) rotate(-5deg)}}
+.k4:hover .card.l{transform:translateX(-30cqw) rotate(-40deg);opacity:0}
+.k4:hover .card.r{transform:translateX(30cqw) rotate(40deg);opacity:0}
+.k4:hover .s3d{animation:pop4 .6s cubic-bezier(.2,.9,.3,1.5)}
+@keyframes pop4{40%{transform:scale(1.18) rotate(8deg)}}
 
-/* 05 · Говорящий Тенгиз: тёмный, Unbounded капсом, фиолетовый */
+/* 05 · Говорящий Тенгиз: название слева, фигурка справа, на наведении «Ай!» */
 .k5 .art{background:#121016;place-items:start}
-.k5 .nm{text-align:left;padding:26px;font:900 clamp(26px,2.8vw,40px)/.92 Unbounded;text-transform:uppercase;color:#F4F1F8;letter-spacing:-.03em}
+.k5 .nm{text-align:left;padding:5.5cqw;font:900 7.2cqw/.95 Unbounded;text-transform:uppercase;color:#F4F1F8;letter-spacing:-.02em}
 .k5 .nm span{display:block;color:#9D5CF0}
-.k5 .fig{position:absolute;right:-12%;bottom:-88%;height:150%;width:auto;max-width:none;animation:sway 5s ease-in-out infinite;transform-origin:50% 100%}
-.k5 .bub{position:absolute;z-index:3;left:26px;bottom:26px;background:#fff;color:#17121F;font:600 14px/1 Montserrat;padding:10px 14px;border-radius:14px 14px 14px 4px;animation:pop 3.6s ease-in-out infinite}
-@keyframes sway{50%{transform:rotate(-3deg)}}
-@keyframes pop{0%,8%{transform:scale(0)}16%,80%{transform:scale(1)}90%,100%{transform:scale(0)}}
+.k5 .fig{position:absolute;right:4cqw;top:6cqw;height:170%;width:auto;max-width:none;transform-origin:50% 0;animation:sway 5s ease-in-out infinite;transition:translate .4s cubic-bezier(.2,.9,.3,1.4)}
+.k5 .bub{position:absolute;z-index:3;left:5.5cqw;bottom:5.5cqw;background:#fff;color:#17121F;font:600 3.4cqw/1 Montserrat;padding:2.2cqw 3cqw;border-radius:3cqw 3cqw 3cqw 1cqw;transition:opacity .2s,transform .3s cubic-bezier(.2,.9,.3,1.5)}
+.k5 .bub.ai{left:auto;right:30cqw;bottom:auto;top:16cqw;border-radius:3cqw 3cqw 1cqw 3cqw;opacity:0;transform:scale(.4)}
+@keyframes sway{50%{transform:rotate(2deg)}}
+.k5:hover .fig{translate:0 -4cqw;animation:shake5 .4s ease-in-out 2}
+.k5:hover .bub.ai{opacity:1;transform:none}
+.k5:hover .bub.hi{opacity:0;transform:scale(.6)}
+@keyframes shake5{25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
 
-/* 06 · rofls studio: оранжевый, Montserrat, круг с tm */
+/* 06 · rofls studio: название и знак рядом, на наведении знак катится */
 .k6 .art{background:#FF9500}
-.k6 .nm{font:900 clamp(42px,4.8vw,70px)/1.04 Montserrat;color:#fff;letter-spacing:.005em;font-variant-ligatures:none;text-align:left}
-.k6 .nm span{display:block;padding-left:.5em}
-.k6 .rl{position:absolute;right:9%;top:9%;width:70px;aspect-ratio:1;border-radius:50%;background:#fff;color:#FF9500;display:grid;place-items:center;font:700 13px/.95 Montserrat;text-align:center;animation:spin6 8s linear infinite}
-.k6 .rl::after{content:"tm";position:absolute;left:78%;top:77.5%;width:20%;aspect-ratio:1;border-radius:50%;background:#1E1E1E;color:#fff;display:grid;place-items:center;font:300 6px/1 Montserrat}
+.k6 .duo{display:flex;align-items:center;gap:5cqw}
+.k6 .nm{font:900 11.5cqw/1 Montserrat;color:#fff;letter-spacing:.005em;font-variant-ligatures:none;text-align:left}
+.k6 .nm span{display:block}
+.k6 .rl{position:relative;width:21cqw;aspect-ratio:1;border-radius:50%;background:#fff;color:#FF9500;display:grid;place-items:center;font:700 4cqw/.95 Montserrat;text-align:center;flex:none;animation:spin6 9s linear infinite}
+.k6 .rl::after{content:"tm";position:absolute;left:78%;top:77.5%;width:20%;aspect-ratio:1;border-radius:50%;background:#1E1E1E;color:#fff;display:grid;place-items:center;font:300 1.5cqw/1 Montserrat}
 @keyframes spin6{to{transform:rotate(360deg)}}
-
-/* наведение: плитка наклоняется за курсором, слои внутри едут с параллаксом */
-.art{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .5s cubic-bezier(.2,.9,.3,1.2)}
-.tile.live .art{transition:transform .08s linear}
-.tile:hover .art{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(1.03)}
-[data-d]{translate:calc(var(--mx,0)*var(--k,10px)) calc(var(--my,0)*var(--k,10px));transition:translate .5s cubic-bezier(.2,.9,.3,1.2)}
-[data-d="2"]{--k:22px}
-.tile.live [data-d]{transition:translate .08s linear}
-@media(prefers-reduced-motion:reduce){.art *{animation:none!important}.art,[data-d]{transform:none!important;translate:none!important}.k2 .mas img:first-child{opacity:1}}
+.k6:hover .rl{animation:roll .9s cubic-bezier(.3,0,.2,1)}
+.k6:hover .nm{animation:wig .5s ease-in-out .2s}
+@keyframes roll{40%{transform:translateX(-6cqw) rotate(-200deg)}100%{transform:rotate(-360deg)}}
+@keyframes wig{30%{transform:rotate(-3deg)}70%{transform:rotate(3deg)}}
+@media(prefers-reduced-motion:reduce){.art *{animation:none!important;transition:none!important}.k2 .mas img:first-child{opacity:1}}
 
 /* услуги */
 .svc{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
@@ -234,12 +250,12 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 <section id="work" class="wrap">
   <div class="sec"><span class="num">01</span><h2>Работы</h2><span class="label">2024—2026</span></div>
   <div class="tiles">
-    <a class="tile k1" href="/work/1shot/"><div class="art"><span class="aim" aria-hidden="true"></span><div class="nm" data-d="1"><img src="/work/1shot/img/logo.svg" alt="1SHOT"></div></div><div class="cap"><b>01</b><span>2025—26</span><span class="ar">→</span></div></a>
-    <a class="tile k2" href="/work/kursich/"><div class="art"><span class="mas" data-d="2" aria-hidden="true"><img src="/work/kursich/mascot/m-happy.svg" alt=""><img src="/work/kursich/mascot/m-wink.svg" alt=""><img src="/work/kursich/mascot/m-genius.svg" alt=""><img src="/work/kursich/mascot/m-love.svg" alt=""></span><div class="nm" data-d="1">курсич</div></div><div class="cap"><b>02</b><span>2026</span><span class="ar">→</span></div></a>
-    <a class="tile k3" href="/work/maplink/"><div class="art"><span class="route" aria-hidden="true"></span><span class="plane" aria-hidden="true"></span><span class="stamp" data-d="2" aria-hidden="true">Visited</span><div class="nm" data-d="1">Map<em>Link</em></div></div><div class="cap"><b>03</b><span>2026</span><span class="ar">→</span></div></a>
-    <a class="tile k4" href="/work/smotra/"><div class="art"><span class="card l" aria-hidden="true"></span><span class="card r" aria-hidden="true"></span><img class="s3d" data-d="2" src="/work/smotra/img/logo.png" alt=""><div class="nm" data-d="1">SMOTRA</div></div><div class="cap"><b>04</b><span>2026</span><span class="ar">→</span></div></a>
-    <a class="tile k5" href="/work/tengiz/"><div class="art"><img class="fig" data-d="2" src="/tengiz/img/tengiz.webp" alt="" loading="lazy"><div class="nm" data-d="1">Говорящий<span>Тенгиз</span></div><span class="bub" aria-hidden="true">Здарова, бро!</span></div><div class="cap"><b>05</b><span>2026</span><span class="ar">→</span></div></a>
-    <a class="tile k6" href="/work/roflsstudio/"><div class="art"><span class="rl" data-d="2" aria-hidden="true">rofls<br>studio</span><div class="nm" data-d="1">rofls<span>studio</span></div></div><div class="cap"><b>06</b><span>2024</span><span class="ar">→</span></div></a>
+    <a class="tile k1" href="/work/1shot/"><div class="art"><span class="aim" aria-hidden="true"></span><div class="nm"><img src="/work/1shot/img/logo.svg" alt="1SHOT"></div></div><div class="cap"><b>01</b><span>2025—26</span><span class="ar">→</span></div></a>
+    <a class="tile k2" href="/work/kursich/"><div class="art"><div class="stack"><span class="mas" aria-hidden="true"><img src="/work/kursich/mascot/m-happy.svg" alt=""><img src="/work/kursich/mascot/m-wink.svg" alt=""><img src="/work/kursich/mascot/m-genius.svg" alt=""><img src="/work/kursich/mascot/m-love.svg" alt=""></span><div class="nm">курсич</div></div></div><div class="cap"><b>02</b><span>2026</span><span class="ar">→</span></div></a>
+    <a class="tile k3" href="/work/maplink/"><div class="art"><span class="route" aria-hidden="true"></span><span class="orbit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12 13.5 9.3 9.6 2.5H7.8l2 6.6-4.9-.5L3.3 6.3H2l.9 5.7L2 17.7h1.3l1.6-2.3 4.9-.5-2 6.6h1.8l3.9-6.8Z"/></svg></span><span class="stamp" aria-hidden="true">Visited</span><div class="nm">Map<em>Link</em></div></div><div class="cap"><b>03</b><span>2026</span><span class="ar">→</span></div></a>
+    <a class="tile k4" href="/work/smotra/"><div class="art"><div class="stack"><span class="logo-s"><span class="card l" aria-hidden="true"></span><span class="card r" aria-hidden="true"></span><img class="s3d" src="/work/smotra/img/logo.png" alt=""></span><div class="nm">SMOTRA</div></div></div><div class="cap"><b>04</b><span>2026</span><span class="ar">→</span></div></a>
+    <a class="tile k5" href="/work/tengiz/"><div class="art"><img class="fig" src="/tengiz/img/tengiz.webp" alt="" loading="lazy"><div class="nm">Говорящий<span>Тенгиз</span></div><span class="bub hi" aria-hidden="true">Здарова, бро!</span><span class="bub ai" aria-hidden="true">Ай!</span></div><div class="cap"><b>05</b><span>2026</span><span class="ar">→</span></div></a>
+    <a class="tile k6" href="/work/roflsstudio/"><div class="art"><div class="duo"><div class="nm">rofls<span>studio</span></div><span class="rl" aria-hidden="true">rofls<br>studio</span></div></div><div class="cap"><b>06</b><span>2024</span><span class="ar">→</span></div></a>
   </div>
 </section>
 
@@ -300,7 +316,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
   <div class="about">
     <figure><img src="/assets/img/tengiz-photo-800.webp" srcset="/assets/img/tengiz-photo-800.webp 800w,/assets/img/tengiz-photo.webp 1254w" sizes="(max-width:900px) 92vw,520px" alt="Тенгиз Чочишвили: кудри, фиолетовая бандана, чёрный костюм" loading="lazy"><figcaption><span class="label">Тенгиз Чочишвили</span><span class="label">tengizka</span></figcaption></figure>
     <div class="txt">
-      <h3>Привет, я <span>Тенгиз</span><br>Чето делаю<br>Чето работаю<i class="dot"></i></h3>
+      <h3>Привет, я <span>Тенгиз</span><br>Чето делаю<br>Чето работаю<span>.</span></h3>
       <p>По образованию я графический дизайнер. Придумываю бренду знак и цвета, рисую ему персонажа, монтирую ролики и сам собираю приложение, где всё это работает.</p>
       <p>Больше всего кайфую, когда работа уходит из макета в жизнь: логотип висит на вывеске, а на кнопку, которую я нарисовал, каждый день жмут люди.</p>
       <p>Над проектом я работаю один, поэтому стиль, персонаж, ролики и интерфейс не спорят друг с другом.</p>
@@ -330,10 +346,6 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 const news=[['Сейчас','открыт для новых проектов'],['Логотип','от 1 500 ₽'],['Лендинг','от 6 000 ₽'],['Mini App в Telegram','от 15 000 ₽'],['Пакет «Старт»','логотип, лендинг и бот за 12 000 ₽'],['Делаю','айдентику, маскотов, моушн и интерфейсы'],['Связь','@teng1zka в Telegram']];
 const one=news.map(([a,b])=>`<span><b>${a}</b>${b}</span><i>/</i>`).join('');document.getElementById('run').innerHTML=one+one+one+one;
 const clock=document.getElementById('clock');const tick=()=>{try{clock.textContent='Москва '+new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit'}).format(new Date())}catch(e){}};tick();setInterval(tick,15000);
-if(matchMedia('(hover:hover)').matches&&!matchMedia('(prefers-reduced-motion:reduce)').matches)document.querySelectorAll('.tile').forEach(t=>{const a=t.querySelector('.art');
-  t.addEventListener('mousemove',e=>{const r=a.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;t.classList.add('live');
-    a.style.setProperty('--ry',(x*14)+'deg');a.style.setProperty('--rx',(-y*14)+'deg');a.style.setProperty('--mx',x*2);a.style.setProperty('--my',y*2)});
-  t.addEventListener('mouseleave',()=>{t.classList.remove('live');['--rx','--ry','--mx','--my'].forEach(v=>a.style.removeProperty(v))})});
 </script>
 </body>
 </html>

@@ -49,10 +49,12 @@ section{padding-top:110px;padding-bottom:110px}
 .sw b{font:700 15px/1.2 var(--display)}
 
 /* следующий кейс */
-.next{display:block;padding-top:90px;padding-bottom:120px;border-top:1px solid var(--line)}
-.next small{font:700 12px/1 var(--display);letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
-.next strong{display:block;font:900 clamp(56px,12vw,180px)/.9 var(--display);letter-spacing:-.04em;margin-top:14px;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
-.next:hover strong{transform:translateX(18px)}
+.next{display:flex;justify-content:space-between;align-items:center;gap:16px 24px;flex-wrap:wrap;margin-top:40px;padding-top:36px;padding-bottom:36px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.next.wrap{padding-left:0;padding-right:0;width:calc(100% - 48px);max-width:1192px}
+.next small{font:700 11px/1 var(--display);letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.next strong{display:inline-flex;align-items:center;gap:14px;font:700 clamp(20px,2.2vw,28px)/1.1 var(--display);letter-spacing:-.01em;transition:color .25s}
+.next strong i{font-style:normal;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.next:hover strong i{transform:translateX(8px)}
 footer{padding:28px 0 40px;font-size:13px;color:var(--muted)}
 footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
