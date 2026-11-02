@@ -20,6 +20,7 @@ section{padding-top:110px;padding-bottom:110px}
 @media(max-width:820px){section{padding-top:80px;padding-bottom:80px}}
 .kicker{display:block;font:700 12px/1 var(--display);letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:18px}
 .h2{font:800 clamp(36px,5.4vw,76px)/.95 var(--display);letter-spacing:-.03em}
+@media(max-width:400px){.h2{font-size:30px}}
 .lead{font-size:clamp(18px,1.7vw,22px);line-height:1.5;max-width:640px;color:var(--muted)}
 
 /* паспорт проекта */
