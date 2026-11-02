@@ -329,19 +329,27 @@ const sfx = {
   },
 };
 
+/* ── эмодзи: Fluent 3D картинками, одинаково на всех устройствах ── */
+const emoji = (name) => {
+  const i = document.createElement('img');
+  i.className = 'em'; i.src = `/assets/emoji/${name}.webp`; i.alt = '';
+  return i;
+};
+
 /* ── голоса ── */
 const VOICES = [
-  { id: 'chip', label: '🐿 Бурундук', rate: 1.6, pitch: 2, babble: 560 },
-  { id: 'bass', label: '🐻 Бас', rate: 0.72, pitch: 0.1, babble: 140 },
-  { id: 'robot', label: '🤖 Робот', rate: 1.1, pitch: 0.6, babble: 260, robot: true },
+  { id: 'chip', label: 'Бурундук', icon: 'chipmunk', rate: 1.6, pitch: 2, babble: 560 },
+  { id: 'bass', label: 'Бас', icon: 'bear', rate: 0.72, pitch: 0.1, babble: 140 },
+  { id: 'robot', label: 'Робот', icon: 'robot', rate: 1.1, pitch: 0.6, babble: 260, robot: true },
 ];
 let voice = VOICES[0];
 try { voice = VOICES.find((v) => v.id === localStorage.getItem('tengiz-voice')) || voice; } catch { /* нет хранилища */ }
 const voiceBtn = $('#voice');
-voiceBtn.textContent = voice.label;
+const showVoice = () => voiceBtn.replaceChildren(emoji(voice.icon), ' ' + voice.label);
+showVoice();
 voiceBtn.addEventListener('click', () => {
   voice = VOICES[(VOICES.indexOf(voice) + 1) % VOICES.length];
-  voiceBtn.textContent = voice.label;
+  showVoice();
   try { localStorage.setItem('tengiz-voice', voice.id); } catch { /* ничего */ }
   touch();
   say(pick(['Так лучше?', 'Новый голос, бро', 'Проверка, раз-два']));
@@ -405,9 +413,10 @@ function say(text, { sound = true } = {}) {
 /* ── пузырь с репликой ── */
 const bubbleEl = $('#bubble');
 let bubbleUntil = 0;
-function bubble(text, ms = 1800) {
+function bubble(text, ms = 1800, icon) {
   bubbleEl.hidden = false;
   bubbleEl.textContent = text;
+  if (icon) bubbleEl.append(' ', emoji(icon));
   bubbleEl.style.animation = 'none';
   void bubbleEl.offsetWidth;
   bubbleEl.style.animation = '';
@@ -549,7 +558,7 @@ function tickle() {
 const ACTIONS = {
   dance() {
     sfx.beat(4);
-    bubble('Погнали! 🕺', 1500);
+    bubble('Погнали!', 1500, 'man_dancing');
     act(8, (t, p, a) => {
       const beat = t * 2;
       const k = ramp(t, 0, 0.3) * (1 - ramp(t, 7.6, 8));
@@ -969,7 +978,7 @@ new GLTFLoader().load(
     go.textContent = 'Погнали';
   },
   undefined,
-  () => { go.textContent = 'Не загрузилась модель 😢'; },
+  () => { go.replaceChildren('Не загрузилась модель ', emoji('crying_face')); },
 );
 
 go.addEventListener('click', () => {

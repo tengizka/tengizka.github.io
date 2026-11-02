@@ -27,12 +27,12 @@ img{display:block;max-width:100%}
 .dot{display:inline-block;width:.3em;height:.3em;background:var(--violet);margin-left:.04em}
 
 /* бегущая строка: тихая, без мигания */
-.ticker{position:sticky;top:0;z-index:50;height:34px;display:flex;align-items:center;background:var(--ink);color:#EDEBE6;overflow:hidden}
-.ticker .run{display:flex;white-space:nowrap;animation:run 90s linear infinite}
+.ticker{position:sticky;top:0;z-index:50;height:34px;display:flex;align-items:center;background:var(--violet);color:#fff;overflow:hidden}
+.ticker .run{display:flex;align-items:center;height:100%;white-space:nowrap;animation:run 90s linear infinite}
 .ticker:hover .run{animation-play-state:paused}
 .ticker span{font:500 12px/1 Montserrat;letter-spacing:.02em;padding:0 22px}
 .ticker b{font-weight:700;margin-right:8px}
-.ticker i{font-style:normal;color:#6E6A63}
+.ticker i{font:500 12px/1 Montserrat;font-style:normal;color:rgba(255,255,255,.55)}
 @keyframes run{to{transform:translateX(-50%)}}
 
 /* шапка */
@@ -131,7 +131,7 @@ section{padding-top:120px}
 
 /* 06 · rofls studio: оранжевый, Montserrat, круг с tm */
 .k6 .art{background:#FF9500}
-.k6 .nm{font:900 clamp(44px,5.2vw,74px)/.86 Montserrat;color:#fff;letter-spacing:-.06em;text-align:left}
+.k6 .nm{font:900 clamp(42px,4.8vw,70px)/1.04 Montserrat;color:#fff;letter-spacing:.005em;font-variant-ligatures:none;text-align:left}
 .k6 .nm span{display:block;padding-left:.5em}
 .k6 .rl{position:absolute;right:9%;top:9%;width:70px;aspect-ratio:1;border-radius:50%;background:#fff;color:#FF9500;display:grid;place-items:center;font:700 13px/.95 Montserrat;text-align:center;animation:spin6 8s linear infinite}
 .k6 .rl::after{content:"tm";position:absolute;left:78%;top:77.5%;width:20%;aspect-ratio:1;border-radius:50%;background:#1E1E1E;color:#fff;display:grid;place-items:center;font:300 6px/1 Montserrat}

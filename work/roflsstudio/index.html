@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="/assets/case.css">
 <style>
 :root{--or:#FF9500;--blk:#1E1E1E;--bg:#FF9500;--ink:#FFFFFF;--muted:rgba(255,255,255,.82);--line:rgba(255,255,255,.35);--accent:#1E1E1E;--radius:24px;--display:Montserrat,system-ui,sans-serif;--body:Montserrat,system-ui,sans-serif}
-.h2{font-weight:900;letter-spacing:-.04em}
+.h2{font-weight:900;letter-spacing:-.005em;font-variant-ligatures:none}
 .kicker{color:var(--blk)}
 
 .logo{position:relative;display:inline-grid;place-items:center;width:var(--s,72px);aspect-ratio:1;border-radius:50%;background:var(--or);color:#fff;font:700 calc(var(--s,72px)*.19)/.95 Montserrat;text-align:center;letter-spacing:-.02em;flex:none}
@@ -24,7 +24,7 @@
 .logo.ln::after{background:none;color:var(--blk);box-shadow:inset 0 0 0 1px var(--blk)}
 
 .hero{padding-top:70px;padding-bottom:70px;position:relative;overflow:hidden}
-.hero h1{font:900 clamp(72px,15vw,220px)/.82 Montserrat;letter-spacing:-.06em}
+.hero h1{font:900 clamp(64px,14vw,210px)/1.02 Montserrat;letter-spacing:.005em;font-variant-ligatures:none}
 .hero h1 span{display:block}
 .hero h1 span+span{padding-left:.6em}
 .hero .lead{color:var(--muted);margin-top:34px}
@@ -46,7 +46,7 @@
 .sys>div{border-radius:22px;aspect-ratio:1;padding:18px;display:flex;flex-direction:column;justify-content:flex-end;font:700 14px/1.3 Montserrat}
 .sys b{font:900 clamp(16px,4.6vw,22px)/1 Montserrat}
 .sys .font{background:#fff;color:var(--blk);justify-content:space-between}
-.sys .font span{font:900 clamp(56px,7vw,96px)/.9 Montserrat;letter-spacing:-.04em}
+.sys .font span{font:900 clamp(56px,7vw,96px)/.9 Montserrat;letter-spacing:-.005em;font-variant-ligatures:none}
 @media(max-width:820px){.sys{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 .biz{display:flex;gap:30px;justify-content:center;align-items:center;flex-wrap:wrap;background:#EDEDED;border-radius:var(--radius);padding:60px 24px}
@@ -69,7 +69,7 @@
 .poster.p1{background:#fff;color:var(--or)}
 .poster.p2{background:var(--blk);color:#fff}
 .poster.p3{background:#fff;color:var(--blk)}
-.poster big{font:900 clamp(30px,3.4vw,50px)/.95 Montserrat;letter-spacing:-.03em}
+.poster big{font:900 clamp(30px,3.4vw,50px)/.95 Montserrat;letter-spacing:-.005em;font-variant-ligatures:none}
 .poster small{font:700 15px/1.4 Montserrat;letter-spacing:.14em;opacity:.75}
 .poster .cr{font:900 clamp(34px,4vw,58px)/.9 Montserrat;color:var(--or);animation:shake 2.4s ease-in-out infinite}
 @keyframes shake{0%,70%,100%{transform:none}75%{transform:rotate(-5deg) scale(1.08)}85%{transform:rotate(5deg) scale(1.08)}}

@@ -63,6 +63,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
   transition: background 0.2s, transform 0.15s;
 }
 .act span { font-size: 24px; line-height: 1; }
+.em { display: inline-block; width: 1.25em; height: 1.25em; vertical-align: -0.28em; }
+.act .em { width: 30px; height: 30px; vertical-align: middle; }
 .act small { font-size: 10px; color: var(--muted); }
 .act:hover { background: rgba(255, 255, 255, 0.06); }
 .act:active { transform: scale(0.9); }
