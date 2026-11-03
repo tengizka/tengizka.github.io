@@ -110,16 +110,16 @@ section{padding-top:120px}
 
 /* 02 · курсич: голова прямо над надписью, на наведении прыжок с переворотом */
 .k2 .art{background:#58CC02}
-.k2 .stack{display:flex;flex-direction:column;align-items:center;gap:calc(2*var(--u))}
-.k2 .mas{position:relative;width:calc(44*var(--u));height:calc(28.4*var(--u));animation:hop 1.6s cubic-bezier(.3,0,.3,1) infinite}
+.k2 .stack{position:relative;display:flex;justify-content:center}
+.k2 .mas{position:absolute;left:50%;bottom:100%;width:calc(28*var(--u));height:calc(18*var(--u));margin:0 0 calc(1.2*var(--u)) calc(-14*var(--u));animation:hop 1.6s cubic-bezier(.3,0,.3,1) infinite}
 .k2 .mas img{position:absolute;inset:0;width:100%;height:100%;opacity:0;animation:emo 6s steps(1) infinite}
 .k2 .mas img:nth-child(2){animation-delay:1.5s}.k2 .mas img:nth-child(3){animation-delay:3s}.k2 .mas img:nth-child(4){animation-delay:4.5s}
-.k2 .nm{font:900 calc(20*var(--u))/.9 Nunito;color:#fff;letter-spacing:-.03em;text-shadow:0 calc(1*var(--u)) 0 #46A302}
+.k2 .nm{font:900 calc(18*var(--u))/.9 Nunito;color:#fff;letter-spacing:-.03em;text-shadow:0 calc(1*var(--u)) 0 #46A302}
 @keyframes emo{0%{opacity:1}25%,100%{opacity:0}}
-@keyframes hop{0%,100%{transform:translateY(0) scale(1.05,.95)}50%{transform:translateY(calc(-2.5*var(--u)))}}
+@keyframes hop{0%,100%{transform:translateY(0) scale(1.05,.95)}50%{transform:translateY(calc(-1.5*var(--u)))}}
 .k2:hover .mas{animation:flip .8s cubic-bezier(.3,0,.3,1)}
 .k2:hover .nm{animation:squash .8s cubic-bezier(.3,0,.3,1)}
-@keyframes flip{40%{transform:translateY(calc(-7*var(--u))) rotate(180deg)}80%{transform:translateY(0) rotate(360deg) scale(1.08,.92)}100%{transform:rotate(360deg)}}
+@keyframes flip{40%{transform:translateY(calc(-2.5*var(--u))) rotate(180deg)}80%{transform:translateY(0) rotate(360deg) scale(1.08,.92)}100%{transform:rotate(360deg)}}
 @keyframes squash{75%{transform:scale(1.06,.9)}}
 
 /* 03 · MapLink: ровный круг-маршрут вокруг названия, самолёт летит носом вперёд */
