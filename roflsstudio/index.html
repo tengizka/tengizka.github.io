@@ -27,8 +27,8 @@ section{padding-top:100px;padding-bottom:100px}
 .lang button,.btn{font:800 13px/1 var(--body);text-transform:uppercase;letter-spacing:.06em;cursor:pointer}
 
 /* логотип: оранжевый круг, белая надпись, чёрная точка */
-.logo{position:relative;display:inline-grid;place-items:center;width:var(--s,72px);aspect-ratio:1;border-radius:50%;background:var(--or);color:var(--wht);font:700 calc(var(--s,72px)*.19)/.95 var(--body);text-align:center;letter-spacing:-.02em}
-.logo::after{content:"tm";position:absolute;left:78%;top:77.5%;width:20%;aspect-ratio:1;border-radius:50%;background:var(--blk);color:#fff;display:grid;place-items:center;font:300 calc(var(--s,72px)*.075)/1 Montserrat;letter-spacing:0}
+.logo{position:relative;display:inline-flex;align-items:center;justify-content:center;width:var(--s,72px);height:var(--s,72px);border-radius:50%;background:var(--or);color:var(--wht);font:700 calc(var(--s,72px)*.19)/.95 var(--body);text-align:center;letter-spacing:-.02em}
+.logo::after{content:"tm";position:absolute;left:78%;top:77.5%;width:20%;height:20%;border-radius:50%;background:var(--blk);color:#fff;display:flex;align-items:center;justify-content:center;font:300 calc(var(--s,72px)*.075)/1 Montserrat;letter-spacing:0}
 .logo.nodot::after{display:none}
 .logo.inv{background:var(--wht);color:var(--or)}
 
@@ -75,10 +75,10 @@ section{padding-top:100px;padding-bottom:100px}
 .what h2 em{font-style:normal;color:var(--or);white-space:nowrap}
 .what p{font-size:clamp(18px,1.6vw,22px);line-height:1.5;color:rgba(255,255,255,.8);margin-top:18px}
 .faces{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;width:100%;max-width:960px}
-.faces span{aspect-ratio:1;border-radius:50%;background:var(--or);display:grid;place-items:center;font-size:clamp(36px,5vw,64px);animation:bob 2.6s ease-in-out infinite}
+.faces span{position:relative;aspect-ratio:1;border-radius:50%;background:var(--or);font-size:clamp(36px,5vw,64px);animation:bob 2.6s ease-in-out infinite}
 .faces span:nth-child(2n){background:var(--wht);animation-delay:-.6s}
 .faces span:nth-child(3n){animation-delay:-1.3s}
-.faces .fe{width:56%;height:auto}
+.faces .fe{position:absolute;left:22%;top:22%;width:56%;height:56%;object-fit:contain}
 .em{display:inline-block;width:1.4em;height:1.4em;vertical-align:-.4em}
 @keyframes bob{50%{transform:translateY(-10px) rotate(6deg)}}
 @media(max-width:820px){.what .grid{gap:40px}.faces{grid-template-columns:repeat(3,minmax(0,1fr))}}
