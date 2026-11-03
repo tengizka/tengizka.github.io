@@ -53,7 +53,8 @@ img{display:block;max-width:100%}
 .head .menu{display:none;height:40px;padding:0 14px;border:1.5px solid var(--ink);background:none;font:700 13px/1 Montserrat;color:var(--ink);cursor:pointer}
 .drop{display:none;border-top:1px solid var(--line);padding-top:8px;padding-bottom:16px}
 .drop a{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line);font:600 20px/1 Unbounded;letter-spacing:-.02em}
-.drop a span{color:var(--violet)}
+.drop a span{color:var(--violet);display:flex;align-items:center}
+.drop a .ico{width:22px;height:22px}
 .bar.open .drop{display:block}
 @media(max-width:1060px){.head .clock{display:none}}
 @media(max-width:900px){.head{grid-template-columns:1fr auto}.head nav{display:none}.head .menu{display:inline-flex;align-items:center}.head .write{display:none}}
@@ -86,7 +87,7 @@ section{padding-top:120px}
 .tile{display:block;border:1.5px solid var(--ink);background:#FBFAF7;padding:8px;transition:transform .25s cubic-bezier(.2,.9,.3,1.3),box-shadow .25s,border-color .2s}
 .tile:hover,.tile:focus-visible{transform:translate(-4px,-4px);box-shadow:6px 6px 0 var(--violet);border-color:var(--violet);outline:none}
 .tile:active{transform:none;box-shadow:0 0 0 var(--violet)}
-.art{position:relative;aspect-ratio:16/10;overflow:hidden;display:grid;place-items:center}
+.art{position:relative;height:calc(62.5*var(--u));overflow:hidden;display:flex;align-items:center;justify-content:center}
 .art .nm{position:relative;z-index:2;text-align:center;line-height:1}
 .cap{display:flex;align-items:center;gap:12px;padding:10px 2px 2px 4px;font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
 .cap b{font:600 14px/1.2 Unbounded;color:var(--ink);letter-spacing:-.01em}
@@ -151,7 +152,7 @@ section{padding-top:120px}
 @keyframes jump4{40%{transform:translateY(-.18em)}}
 
 /* 05 · Говорящий Тенгиз: название слева, фигурка справа, на наведении «Ай!» */
-.k5 .art{background:#121016;place-items:start}
+.k5 .art{background:#121016;align-items:flex-start;justify-content:flex-start}
 .k5 .nm{text-align:left;padding:calc(4.5*var(--u));font:900 calc(8.6*var(--u))/.95 Unbounded;text-transform:uppercase;color:#F4F1F8;letter-spacing:-.02em}
 .k5 .nm span{display:block;color:#9D5CF0}
 .k5 .fig{position:absolute;right:calc(-5*var(--u));top:calc(4*var(--u));height:215%;width:auto;max-width:none;transform-origin:50% 0;animation:sway 5s ease-in-out infinite;transition:translate .4s cubic-bezier(.2,.9,.3,1.4)}
@@ -177,7 +178,7 @@ section{padding-top:120px}
 @keyframes wig{30%{transform:rotate(-3deg)}70%{transform:rotate(3deg)}}
 /* 07 · TIME TO DIE: широкий баннер, живой обратный отсчёт, на наведении красная вспышка и пульс */
 .tile.wide{grid-column:1/-1}
-.tile.wide .art{aspect-ratio:auto;height:calc(62.5*var(--u))}
+.tile.wide .art{height:calc(62.5*var(--u))}
 .k7 .art{background:#040404}
 .k7 .duo7{display:flex;align-items:center;gap:calc(12*var(--u))}
 .k7 .nm{text-align:left;font:700 calc(15*var(--u))/.9 Oswald,sans-serif;color:#e4e4e4;text-transform:uppercase;letter-spacing:.02em}
@@ -194,7 +195,7 @@ section{padding-top:120px}
 @keyframes flash7{0%{opacity:.55}100%{opacity:0}}
 @keyframes pulse7{0%,100%{text-shadow:0 0 0 rgba(255,30,45,0)}50%{text-shadow:0 0 calc(4*var(--u)) rgba(255,30,45,.9)}}
 @media(max-width:980px) and (min-width:601px){.k7 .nm{font-size:calc(12*var(--u))}.k7 .cd .dd b{font-size:calc(13*var(--u))}.k7 .duo7{gap:calc(8*var(--u))}}
-@media(max-width:600px){.tile.wide{grid-column:auto}.tile.wide .art{height:auto;aspect-ratio:16/10}.k7 .duo7{flex-direction:column;align-items:flex-start;gap:calc(5*var(--u))}.k7 .nm{font-size:calc(14*var(--u))}.k7 .nm span{display:inline}.k7 .cd .dd b{font-size:calc(14*var(--u))}}
+@media(max-width:600px){.tile.wide{grid-column:auto}.tile.wide .art{height:calc(62.5*var(--u))}.k7 .duo7{flex-direction:column;align-items:flex-start;gap:calc(5*var(--u))}.k7 .nm{font-size:calc(14*var(--u))}.k7 .nm span{display:inline}.k7 .cd .dd b{font-size:calc(14*var(--u))}}
 @media(prefers-reduced-motion:reduce){.art *{animation:none!important;transition:none!important}.k2 .mas img:first-child{opacity:1}}
 
 /* услуги */
@@ -279,9 +280,9 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-
 <header class="wrap head">
   <a class="brand" href="/"><img src="/favicon.svg" alt="">tengizka</a>
   <nav aria-label="Разделы"><a href="#work">Работы</a><a href="#services">Услуги</a><a href="#prices">Цены</a><a href="#about">Обо мне</a><a href="#contact">Контакты</a></nav>
-  <div class="side"><span class="clock" id="clock">Москва</span><a class="write" href="https://t.me/teng1zka" target="_blank" rel="noopener">Написать ↗</a><button class="menu" type="button" id="menu" aria-expanded="false" aria-controls="drop">Меню</button></div>
+  <div class="side"><span class="clock" id="clock">Москва</span><a class="write" href="https://t.me/teng1zka" target="_blank" rel="noopener">Написать ↗︎</a><button class="menu" type="button" id="menu" aria-expanded="false" aria-controls="drop">Меню</button></div>
 </header>
-<nav class="wrap drop" id="drop" aria-label="Меню"><a href="#work">Работы<span>→</span></a><a href="#services">Услуги<span>→</span></a><a href="#prices">Цены<span>→</span></a><a href="#about">Обо мне<span>→</span></a><a href="#contact">Контакты<span>→</span></a><a href="https://t.me/teng1zka" target="_blank" rel="noopener">Написать в Telegram<span>↗</span></a></nav>
+<nav class="wrap drop" id="drop" aria-label="Меню"><a href="#work">Работы<span>→</span></a><a href="#services">Услуги<span>→</span></a><a href="#prices">Цены<span>→</span></a><a href="#about">Обо мне<span>→</span></a><a href="#contact">Контакты<span>→</span></a><a href="https://t.me/teng1zka" target="_blank" rel="noopener">Написать в Telegram<span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg></span></a></nav>
 </div>
 
 <main>
@@ -292,7 +293,7 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-
     <p class="say">Рисую бренды и персонажей, монтирую ролики и собираю <em>приложения</em>, в которых всё это работает.</p>
     <div class="cta">
       <a href="#work"><span>Работы</span><span>↓</span></a>
-      <a href="https://t.me/teng1zka" target="_blank" rel="noopener"><span>Написать в Telegram</span><span>↗</span></a>
+      <a href="https://t.me/teng1zka" target="_blank" rel="noopener"><span>Написать в Telegram</span><span>↗︎</span></a>
     </div>
   </div>
 </div>
@@ -369,7 +370,7 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-
     <div class="txt">
       <h3>Привет, я <span>Тенгиз</span><br>Чето делаю<br>Чето работаю<span>.</span></h3>
       <p>По образованию я графический дизайнер. Обычно всё начинается со знака и цвета, потом появляется персонаж, ролики, а в конце приложение, где это всё работает вместе.</p>
-      <p>Больше всего кайфую, когда работа уходит из макета в жизнь: логотип висит на вывеске, а на кнопку, которую я нарисовал, каждый день жмут люди.</p>
+      <p>Больше всего удовольствия получаю, когда мой продукт начинает работать на бизнес: логотип висит на вывеске, а на кнопку, которую я нарисовал, каждый день жмут люди.</p>
       <p>Над проектом я работаю один, поэтому стиль, персонаж, ролики и интерфейс не спорят друг с другом.</p>
       <table>
         <tr><td>Образование</td><td>Графический дизайнер</td></tr>
@@ -384,9 +385,9 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-
   <div class="sec"><span class="num">05</span><h2>Контакты</h2><span class="label">Быстрее всего отвечаю в Telegram</span></div>
   <a class="big" href="https://t.me/teng1zka" target="_blank" rel="noopener">Есть идея?<br>Напиши →</a>
   <div class="links">
-    <a class="soc tg" href="https://t.me/teng1zka" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 4.2 2.9 11.4c-1 .4-1 1.6.1 1.9l4.6 1.4 1.8 5.6c.2.7 1.1.9 1.6.4l2.6-2.5 4.9 3.6c.6.4 1.4.1 1.6-.6L22.9 5.6c.2-1-.6-1.8-1.4-1.4ZM9.4 14.1l8.7-7.6-6.9 8.8-.3 3.3-1.5-4.5Z"/></svg></i><span>Telegram<small>@teng1zka</small></span><em>↗</em></a>
-    <a class="soc be" href="https://www.behance.net/tengizka" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 11.4c.9-.4 1.4-1.2 1.4-2.2C10 7.3 8.6 6.4 6.8 6.4H2v11.2h5c1.9 0 3.6-1 3.6-3.2 0-1.4-.7-2.6-2-3ZM4.4 8.3h2c.8 0 1.4.3 1.4 1.1 0 .8-.5 1.2-1.4 1.2h-2V8.3Zm2.3 7.3H4.4v-2.8h2.3c1 0 1.6.4 1.6 1.4 0 1-.7 1.4-1.6 1.4ZM18.1 9.5c-2.4 0-4 1.8-4 4.2 0 2.5 1.5 4.2 4 4.2 1.9 0 3.2-.9 3.8-2.7h-2c-.2.6-1 1-1.7 1-1.2 0-1.9-.7-1.9-2h5.7c.2-2.6-1.2-4.7-3.9-4.7Zm-1.8 3.3c.1-1 .7-1.7 1.8-1.7 1 0 1.6.6 1.7 1.7h-3.5ZM15.4 7h5.3v1.3h-5.3z"/></svg></i><span>Behance<small>tengizka</small></span><em>↗</em></a>
-    <a class="soc ig" href="https://instagram.com/tengizka" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7.2a4.8 4.8 0 1 0 0 9.6 4.8 4.8 0 0 0 0-9.6Zm0 7.9a3.1 3.1 0 1 1 0-6.2 3.1 3.1 0 0 1 0 6.2Zm5-9.2a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2ZM12 2.5c-2.6 0-2.9 0-3.9.1-3.5.2-5.4 2.1-5.6 5.6C2.5 9.1 2.5 9.4 2.5 12s0 2.9.1 3.9c.2 3.5 2.1 5.4 5.6 5.6 1 .1 1.3.1 3.9.1s2.9 0 3.9-.1c3.5-.2 5.4-2.1 5.6-5.6.1-1 .1-1.3.1-3.9s0-2.9-.1-3.9c-.2-3.5-2.1-5.4-5.6-5.6-1-.1-1.3-.1-3.9-.1Zm0 1.7c2.5 0 2.8 0 3.8.1 2.6.1 3.8 1.3 3.9 3.9.1 1 .1 1.3.1 3.8s0 2.8-.1 3.8c-.1 2.6-1.3 3.8-3.9 3.9-1 .1-1.3.1-3.8.1s-2.8 0-3.8-.1c-2.6-.1-3.8-1.3-3.9-3.9-.1-1-.1-1.3-.1-3.8s0-2.8.1-3.8c.1-2.6 1.3-3.8 3.9-3.9 1-.1 1.3-.1 3.8-.1Z"/></svg></i><span>Instagram<small>tengizka</small></span><em>↗</em></a>
+    <a class="soc tg" href="https://t.me/teng1zka" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 4.2 2.9 11.4c-1 .4-1 1.6.1 1.9l4.6 1.4 1.8 5.6c.2.7 1.1.9 1.6.4l2.6-2.5 4.9 3.6c.6.4 1.4.1 1.6-.6L22.9 5.6c.2-1-.6-1.8-1.4-1.4ZM9.4 14.1l8.7-7.6-6.9 8.8-.3 3.3-1.5-4.5Z"/></svg></i><span>Telegram<small>@teng1zka</small></span><em>↗︎</em></a>
+    <a class="soc be" href="https://www.behance.net/tengizka" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 11.4c.9-.4 1.4-1.2 1.4-2.2C10 7.3 8.6 6.4 6.8 6.4H2v11.2h5c1.9 0 3.6-1 3.6-3.2 0-1.4-.7-2.6-2-3ZM4.4 8.3h2c.8 0 1.4.3 1.4 1.1 0 .8-.5 1.2-1.4 1.2h-2V8.3Zm2.3 7.3H4.4v-2.8h2.3c1 0 1.6.4 1.6 1.4 0 1-.7 1.4-1.6 1.4ZM18.1 9.5c-2.4 0-4 1.8-4 4.2 0 2.5 1.5 4.2 4 4.2 1.9 0 3.2-.9 3.8-2.7h-2c-.2.6-1 1-1.7 1-1.2 0-1.9-.7-1.9-2h5.7c.2-2.6-1.2-4.7-3.9-4.7Zm-1.8 3.3c.1-1 .7-1.7 1.8-1.7 1 0 1.6.6 1.7 1.7h-3.5ZM15.4 7h5.3v1.3h-5.3z"/></svg></i><span>Behance<small>tengizka</small></span><em>↗︎</em></a>
+    <a class="soc ig" href="https://instagram.com/tengizka" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7.2a4.8 4.8 0 1 0 0 9.6 4.8 4.8 0 0 0 0-9.6Zm0 7.9a3.1 3.1 0 1 1 0-6.2 3.1 3.1 0 0 1 0 6.2Zm5-9.2a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2ZM12 2.5c-2.6 0-2.9 0-3.9.1-3.5.2-5.4 2.1-5.6 5.6C2.5 9.1 2.5 9.4 2.5 12s0 2.9.1 3.9c.2 3.5 2.1 5.4 5.6 5.6 1 .1 1.3.1 3.9.1s2.9 0 3.9-.1c3.5-.2 5.4-2.1 5.6-5.6.1-1 .1-1.3.1-3.9s0-2.9-.1-3.9c-.2-3.5-2.1-5.4-5.6-5.6-1-.1-1.3-.1-3.9-.1Zm0 1.7c2.5 0 2.8 0 3.8.1 2.6.1 3.8 1.3 3.9 3.9.1 1 .1 1.3.1 3.8s0 2.8-.1 3.8c-.1 2.6-1.3 3.8-3.9 3.9-1 .1-1.3.1-3.8.1s-2.8 0-3.8-.1c-2.6-.1-3.8-1.3-3.9-3.9-.1-1-.1-1.3-.1-3.8s0-2.8.1-3.8c.1-2.6 1.3-3.8 3.9-3.9 1-.1 1.3-.1 3.8-.1Z"/></svg></i><span>Instagram<small>tengizka</small></span><em>↗︎</em></a>
   </div>
 </section>
 </main>
