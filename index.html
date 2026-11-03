@@ -41,10 +41,7 @@ img{display:block;max-width:100%;height:auto}
 .bar.stuck{border-bottom-color:var(--line)}
 .head{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;height:64px}
 .brand{display:flex;align-items:center;gap:10px;font:700 15px/1 Unbounded;justify-self:start}
-.brand img{width:22px;height:22px}
-/* маленький логотип появляется, только когда большое «tengizka.» ушло с экрана */
-.bar .brand{opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .3s,transform .3s,visibility .3s}
-.bar.past .brand{opacity:1;visibility:visible;transform:none}
+.brand img{width:34px;height:34px}
 .head nav{display:flex;gap:2px;padding:4px;border:1.5px solid var(--ink);font-size:13px;font-weight:700}
 .head nav a{padding:8px 14px;color:var(--ink);transition:background .2s,color .2s}
 .head nav a:hover{background:#E6E2D8}
@@ -281,7 +278,7 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-
 
 <div class="bar" id="bar">
 <header class="wrap head">
-  <a class="brand" href="/"><img src="/favicon.svg" alt="">tengizka</a>
+  <a class="brand" href="/" aria-label="tengizka — на главную"><img src="/favicon.svg" alt=""></a>
   <nav aria-label="Разделы"><a href="#work">Работы</a><a href="#services">Услуги</a><a href="#prices">Цены</a><a href="#about">Обо мне</a><a href="#contact">Контакты</a></nav>
   <div class="side"><span class="clock" id="clock">Москва</span><a class="write" href="https://t.me/teng1zka" target="_blank" rel="noopener">Написать <svg viewBox="0 0 24 24" width=".8em" height=".8em" style="display:inline-block;vertical-align:-.04em" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="square"/></svg></a><button class="menu" type="button" id="menu" aria-expanded="false" aria-controls="drop">Меню</button></div>
 </header>
@@ -404,8 +401,7 @@ const clock=document.getElementById('clock');const tick=()=>{try{clock.textConte
 const bar=document.getElementById('bar'),menu=document.getElementById('menu');
 menu.addEventListener('click',()=>{const o=bar.classList.toggle('open');menu.setAttribute('aria-expanded',o);menu.textContent=o?'Закрыть':'Меню'});
 document.querySelectorAll('#drop a').forEach(a=>a.addEventListener('click',()=>{bar.classList.remove('open');menu.setAttribute('aria-expanded',false);menu.textContent='Меню'}));
-const bigName=document.querySelector('.hero h1');
-const onScroll=()=>{bar.classList.toggle('stuck',scrollY>10);bar.classList.toggle('past',bigName.getBoundingClientRect().bottom<70)};
+const onScroll=()=>{bar.classList.toggle('stuck',scrollY>10)};
 addEventListener('scroll',onScroll,{passive:true});onScroll();
 const links=[...document.querySelectorAll('.head nav a')];
 const spy=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
