@@ -176,7 +176,7 @@ section{padding-top:120px}
 @keyframes roll{40%{transform:translateX(calc(-6*var(--u))) rotate(-200deg)}100%{transform:rotate(-360deg)}}
 @keyframes wig{30%{transform:rotate(-3deg)}70%{transform:rotate(3deg)}}
 /* 07 · TIME TO DIE: широкий баннер, живой обратный отсчёт, на наведении красная вспышка и пульс */
-.tile.wide{grid-column:span 2}
+.tile.wide{grid-column:1/-1}
 .tile.wide .art{aspect-ratio:auto;height:calc(62.5*var(--u))}
 .k7 .art{background:#040404}
 .k7 .duo7{display:flex;align-items:center;gap:calc(12*var(--u))}
@@ -193,17 +193,8 @@ section{padding-top:120px}
 .k7:hover .nm span{animation:pulse7 .55s ease-in-out infinite}
 @keyframes flash7{0%{opacity:.55}100%{opacity:0}}
 @keyframes pulse7{0%,100%{text-shadow:0 0 0 rgba(255,30,45,0)}50%{text-shadow:0 0 calc(4*var(--u)) rgba(255,30,45,.9)}}
-.k7 .nm{font-size:calc(12*var(--u))}.k7 .cd .dd b{font-size:calc(13*var(--u))}.k7 .duo7{gap:calc(8*var(--u))}
-@media(max-width:980px){.tile.be{grid-column:span 2}.tile.be .art{aspect-ratio:auto;height:calc(62.5*var(--u))}}
-@media(max-width:600px){.tile.wide,.tile.be{grid-column:auto}.tile.be .art{height:auto;aspect-ratio:16/10}.tile.wide .art{height:auto;aspect-ratio:16/10}.k7 .duo7{flex-direction:column;align-items:flex-start;gap:calc(5*var(--u))}.k7 .nm{font-size:calc(14*var(--u))}.k7 .nm span{display:inline}.k7 .cd .dd b{font-size:calc(14*var(--u))}}
-/* Behance: синий, знак Bē, на наведении стрелка вылетает */
-.kbe .art{background:#0057FF}
-.kbe .nm{color:#fff;font:900 calc(30*var(--u))/1 Montserrat;letter-spacing:-.04em}
-.kbe .sub{position:absolute;left:calc(5*var(--u));bottom:calc(4.5*var(--u));color:#fff;font:700 calc(4.2*var(--u))/1 Montserrat;opacity:.85}
-.kbe .go{position:absolute;right:calc(5*var(--u));top:calc(4.5*var(--u));color:#fff;font:700 calc(8*var(--u))/1 Montserrat;transition:transform .35s cubic-bezier(.2,.9,.3,1.4)}
-.kbe:hover .go{transform:translate(calc(2*var(--u)),calc(-2*var(--u))) scale(1.15)}
-.kbe:hover .nm{animation:be .5s cubic-bezier(.2,.9,.3,1.4)}
-@keyframes be{40%{transform:scale(1.1,.9)}}
+@media(max-width:980px) and (min-width:601px){.k7 .nm{font-size:calc(12*var(--u))}.k7 .cd .dd b{font-size:calc(13*var(--u))}.k7 .duo7{gap:calc(8*var(--u))}}
+@media(max-width:600px){.tile.wide{grid-column:auto}.tile.wide .art{height:auto;aspect-ratio:16/10}.k7 .duo7{flex-direction:column;align-items:flex-start;gap:calc(5*var(--u))}.k7 .nm{font-size:calc(14*var(--u))}.k7 .nm span{display:inline}.k7 .cd .dd b{font-size:calc(14*var(--u))}}
 @media(prefers-reduced-motion:reduce){.art *{animation:none!important;transition:none!important}.k2 .mas img:first-child{opacity:1}}
 
 /* услуги */
@@ -258,14 +249,26 @@ section{padding-top:120px}
 /* контакты */
 .contact .big{display:inline-block;font:800 clamp(44px,9.4vw,148px)/.9 Unbounded;letter-spacing:-.055em;transition:color .25s}
 .contact .big:hover{color:var(--violet)}
-.contact .links{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:64px}
-.contact .links a{display:flex;justify-content:space-between;align-items:baseline;padding-top:14px;border-top:1px solid var(--ink);font-weight:700;transition:color .2s}
-.contact .links a:hover{color:var(--violet)}
-.contact .links small{display:block;color:var(--muted);font-weight:600;font-size:12px;margin-top:2px}
-@media(max-width:700px){.contact .links{grid-template-columns:1fr;gap:16px}}
+.contact .links{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:64px}
+/* кнопки соцсетей: рамка, иконка в квадрате цвета сети, на наведении заливка цветом сети */
+.soc{display:flex;align-items:center;gap:14px;padding:12px 16px 12px 12px;border:1.5px solid var(--ink);background:#FBFAF7;font-weight:700;transition:transform .2s cubic-bezier(.2,.9,.3,1.3),box-shadow .2s,background .2s,color .2s}
+.soc i{flex:none;display:grid;place-items:center;width:44px;height:44px;background:var(--c);color:#fff}
+.soc svg{width:24px;height:24px;fill:currentColor}
+.soc small{display:block;color:var(--muted);font-weight:600;font-size:12px;margin-top:2px;transition:color .2s}
+.soc em{margin-left:auto;font-style:normal;transition:transform .25s}
+.soc:hover{transform:translate(-3px,-3px);box-shadow:5px 5px 0 var(--ink);background:var(--c);color:#fff}
+.soc:hover small{color:rgba(255,255,255,.8)}
+.soc:hover i{background:rgba(255,255,255,.18)}
+.soc:hover em{transform:rotate(45deg)}
+.soc.tg{--c:#229ED9}.soc.be{--c:#0057FF}.soc.ig{--c:#E1306C}
+@media(max-width:700px){.contact .links{grid-template-columns:1fr;gap:12px}}
+.fsoc{display:flex;gap:8px}
+.fsoc a{display:grid;place-items:center;width:36px;height:36px;border:1.5px solid var(--ink);color:var(--ink);transition:background .2s,color .2s,border-color .2s}
+.fsoc a svg{width:18px;height:18px;fill:currentColor}
+.fsoc a:hover{background:var(--c);border-color:var(--c);color:#fff}
 
 footer{padding:28px 0 40px;margin-top:120px;border-top:1px solid var(--line);font-size:12px;font-weight:600;color:var(--muted)}
-footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -304,7 +307,6 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
     <a class="tile k5" href="/work/tengiz/"><div class="art"><img class="fig" src="/tengiz/img/tengiz.webp" alt="" loading="lazy"><div class="nm">Говорящий<span>Тенгиз</span></div><span class="bub hi" aria-hidden="true">Здарова, бро!</span><span class="bub ai" aria-hidden="true">Ай!</span></div><div class="cap"><b>Говорящий Тенгиз</b><span class="ar">→</span></div></a>
     <a class="tile k6" href="/work/roflsstudio/"><div class="art"><div class="duo"><div class="nm">rofls<span>studio</span></div><span class="rl" aria-hidden="true">rofls<br>studio</span></div></div><div class="cap"><b>rofls studio</b><span class="ar">→</span></div></a>
     <a class="tile wide k7" href="/work/timetodie/"><div class="art"><span class="flash" aria-hidden="true"></span><div class="duo7"><div class="nm">Time <span>to die</span></div><div class="cd" aria-hidden="true"><div class="dd"><b id="t7d">1 310</b><small>дней</small></div><div class="hms"><div><b id="t7h">14</b><small>час</small></div><div><b id="t7m">08</b><small>мин</small></div><div><b id="t7s">58</b><small>сек</small></div></div></div></div></div><div class="cap"><b>Time to die</b><span class="ar">→</span></div></a>
-    <a class="tile be kbe" href="https://www.behance.net/tengizka" target="_blank" rel="noopener"><div class="art"><span class="go" aria-hidden="true">↗</span><div class="nm">Bē</div><span class="sub">tengizka</span></div><div class="cap"><b>Behance</b><span class="ar">↗</span></div></a>
   </div>
 </section>
 
@@ -382,14 +384,14 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
   <div class="sec"><span class="num">05</span><h2>Контакты</h2><span class="label">Быстрее всего отвечаю в Telegram</span></div>
   <a class="big" href="https://t.me/teng1zka" target="_blank" rel="noopener">Есть идея?<br>Напиши →</a>
   <div class="links">
-    <a href="https://t.me/teng1zka" target="_blank" rel="noopener"><span>Telegram<small>@teng1zka</small></span>↗</a>
-    <a href="https://www.behance.net/tengizka" target="_blank" rel="noopener"><span>Behance<small>tengizka</small></span>↗</a>
-    <a href="https://instagram.com/tengizka" target="_blank" rel="noopener"><span>Instagram<small>tengizka</small></span>↗</a>
+    <a class="soc tg" href="https://t.me/teng1zka" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 4.2 2.9 11.4c-1 .4-1 1.6.1 1.9l4.6 1.4 1.8 5.6c.2.7 1.1.9 1.6.4l2.6-2.5 4.9 3.6c.6.4 1.4.1 1.6-.6L22.9 5.6c.2-1-.6-1.8-1.4-1.4ZM9.4 14.1l8.7-7.6-6.9 8.8-.3 3.3-1.5-4.5Z"/></svg></i><span>Telegram<small>@teng1zka</small></span><em>↗</em></a>
+    <a class="soc be" href="https://www.behance.net/tengizka" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 11.4c.9-.4 1.4-1.2 1.4-2.2C10 7.3 8.6 6.4 6.8 6.4H2v11.2h5c1.9 0 3.6-1 3.6-3.2 0-1.4-.7-2.6-2-3ZM4.4 8.3h2c.8 0 1.4.3 1.4 1.1 0 .8-.5 1.2-1.4 1.2h-2V8.3Zm2.3 7.3H4.4v-2.8h2.3c1 0 1.6.4 1.6 1.4 0 1-.7 1.4-1.6 1.4ZM18.1 9.5c-2.4 0-4 1.8-4 4.2 0 2.5 1.5 4.2 4 4.2 1.9 0 3.2-.9 3.8-2.7h-2c-.2.6-1 1-1.7 1-1.2 0-1.9-.7-1.9-2h5.7c.2-2.6-1.2-4.7-3.9-4.7Zm-1.8 3.3c.1-1 .7-1.7 1.8-1.7 1 0 1.6.6 1.7 1.7h-3.5ZM15.4 7h5.3v1.3h-5.3z"/></svg></i><span>Behance<small>tengizka</small></span><em>↗</em></a>
+    <a class="soc ig" href="https://instagram.com/tengizka" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7.2a4.8 4.8 0 1 0 0 9.6 4.8 4.8 0 0 0 0-9.6Zm0 7.9a3.1 3.1 0 1 1 0-6.2 3.1 3.1 0 0 1 0 6.2Zm5-9.2a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2ZM12 2.5c-2.6 0-2.9 0-3.9.1-3.5.2-5.4 2.1-5.6 5.6C2.5 9.1 2.5 9.4 2.5 12s0 2.9.1 3.9c.2 3.5 2.1 5.4 5.6 5.6 1 .1 1.3.1 3.9.1s2.9 0 3.9-.1c3.5-.2 5.4-2.1 5.6-5.6.1-1 .1-1.3.1-3.9s0-2.9-.1-3.9c-.2-3.5-2.1-5.4-5.6-5.6-1-.1-1.3-.1-3.9-.1Zm0 1.7c2.5 0 2.8 0 3.8.1 2.6.1 3.8 1.3 3.9 3.9.1 1 .1 1.3.1 3.8s0 2.8-.1 3.8c-.1 2.6-1.3 3.8-3.9 3.9-1 .1-1.3.1-3.8.1s-2.8 0-3.8-.1c-2.6-.1-3.8-1.3-3.9-3.9-.1-1-.1-1.3-.1-3.8s0-2.8.1-3.8c.1-2.6 1.3-3.8 3.9-3.9 1-.1 1.3-.1 3.8-.1Z"/></svg></i><span>Instagram<small>tengizka</small></span><em>↗</em></a>
   </div>
 </section>
 </main>
 
-<footer><div class="wrap"><span>© 2026 Тенгиз Чочишвили · tengizka.fun</span></div></footer>
+<footer><div class="wrap"><span>© 2026 Тенгиз Чочишвили · tengizka.fun</span><span class="fsoc"><a style="--c:#229ED9" href="https://t.me/teng1zka" target="_blank" rel="noopener" aria-label="Telegram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 4.2 2.9 11.4c-1 .4-1 1.6.1 1.9l4.6 1.4 1.8 5.6c.2.7 1.1.9 1.6.4l2.6-2.5 4.9 3.6c.6.4 1.4.1 1.6-.6L22.9 5.6c.2-1-.6-1.8-1.4-1.4ZM9.4 14.1l8.7-7.6-6.9 8.8-.3 3.3-1.5-4.5Z"/></svg></a><a style="--c:#0057FF" href="https://www.behance.net/tengizka" target="_blank" rel="noopener" aria-label="Behance"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 11.4c.9-.4 1.4-1.2 1.4-2.2C10 7.3 8.6 6.4 6.8 6.4H2v11.2h5c1.9 0 3.6-1 3.6-3.2 0-1.4-.7-2.6-2-3ZM4.4 8.3h2c.8 0 1.4.3 1.4 1.1 0 .8-.5 1.2-1.4 1.2h-2V8.3Zm2.3 7.3H4.4v-2.8h2.3c1 0 1.6.4 1.6 1.4 0 1-.7 1.4-1.6 1.4ZM18.1 9.5c-2.4 0-4 1.8-4 4.2 0 2.5 1.5 4.2 4 4.2 1.9 0 3.2-.9 3.8-2.7h-2c-.2.6-1 1-1.7 1-1.2 0-1.9-.7-1.9-2h5.7c.2-2.6-1.2-4.7-3.9-4.7Zm-1.8 3.3c.1-1 .7-1.7 1.8-1.7 1 0 1.6.6 1.7 1.7h-3.5ZM15.4 7h5.3v1.3h-5.3z"/></svg></a><a style="--c:#E1306C" href="https://instagram.com/tengizka" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7.2a4.8 4.8 0 1 0 0 9.6 4.8 4.8 0 0 0 0-9.6Zm0 7.9a3.1 3.1 0 1 1 0-6.2 3.1 3.1 0 0 1 0 6.2Zm5-9.2a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2ZM12 2.5c-2.6 0-2.9 0-3.9.1-3.5.2-5.4 2.1-5.6 5.6C2.5 9.1 2.5 9.4 2.5 12s0 2.9.1 3.9c.2 3.5 2.1 5.4 5.6 5.6 1 .1 1.3.1 3.9.1s2.9 0 3.9-.1c3.5-.2 5.4-2.1 5.6-5.6.1-1 .1-1.3.1-3.9s0-2.9-.1-3.9c-.2-3.5-2.1-5.4-5.6-5.6-1-.1-1.3-.1-3.9-.1Zm0 1.7c2.5 0 2.8 0 3.8.1 2.6.1 3.8 1.3 3.9 3.9.1 1 .1 1.3.1 3.8s0 2.8-.1 3.8c-.1 2.6-1.3 3.8-3.9 3.9-1 .1-1.3.1-3.8.1s-2.8 0-3.8-.1c-2.6-.1-3.8-1.3-3.9-3.9-.1-1-.1-1.3-.1-3.8s0-2.8.1-3.8c.1-2.6 1.3-3.8 3.9-3.9 1-.1 1.3-.1 3.8-.1Z"/></svg></a></span></div></footer>
 
 <script>
 const news=[['Сейчас','открыт для новых проектов'],['Логотип','от 1 500 ₽'],['Лендинг','от 6 000 ₽'],['Mini App в Telegram','от 15 000 ₽'],['Пакет «Старт»','логотип, лендинг и бот за 12 000 ₽'],['Делаю','айдентику, маскотов, моушн и интерфейсы'],['Связь','@teng1zka в Telegram']];
