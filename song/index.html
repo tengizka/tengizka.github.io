@@ -111,6 +111,21 @@ h2 .cnt{font-size:15px;font-weight:600;color:var(--mute);letter-spacing:0}
 .swap .rows b{flex:1 1 auto}
 .swap .rows i{flex-basis:100%;padding-left:32px;font-size:13px}
 
+/* all shared tracks */
+.list{display:grid;grid-template-columns:1fr 1fr;column-gap:16px;background:var(--el);border-radius:24px;padding:12px}
+.row{display:flex;align-items:center;gap:14px;padding:8px 10px;border-radius:12px;min-width:0}
+.row:hover{background:var(--el2)}
+.row .n{width:26px;text-align:center;color:var(--mute);font-size:14px;flex:none}
+.row .th{width:44px;height:44px;border-radius:8px;flex:none;background:var(--el2);overflow:hidden;position:relative;display:grid;place-items:center;font-family:Unbounded;font-weight:900;font-size:17px;color:var(--mute)}
+.row .th img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.row .tx{min-width:0;flex:1}
+.row b,.row span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row b{font-size:15px;font-weight:600}
+.row span{font-size:13px;color:var(--mute)}
+.list.short .row:nth-child(n+21){display:none}
+.more{display:block;margin:20px auto 0;padding:14px 28px;border:0;border-radius:99px;background:var(--y);color:var(--yt);font:700 15px Inter,sans-serif;cursor:pointer}
+.more:hover{filter:brightness(1.05)}
+
 footer{padding:32px 0 48px;border-top:1px solid var(--line);color:var(--mute);font-size:14px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 footer a{color:var(--text);text-decoration:none;font-weight:600}
 
@@ -119,6 +134,8 @@ footer a{color:var(--text);text-decoration:none;font-weight:600}
   .grid{grid-template-columns:repeat(3,1fr)}
   .duo{grid-template-columns:1fr}
   .score{grid-template-columns:1fr}
+  .list{grid-template-columns:1fr}
+  .list.short .row:nth-child(n+16){display:none}
 }
 @media (max-width:480px){
   .wrap{padding:0 16px}
@@ -215,6 +232,12 @@ footer a{color:var(--text);text-decoration:none;font-weight:600}
     <p class="vibe">Наша точка пересечения — <b class="nw">грустный инди</b> и альтернатива.<br>А ещё мы оба не стесняемся Rick Astley, Bee Gees и Кати Лель в speed up.</p>
   </section>
 
+  <section id="all">
+    <h2>Все общие треки <span class="cnt">154</span></h2>
+    <div class="list short" id="list"></div>
+    <button class="more" id="more">Показать все 154</button>
+  </section>
+
   <section class="swap">
     <h2>Что послушать друг у друга</h2>
     <div class="duo">
@@ -271,6 +294,14 @@ tracks.forEach(([a,t,c])=>{
   el.innerHTML=`<div class="cover"><div class="fb">${a[0]}</div><img src="${c}" alt="${a} — ${t}" onerror="this.remove()"><span class="pb">${play}</span></div><b>${t}</b><span>${a}</span>`;
   g.appendChild(el);
 });
+
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+fetch('tracks.json').then(r=>r.json()).then(list=>{
+  const box=document.getElementById('list');
+  box.innerHTML=list.map((x,i)=>`<div class="row"><span class="n">${i+1}</span><div class="th">${esc(x.a[0]||'')}${x.c?`<img src="${x.c}" alt="" loading="lazy" onerror="this.remove()">`:''}</div><div class="tx"><b>${esc(x.t)}</b><span>${esc(x.a)}</span></div></div>`).join('');
+});
+const more=document.getElementById('more'),lst=document.getElementById('list');
+more.onclick=()=>{const s=lst.classList.toggle('short');more.textContent=s?'Показать все 154':'Свернуть';if(s)document.getElementById('all').scrollIntoView({behavior:'smooth'});};
 </script>
 </body>
 </html>
