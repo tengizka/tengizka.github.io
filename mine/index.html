@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#14161A">
+<title>Майним вдвоём</title>
+<meta name="description" content="Как нам с Ваньком поиграть в кубики вдвоём и навалить модов: бесплатно через Luanti или через Horizon, если купим Minecraft.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tengizka.fun/mine/">
+<meta property="og:title" content="Майним вдвоём">
+<meta property="og:description" content="Бесплатный путь через Luanti и путь через Horizon. Пошагово.">
+<link rel="icon" href="/mine/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/fonts.css">
+<style>
+:root{--bg:#14161A;--el:#1D2026;--el2:#262A31;--line:#30353D;--text:#F3F1EC;--mute:#9AA0A8;--g:#6FCF4A;--gt:#0F1A0A;--dirt:#8A5A3B;--warn:#FFC23D}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:Montserrat,system-ui,sans-serif;font-size:17px;line-height:1.55;overflow-x:hidden}
+.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+.nw{white-space:nowrap}
+a{color:var(--g)}
+.em{width:1.15em;height:1.15em;vertical-align:-.2em;display:inline-block}
+h1,h2,h3{font-family:Unbounded,sans-serif;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+section{padding:48px 0}
+
+.bar{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
+.logo{font-family:Unbounded,sans-serif;font-weight:900;font-size:20px;color:var(--text);text-decoration:none}
+.logo span{color:var(--g)}
+.pill{padding:8px 16px;border-radius:99px;background:var(--el);color:var(--mute);font-size:14px;font-weight:600}
+
+/* hero */
+.hero{position:relative;border-radius:28px;overflow:hidden;background:#1A2A3A;padding:56px 40px 0;isolation:isolate}
+.hero h1{font-size:clamp(34px,6vw,64px);margin-bottom:16px}
+.hero h1 span{color:var(--g)}
+.hero p{max-width:560px;color:#C9D2DC;font-size:18px;margin-bottom:32px}
+.hero .tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:48px}
+.hero .tags b{padding:8px 14px;border-radius:99px;background:rgba(255,255,255,.08);font-size:14px;font-weight:600}
+.ground{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));margin:0 -40px}
+.ground i{aspect-ratio:1;background:var(--dirt);box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+.ground i.t{background:linear-gradient(var(--g) 0 34%,var(--dirt) 34%)}
+.ground i.s{background:#7A7F86}
+.sun{position:absolute;right:48px;top:48px;width:72px;height:72px;background:#FFE27A;z-index:-1;box-shadow:0 0 0 12px rgba(255,226,122,.15)}
+
+/* blocks */
+h2{font-size:clamp(24px,3.4vw,34px);margin-bottom:20px}
+.lead{color:var(--mute);max-width:680px;margin-bottom:28px}
+.card{background:var(--el);border:1px solid var(--line);border-radius:22px;padding:28px}
+.note{border-color:rgba(255,194,61,.35);background:linear-gradient(0deg,rgba(255,194,61,.06),rgba(255,194,61,.06)),var(--el)}
+.note h3{font-size:20px;margin-bottom:12px;color:var(--warn)}
+.note p+p{margin-top:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.path{display:flex;flex-direction:column;gap:12px}
+.path .lbl{font-family:Unbounded,sans-serif;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+.path h3{font-size:22px}
+.path .price{font-family:Unbounded,sans-serif;font-weight:800;font-size:28px;color:var(--g)}
+.path.b .price{color:var(--text)}
+.path p{color:#C4C9D0}
+
+ol.steps{list-style:none;counter-reset:s;display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+ol.steps li{counter-increment:s;position:relative;background:var(--el);border:1px solid var(--line);border-radius:18px;padding:20px 22px 20px 76px}
+ol.steps li::before{content:counter(s);position:absolute;left:20px;top:18px;width:38px;height:38px;display:grid;place-items:center;background:var(--g);color:var(--gt);font-family:Unbounded,sans-serif;font-weight:800;font-size:16px}
+ol.steps li b{display:block;margin-bottom:4px;font-size:18px}
+ol.steps li p{color:#C4C9D0}
+code{font-family:'Share Tech Mono',ui-monospace,monospace;background:var(--el2);padding:2px 7px;border-radius:6px;font-size:.95em}
+
+.mods{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.mod{background:var(--el);border:1px solid var(--line);border-radius:18px;padding:20px}
+.mod b{display:block;font-family:Unbounded,sans-serif;font-size:16px;margin-bottom:6px}
+.mod p{color:var(--mute);font-size:15px}
+
+.who{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.who .card h3{font-size:18px;margin-bottom:12px}
+.who ul{padding-left:20px;color:#C4C9D0}
+.who li+li{margin-top:6px}
+
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 22px;background:var(--g);color:var(--gt);text-decoration:none;font-weight:700;border-radius:14px}
+.btn.ghost{background:var(--el2);color:var(--text)}
+
+footer{padding:40px 0 56px;color:var(--mute);font-size:14px;text-align:center}
+
+@media (max-width:820px){
+  .grid2,.who{grid-template-columns:1fr}
+  .mods{grid-template-columns:1fr 1fr}
+}
+@media (max-width:520px){
+  .wrap{padding:0 16px}
+  body{font-size:16px}
+  .hero{padding:40px 22px 0;border-radius:22px}
+  .hero p br{display:none}
+  .ground{margin:0 -22px;grid-template-columns:repeat(auto-fill,minmax(32px,1fr))}
+  .sun{right:22px;top:22px;width:44px;height:44px}
+  .card{padding:22px}
+  .mods{grid-template-columns:1fr}
+  ol.steps li{padding:18px 18px 18px 66px}
+  ol.steps li::before{left:16px;width:34px;height:34px}
+  section{padding:36px 0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="logo" href="/">tengizka<span>.fun</span></a>
+    <span class="pill">/mine</span>
+  </header>
+
+  <div class="hero">
+    <div class="sun" aria-hidden="true"></div>
+    <h1>Майним <span>вдвоём</span><br>с Ваньком <img class="em" src="/assets/emoji/pick.webp" alt=""></h1>
+    <p>Хотели скачать Horizon бесплатно, но с ним засада.<br>Поэтому тут два честных пути: бесплатный и тот,<br>где один раз платим и кайфуем.</p>
+    <div class="tags"><b>игра по сети</b><b>моды в пару кликов</b><b>без пиратки</b></div>
+    <div class="ground" aria-hidden="true" id="ground"></div>
+  </div>
+
+  <section>
+    <div class="card note">
+      <h3><img class="em" src="/assets/emoji/light_bulb.webp" alt=""> Что за Horizon и почему не бесплатно</h3>
+      <p>Horizon — это Minecraft: Java Edition 26.3, переписанный на Rust. Код у него открытый и бесплатный, но самой игры внутри нет: ни текстур, ни звуков, ни мобов. Всё это он берёт из купленной копии Minecraft.</p>
+      <p>Лаунчер пускает только с Microsoft-аккаунтом, на котором куплена Java Edition. Без лицензии он просто не запустится, а обходить это мы не будем. Ещё момент: моды под Forge и Fabric в Horizon не работают, у него свои.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Выбираем путь</h2>
+    <div class="grid2">
+      <div class="card path">
+        <span class="lbl">Путь A</span>
+        <h3>Luanti</h3>
+        <div class="price">0 ₽</div>
+        <p>Бесплатная open-source игра про кубики. Есть сборки, которые выглядят и играются почти как Minecraft, и тысячи модов прямо во встроенном каталоге.</p>
+      </div>
+      <div class="card path b">
+        <span class="lbl">Путь B</span>
+        <h3>Minecraft + Horizon</h3>
+        <div class="price">2 лицензии</div>
+        <p>Каждый покупает Minecraft: Java&nbsp;&amp;&nbsp;Bedrock на minecraft.net, а Horizon сверху ставится бесплатно. Шустрый клиент, сервер без Java, приглашение другу кодом.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Путь A: Luanti<br>за 10 минут <img class="em" src="/assets/emoji/rocket.webp" alt=""></h2>
+    <p class="lead">Ставят оба. Сервер держит кто-то один, второй просто подключается.</p>
+    <ol class="steps">
+      <li><b>Качаем Luanti</b><p>Сайт <a href="https://www.luanti.org/downloads/" target="_blank" rel="noopener">luanti.org</a>, есть версии для Windows, macOS, Linux и Android. Раньше игра называлась Minetest, так что в гайдах может встречаться старое имя.</p></li>
+      <li><b>Ставим «игру» внутри Luanti</b><p>Сам Luanti — это движок. Открываем вкладку <span class="nw">«Контент»</span> → <span class="nw">«Обзор онлайн-контента»</span> и ставим игру: <b class="nw" style="display:inline">VoxeLibre</b> или <b class="nw" style="display:inline">Mineclonia</b>, если хочется как в Майне, или <b class="nw" style="display:inline">Minetest Game</b> под кучу модов.</p></li>
+      <li><b>Накидываем моды</b><p>Там же, в «Обзоре», ищем моды и жмём «Установить». Потом в мире нажимаем «Выбрать моды» и включаем нужные. Каталог целиком лежит на <a href="https://content.luanti.org" target="_blank" rel="noopener">content.luanti.org</a>.</p></li>
+      <li><b>Хост создаёт мир с сервером</b><p>Вкладка «Начать игру», ставим галочку <span class="nw">«Хостить сервер»</span>, придумываем ник и пароль. Порт по умолчанию <code>30000</code>.</p></li>
+      <li><b>Второй подключается</b><p>Вкладка «Играть онлайн», вбиваем адрес хоста и порт <code>30000</code>. Моды ставить не надо: сервер сам отдаёт их при входе.</p></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Как достучаться<br>друг до друга <img class="em" src="/assets/emoji/handshake.webp" alt=""></h2>
+    <div class="who">
+      <div class="card">
+        <h3>Сидим на одном Wi-Fi</h3>
+        <ul>
+          <li>Хост узнаёт свой локальный IP, обычно что-то вроде <code>192.168.x.x</code>.</li>
+          <li>Второй вбивает этот адрес. Всё, больше ничего не нужно.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Сидим по домам</h3>
+        <ul>
+          <li>Проще всего: виртуальная сеть вроде <span class="nw">Radmin VPN</span>, ZeroTier или Tailscale. Ставят оба, заходят в одну сеть и подключаются по её IP.</li>
+          <li>Вариант посложнее: проброс порта <code>30000</code> (UDP) в роутере хоста.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Что покликать<br>для старта <img class="em" src="/assets/emoji/video_game.webp" alt=""></h2>
+    <p class="lead">Для Minetest Game, ищутся по названию в «Обзоре онлайн-контента». Если взяли VoxeLibre, смотрите фильтр по совместимости: там многое уже встроено.</p>
+    <div class="mods">
+      <div class="mod"><b>Mesecons</b><p>Провода, кнопки, поршни и логика. Местный редстоун.</p></div>
+      <div class="mod"><b>Technic</b><p>Машины, генераторы, электричество и автоматизация.</p></div>
+      <div class="mod"><b>Animalia</b><p>Нормальные животные с поведением, фермы, приручение.</p></div>
+      <div class="mod"><b>Mobs Redo</b><p>Монстры и мобы, чтобы ночью было страшно.</p></div>
+      <div class="mod"><b>Unified Inventory</b><p>Рецепты крафта прямо в инвентаре, без гугления.</p></div>
+      <div class="mod"><b>3D Armor</b><p>Броня, которую видно на персонаже.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Путь B: если купили Minecraft</h2>
+    <ol class="steps">
+      <li><b>Покупаем игру</b><p>На <a href="https://www.minecraft.net" target="_blank" rel="noopener">minecraft.net</a> каждому свою Java&nbsp;&amp;&nbsp;Bedrock Edition. Там же есть бесплатная пробная версия, если хочется сначала потыкать.</p></li>
+      <li><b>Ставим Horizon</b><p>Лаунчер с <a href="https://playhorizon.dev" target="_blank" rel="noopener">playhorizon.dev</a>, есть Windows, macOS и Linux. Входим своим Microsoft-аккаунтом, лаунчер сам найдёт или скачает файлы игры.</p></li>
+      <li><b>Зовём Ванька</b><p>Открываем мир по сети и кидаем другу код-приглашение со страницы Home в лаунчере. Или поднимаем сервер на вкладке Servers.</p></li>
+      <li><b>Моды</b><p>Только родные для Horizon: <code>.hmod</code> и <code>.hnmod</code>, плюс шейдеры в формате Iris/OptiFine. Моды на Forge и Fabric не запустятся.</p></li>
+    </ol>
+    <div class="btns">
+      <a class="btn" href="https://www.luanti.org/downloads/" target="_blank" rel="noopener">Скачать Luanti</a>
+      <a class="btn ghost" href="https://playhorizon.dev" target="_blank" rel="noopener">Horizon</a>
+      <a class="btn ghost" href="https://www.minecraft.net" target="_blank" rel="noopener">Minecraft</a>
+    </div>
+  </section>
+
+  <footer>Сделано для нас с Ваньком · <a href="/">tengizka.fun</a></footer>
+</div>
+<script>
+(function(){
+  var g=document.getElementById('ground'),h='';
+  for(var i=0;i<120;i++){var c=i<40?'t':(i>80&&(i*7)%5==0?'s':'');h+='<i class="'+c+'"></i>';}
+  g.innerHTML=h;
+  function fit(){var w=g.clientWidth,c=Math.floor(w/(innerWidth<=520?32:40))||1,kids=g.children;
+    for(var i=0;i<kids.length;i++){var row=Math.floor(i/c);kids[i].className=row===0?'t':(row===2&&(i*7)%5==0?'s':'');kids[i].style.display=row<3?'':'none';}}
+  fit();addEventListener('resize',fit);
+})();
+</script>
+</body>
+</html>
