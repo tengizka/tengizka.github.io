@@ -36,6 +36,7 @@ button.b{flex:1;border:0;border-radius:12px;padding:15px 10px;font:800 14px UB;c
 .toast{position:fixed;left:50%;top:16px;transform:translateX(-50%);background:#fff;color:#000;border-radius:10px;padding:10px 14px;font-weight:700;opacity:0;transition:.2s;pointer-events:none;z-index:9}
 .toast.on{opacity:1}
 </style></head><body>
+<div id="lock" style="position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px"><div><div style="font:800 20px UB">1SHOT</div><div id="lockT" style="color:var(--mut);margin-top:10px">Проверяю доступ…</div></div></div>
 <main>
 <h1>Конструктор постов 1SHOT</h1>
 <div class="prev"><canvas id="cv"></canvas></div>
@@ -142,7 +143,13 @@ async function send(mode){if(!tg?.initData){toast('Открой конструк
  catch(e){toast('Нет связи, попробуй ещё раз')}b.disabled=false;b.textContent=old}
 document.getElementById('sendPost').onclick=()=>send('post');document.getElementById('sendImg').onclick=()=>send('image');
 
-(async()=>{chips(document.getElementById('fmt'),FORMATS,'fmt',x=>x[2]);chips(document.getElementById('lay'),LAYOUTS,'lay',x=>x.n);fields();
+// The editor opens only for the club's SMM admins: the server checks Telegram's signature of initData.
+async function access(){const t=document.getElementById('lockT');
+ if(!tg?.initData){t.textContent='Доступ только для команды 1SHOT';return false}
+ try{const r=await fetch(FN,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({initData:tg.initData,mode:'check'})});
+  if(r.ok){document.getElementById('lock').remove();return true}}catch{}
+ t.textContent='Доступ только для команды 1SHOT';return false}
+(async()=>{if(!await access())return;chips(document.getElementById('fmt'),FORMATS,'fmt',x=>x[2]);chips(document.getElementById('lay'),LAYOUTS,'lay',x=>x.n);fields();
  const list=await (await fetch('list.json')).json();photos(list);
  await Promise.all([document.fonts.load('900 40px UB'),document.fonts.load('500 40px UB'),document.fonts.load('700 20px JB','АБВ abc')]);draw()})();
 </script>
