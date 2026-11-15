@@ -44,6 +44,7 @@ button.b{flex:1;border:0;border-radius:12px;padding:15px 10px;font:800 14px UB;c
 
 <div class="lab">Формат</div><div class="chips" id="fmt"></div>
 <div class="lab">Макет</div><div class="chips" id="lay"></div>
+<div class="lab">Цвет акцента</div><div class="chips" id="acc"></div>
 <div class="lab">Фон</div><div class="grid" id="ph"></div>
 <div class="f"><input type="range" id="dim" min="15" max="95" value="62"></div>
 <div class="hint">Яркость фона. Своё фото можно добавить через «+».</div>
@@ -64,84 +65,168 @@ button.b{flex:1;border:0;border-radius:12px;padding:15px 10px;font:800 14px UB;c
 <script>
 const tg=window.Telegram?.WebApp;tg?.ready();tg?.expand();
 const FN='https://zqhfvtgktbfnxcclqqny.supabase.co/functions/v1/smm-maker';
-const LIME='#A3FF10';
+const ACC={lime:['#A3FF10','Лайм'],orange:['#FF8A1F','Оранжевый'],pink:['#E93E97','Розовый'],blue:['#5B7BFF','Синий'],white:['#FFFFFF','Белый']};
+const onAcc=c=>c==='#5B7BFF'?'#fff':'#000';
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 const FORMATS={post:[1080,1350,'Пост 4:5'],story:[1080,1920,'Сторис 9:16']};
-// Fields per layout; defaults show how each one is meant to be filled.
+// Fields per layout; defaults show how each one is meant to be filled. «solid» layouts sit on a colour, not on a dark photo.
 const LAYOUTS={
  headline:{n:'Заголовок',f:[['kick','Надпись сверху','Классика'],['h','Заголовок','«Последняя / катка»'],['s','Текст','сказал он в 22:00. / Сейчас 4:17.']]},
- word:{n:'Словарь',f:[['w','Слово','Кемпер'],['tr','Транскрипция','[кем-пер] · сущ.'],['d','Определение','Сидит в углу всю катку. / Уверен, что это тактика.']]},
- list:{n:'Список',f:[['kick','Надпись сверху','Проверь себя'],['h','Заголовок','Ты наш / постоянник, если'],['li','Пункты через « ; »','Админ помнит твой ник; Называешь цены быстрее админа; «На часок» уже никто не верит']]},
- quote:{n:'Цитата',f:[['h','Цитата','Я не проиграл. / Я собирал / *данные.*'],['a','Кто сказал','Каждый второй после катки']]},
- todo:{n:'Чек-лист',f:[['kick','Надпись сверху','Планы на пятницу'],['li','Пункты через « ; », «+» в начале = отмечено','Выспаться; Сходить в спортзал; +Ночь в 1SHOT']]},
+ top:{n:'Сверху',f:[['kick','Надпись сверху','Ночь пятницы'],['h','Заголовок','Мир / подождёт'],['s','Текст','С 22:00 до 8:00, от 899 ₽']]},
+ center:{n:'По центру',f:[['kick','Надпись сверху','Компьютерный клуб'],['h','Заголовок','Свои / *рядом*'],['s','Текст','Мытищи, Мира 37 · 24/7']]},
  big:{n:'Крупно',f:[['h','Крупный текст','Тихо. / *Тут тащат.*'],['s','Под ним (можно пусто)','']]},
+ sticker:{n:'Стикер',f:[['h','Текст на плашке','Ещё одну / и домой'],['s','Под плашкой','Никто не ушёл домой']]},
+ number:{n:'Цифра',f:[['kick','Над цифрой','Ночь в 1SHOT'],['num','Цифра','899 ₽'],['s','Под цифрой','С 22:00 до 8:00 / в STANDART']]},
+ word:{n:'Словарь',f:[['w','Слово','Кемпер'],['tr','Транскрипция','[кем-пер] · сущ.'],['d','Определение','Сидит в углу всю катку. / Уверен, что это тактика.']]},
+ quote:{n:'Цитата',f:[['h','Цитата','Я не проиграл. / Я собирал / *данные.*'],['a','Кто сказал','Каждый второй после катки']]},
+ list:{n:'Список',f:[['kick','Надпись сверху','Проверь себя'],['h','Заголовок','Ты наш / постоянник, если'],['li','Пункты через « ; »','Админ помнит твой ник; Называешь цены быстрее админа; «На часок» уже никто не верит']]},
+ todo:{n:'Чек-лист',f:[['kick','Надпись сверху','Планы на пятницу'],['li','Пункты через « ; », «+» в начале = отмечено','Выспаться; Сходить в спортзал; +Ночь в 1SHOT']]},
+ chat:{n:'Переписка',f:[['who','Кто пишет','Мама'],['li','Сообщения через « ; », «>» в начале = твоё','Ты где?; >Готовлюсь к сессии; К какой ещё сессии?; >Игровой. До 8 утра']]},
+ dialog:{n:'Окно',f:[['h','Заголовок окна','Выходные / не найдены'],['s','Текст','Возможно, они в клубе / на Мира, 37.'],['b','Кнопка','Найти в 1SHOT']]},
+ terminal:{n:'Терминал',f:[['h','Заголовок','system.log'],['li','Строки через « ; »','загрузка выходных... ok; поиск друзей... 3 найдено; бронь ПК на 22:00... ok; сон... отключён']]},
+ vs:{n:'Сравнение',f:[['l','Левый заголовок','Дома'],['r','Правый заголовок','В 1SHOT'],['li','Пары « слева | справа » через « ; »','Комп гудит | RTX 4070; «Выключай уже!» | Открыто 24/7; Стул с кухни | Игровое кресло']]},
+ ticker:{n:'Лента',f:[['tape','Текст ленты','1SHOT · 24/7 · МЫТИЩИ'],['h','Заголовок','Мы не / *закрываемся*'],['s','Текст','Вообще. Даже в праздники']]},
+ poster:{n:'Постер',solid:1,f:[['kick','Надпись сверху','Пятница'],['h','Заголовок','Неделя / пройдена'],['s','Текст','Награда: ночь в клубе от 899 ₽']]},
+ split:{n:'Половина',solid:1,f:[['kick','Надпись сверху','VIP 1'],['h','Заголовок','RTX 4070 / и тишина'],['s','Текст','MSI MAG 27″ 2K 240 Hz']]},
+ light:{n:'Светлый',solid:1,f:[['kick','Надпись сверху','Простая математика'],['h','Заголовок','Час в клубе / *189 ₽*'],['s','Текст','Игровой ПК домой: от 100 000 ₽']]},
+ polaroid:{n:'Полароид',solid:1,f:[['h','Подпись на фото','та самая ночь'],['s','Под фото','Сохрани момент. / Мира, 37']]},
 };
-// Ready texts for the random button, by layout. Fields are the same keys as in LAYOUTS.
+// Ready texts for the random button, by layout, in the order of the layout's fields.
 const BANK={
- headline:[['Классика','«Последняя / катка»','сказал он в 22:00. / Сейчас 4:17.'],['Простая математика','Игровой ПК / домой: / *от 100 000 ₽*','Час в VIP 1SHOT / на RTX 4070: 229 ₽'],['Факт','*1972* год','Первый турнир по видеоиграм / прошёл в Стэнфорде.'],['Совет','Раз в час / отпусти мышку','Пять минут без экрана, / и снова в катку.'],['Пятница','Неделя / *пройдена*','Награда: ночь в клубе / от 899 ₽'],['Подождите','Загрузка / выходных','Осталось пережить пятницу'],['Знакомо?','«Ещё одну / и *домой*»','Дом: так и не дождался.'],['Ночь','Ночью / *всё честнее*','Тихо, свои, и катка до утра.'],['Без лишних слов','Мира, 37. / *24/7.*','Компьютерный клуб в Мытищах'],['Утро','Кто рано / встаёт, тому / *свободный ПК*','Утро с 8:00 до 13:00 от 399 ₽']],
+ headline:[['Классика','«Последняя / катка»','сказал он в 22:00. / Сейчас 4:17.'],['Простая математика','Игровой ПК / домой: / *от 100 000 ₽*','Час в VIP 1SHOT / на RTX 4070: 229 ₽'],['Факт','*1972* год','Первый турнир по видеоиграм / прошёл в Стэнфорде.'],['Совет','Раз в час / отпусти мышку','Пять минут без экрана, / и снова в катку.'],['Знакомо?','«Ещё одну / и *домой*»','Дом: так и не дождался.'],['Утро','Кто рано / встаёт, тому / *свободный ПК*','Утро с 8:00 до 13:00 от 399 ₽']],
+ top:[['Ночь пятницы','Мир / подождёт','С 22:00 до 8:00, от 899 ₽'],['Понедельник','Неделя / только началась','А ты уже думаешь про пятницу'],['Напоминание','Ты обещал / *лечь пораньше*','Мы никому не скажем'],['Внимание','Тут / *не спят*','Компьютерный клуб 24/7']],
+ center:[['Компьютерный клуб','Свои / *рядом*','Мытищи, Мира 37 · 24/7'],['Без лишних слов','*24/7*','Мы всегда открыты'],['Классика','GG / *WP*','Хорошая игра, хорошая ночь'],['1SHOT','Один / *выстрел*','И ты в игре']],
+ big:[['Тихо. / *Тут тащат.*',''],['*24/7*','Мы не закрываемся. / Даже когда ты обещал / лечь пораньше.'],['Один / из них / *твой.*','Свободный ПК ждёт'],['Ночь / *наша.*','С 22:00 до 8:00, от 899 ₽']],
+ sticker:[['Ещё одну / и домой','Никто не ушёл домой'],['Я на / часок','Уходит в 8 утра'],['Это не я, / это пинг','Классика жанра'],['Мам, я / учусь','Игровая сессия до утра']],
+ number:[['Ночь в 1SHOT','899 ₽','С 22:00 до 8:00 / в STANDART'],['Час в STANDART','189 ₽','RTX 4060 и Acer Nitro 24,5″ 240 Hz'],['Мы открыты','24/7','Даже когда все спят'],['PS5 на 65″','299 ₽','Час в TV-зоне / диван на двоих'],['Монитор в VIP 2','390 Hz','Acer Nitro 24,5″']],
  word:[['Тильт','[тильт] · сущ.','Проиграл три катки подряд / и точно знаешь, кто виноват: / тиммейты, мышка и луна.'],['Ваншот','[уан-шот] · сущ.','1. Убить с одного выстрела. / 2. Клуб в Мытищах, где пункт 1 / можно тренировать 24/7.'],['АФК','[а-эф-ка] · away from keyboard','Отошёл от клавиатуры. / В 9 случаях из 10 за энергетиком.'],['Руинер','[ру-и-нер] · сущ.','Тиммейт, который проиграл / за вас обоих. Сам уверен, / что руинер тут ты.'],['Кемпер','[кем-пер] · сущ.','Сидит в углу всю катку. / Уверен, что это тактика.'],['Смурф','[смурф] · сущ.','Опытный игрок на новом / аккаунте. «Я первый раз, / честно».'],['Катка','[кат-ка] · сущ.','Единица измерения времени. / «Ещё одна» длится до утра.'],['Пинг','[пинг] · сущ.','Главный виноватый / в любом поражении.']],
- list:[['Наблюдения с ресепшена','Кто есть / в каждом клубе','«Я на часок». Уходит утром; Кричит в микрофон на весь зал; 20 минут выбирает скин; Пришёл с другом и проиграл ему'],['Проверь себя','Ты наш / постоянник, если','Админ помнит твой ник; Грустишь, если «твой» ПК занят; Называешь цены быстрее админа; «На часок» уже никто не верит'],['Сохрани','Красные флаги / тиммейта','«Это не я, это пинг»; «Я на минутку» и пропал на 20; Сдаётся на третьей минуте; Молчит, а потом «ну всё»'],['Чек-лист на ночь','Что взять / в клуб','Друга; Зарядку для телефона; Хорошее настроение; Всё остальное у нас'],['Мнение редакции','Лучшая еда / за катками','Пицца на всю команду; Лапша, пока идёт поиск; Чипсы, но не в микрофон'],['Почему 1SHOT','Пять причин / прийти','Открыто 24/7; Ночь от 899 ₽; RTX 4070 в VIP; PS5 на 65″; Свои рядом']],
- quote:[['Я не проиграл. / Я собирал / *данные.*','Каждый второй после катки'],['Это не я, / это *пинг*.','Классика'],['Сейчас / *затащу*.','За минуту до поражения'],['Я на / *минутку*.','Ушёл на 20 минут'],['Последняя. / *Честно.*','Пятая по счёту'],['Мам, я / *учусь*.','Подготовка к игровой сессии']],
- todo:[['Планы на пятницу','Выспаться; Сходить в спортзал; Разобрать дела; +Ночь в 1SHOT'],['Планы на выходные','Встать пораньше; Убраться дома; +Позвать друзей; +Ночь в 1SHOT'],['Сегодня','Сделать домашку; Лечь до полуночи; +Затащить три катки'],['Список дел на ночь','Спать; +Играть; +Играть; +Играть до утра']],
- big:[['Тихо. / *Тут тащат.*',''],['*24/7*','Мы не закрываемся. / Даже когда ты обещал / лечь пораньше.'],['Один / из них / *твой.*','Свободный ПК ждёт'],['Свои / *рядом.*','Компьютерный клуб в Мытищах'],['Ночь / *наша.*','С 22:00 до 8:00, от 899 ₽'],['Мира, 37. / *Заходи.*','']],
+ quote:[['Я не проиграл. / Я собирал / *данные.*','Каждый второй после катки'],['Это не я, / это *пинг*.','Классика'],['Сейчас / *затащу*.','За минуту до поражения'],['Последняя. / *Честно.*','Пятая по счёту']],
+ list:[['Наблюдения с ресепшена','Кто есть / в каждом клубе','«Я на часок». Уходит утром; Кричит в микрофон на весь зал; 20 минут выбирает скин; Пришёл с другом и проиграл ему'],['Проверь себя','Ты наш / постоянник, если','Админ помнит твой ник; Грустишь, если «твой» ПК занят; Называешь цены быстрее админа; «На часок» уже никто не верит'],['Чек-лист на ночь','Что взять / в клуб','Друга; Зарядку для телефона; Хорошее настроение; Всё остальное у нас'],['Почему 1SHOT','Пять причин / прийти','Открыто 24/7; Ночь от 899 ₽; RTX 4070 в VIP; PS5 на 65″; Свои рядом']],
+ todo:[['Планы на пятницу','Выспаться; Сходить в спортзал; Разобрать дела; +Ночь в 1SHOT'],['Планы на выходные','Встать пораньше; Убраться дома; +Позвать друзей; +Ночь в 1SHOT'],['Список дел на ночь','Спать; +Играть; +Играть; +Играть до утра']],
+ chat:[['Мама','Ты где?; >Готовлюсь к сессии; К какой ещё сессии?; >Игровой. До 8 утра'],['Друг','Ты сегодня свободен?; >Смотря для чего; Ночь в 1SHOT; >Уже выхожу'],['Админ 1SHOT','Твой ПК свободен; >Какой мой?; Тот, где ты сидишь всегда; >Бегу']],
+ dialog:[['Выходные / не найдены','Возможно, они в клубе / на Мира, 37.','Найти в 1SHOT'],['Сон / не обнаружен','Последний раз его видели / в пятницу вечером.','Ну и ладно'],['Обновление / доступно','Новая ночь в клубе / уже ждёт установки.','Установить']],
+ terminal:[['system.log','загрузка выходных... ok; поиск друзей... 3 найдено; бронь ПК на 22:00... ok; сон... отключён'],['night.exe','запуск ночи... 22:00; катки... много; энергия... 100%; выход... 8:00'],['tiltcheck','последние 3 катки... поражение; причина... пинг; решение... ещё одну']],
+ vs:[['Дома','В 1SHOT','Комп гудит | RTX 4070; «Выключай уже!» | Открыто 24/7; Стул с кухни | Игровое кресло'],['Ожидание','Реальность','Сыграю часок | Играю до утра; Лягу в 23:00 | Рассвет в клубе; Выиграю всё | Хотя бы одну']],
+ ticker:[['1SHOT · 24/7 · МЫТИЩИ','Мы не / *закрываемся*','Вообще. Даже в праздники'],['НОЧЬ · 899 ₽ · 22:00 → 8:00','Ночь / *начинается*','Здесь, на Мира, 37'],['GG · WP · 1SHOT','Хорошая / *игра*','Хорошая ночь']],
+ poster:[['Пятница','Неделя / пройдена','Награда: ночь в клубе от 899 ₽'],['Выходные','Время / играть','Мира, 37 · открыто 24/7'],['Новый день','Новая / катка','Утро с 8:00 до 13:00 от 399 ₽']],
+ split:[['VIP 1','RTX 4070 / и тишина','MSI MAG 27″ 2K 240 Hz'],['VIP 2','390 Hz / в каждом кадре','Acer Nitro 24,5″ 390 Hz'],['STANDART','Час / за 189 ₽','RTX 4060 · Acer Nitro 24,5″ 240 Hz'],['TV-зона','PS5 / на 65″','Samsung 65″ 4K · диван на двоих']],
+ light:[['Простая математика','Час в клубе / *189 ₽*','Игровой ПК домой: от 100 000 ₽'],['Факт','Первая мышь была / *деревянной*','Её придумали в 1960-х'],['Расписание','Мы открыты / *всегда*','Компьютерный клуб в Мытищах']],
+ polaroid:[['та самая ночь','Сохрани момент. / Мира, 37'],['до рассвета','Кто был, тот знает'],['наш зал','Мытищи, Мира 37 · 24/7']],
 };
 const FOOT=[['Мира, 37','24/7'],['Ночь от 899 ₽','22:00 → 8:00'],['Компьютерный клуб','Мытищи'],['1SHOT','Мира, 37'],['Словарь геймера','1SHOT']];
 const pick=(a,not)=>{let x;do{x=a[Math.floor(Math.random()*a.length)]}while(a.length>1&&x===not);return x};
 let lastRnd={};
 async function randomize(list){const lay=pick(Object.keys(LAYOUTS),lastRnd.lay);const txt=pick(BANK[lay],lastRnd.txt);
  st.lay=lay;LAYOUTS[lay].f.forEach(([k],i)=>st.v[lay+'_'+k]=txt[i]||'');st.custom=null;st.img=pick(list,st.img);st.dim=45+Math.round(Math.random()*30);
+ st.acc=pick(Object.keys(ACC),st.acc);
  const f=lay==='word'?FOOT[4]:pick(FOOT.slice(0,4));document.getElementById('fl').value=f[0];document.getElementById('fr').value=f[1];
  document.getElementById('dim').value=st.dim;lastRnd={lay,txt};
- chips(document.getElementById('lay'),LAYOUTS,'lay',x=>x.n);fields();photos(list);tg?.HapticFeedback?.impactOccurred('light');draw()}
-const st={fmt:'post',lay:'headline',img:'club_02.jpg',dim:62,v:{},custom:null};
-const imgCache={};let logo;
+ chips(document.getElementById('lay'),LAYOUTS,'lay',x=>x.n);chips(document.getElementById('acc'),ACC,'acc',x=>x[1]);fields();photos(list);tg?.HapticFeedback?.impactOccurred('light');draw()}
+const st={fmt:'post',lay:'headline',acc:'lime',img:'club_02.jpg',dim:62,v:{},custom:null};
+const imgCache={};let logoW,logoB;
 const loadImg=src=>imgCache[src]||(imgCache[src]=new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src}));
+// The logo in black for light and colour backgrounds: the same SVG with its white fill swapped.
+async function logos(){if(logoW)return;logoW=await loadImg('logo.svg');const t=await (await fetch('logo.svg')).text();logoB=await loadImg('data:image/svg+xml;charset=utf-8,'+encodeURIComponent(t.replace(/fill="white"/g,'fill="#0B0B0C"')))}
 
 function chips(el,obj,key,label){el.innerHTML='';for(const k in obj){const b=document.createElement('button');b.className='chip'+(st[key]===k?' on':'');b.textContent=label(obj[k]);b.onclick=()=>{st[key]=k;if(key==='lay')fields();chips(el,obj,key,label);draw()};el.appendChild(b)}}
 function fields(){const box=document.getElementById('fields');box.innerHTML='';for(const [k,lab,def] of LAYOUTS[st.lay].f){const id=st.lay+'_'+k;if(st.v[id]===undefined)st.v[id]=def;
  const t=document.createElement('textarea');t.rows=k==='li'||k==='d'||k==='s'?2:1;t.placeholder=lab;t.value=st.v[id];t.setAttribute('enterkeyhint','done');t.className='f';
  t.oninput=()=>{st.v[id]=t.value;draw()};box.appendChild(t)}}
 const val=k=>st.v[st.lay+'_'+k]||'';
+const items=(k,n)=>val(k).split(';').map(x=>x.trim()).filter(Boolean).slice(0,n);
 
-// Rich text: " / " is a line break, *word* is lime. Lines wrap by words to the given width.
-function parseRuns(s){const out=[];let on=false;for(const part of s.split('*')){if(part)out.push({t:part,c:on?LIME:null});on=!on}return out}
+// Rich text: " / " is a line break, *word* is highlighted. Lines wrap by words to the given width.
+function parseRuns(s){const out=[];let on=false;for(const part of s.split('*')){if(part)out.push({t:part,h:on});on=!on}return out}
 function layout(text,font,maxW){ctx.font=font;const lines=[];for(const para of text.split(/\s+\/\s+|\s*\n\s*/)){let line=[],w=0;
  for(const run of parseRuns(para))for(const word of run.t.split(/(\s+)/)){if(!word)continue;const ww=ctx.measureText(word).width;
   if(w+ww>maxW&&line.length&&word.trim()){lines.push(line);line=[];w=0;if(!word.trim())continue}
-  if(!line.length&&!word.trim())continue;line.push({t:word,c:run.c,w:ww});w+=ww}
+  if(!line.length&&!word.trim())continue;line.push({t:word,h:run.h,w:ww});w+=ww}
  lines.push(line)}return lines}
 function fit(text,weight,size,family,maxW,maxLines,min=36){let s=size,L;do{L=layout(text,`${weight} ${s}px ${family}`,maxW);if(L.length<=maxLines&&L.every(l=>l.reduce((a,x)=>a+x.w,0)<=maxW))break;s-=4}while(s>min);return {L,s}}
-function paint(L,x,y,size,lh,font,color){ctx.font=font;ctx.textBaseline='alphabetic';let yy=y;for(const line of L){let xx=x;for(const r of line){ctx.fillStyle=r.c||color;ctx.fillText(r.t,xx,yy);xx+=r.w}yy+=size*lh}return yy}
-// Measures a block's height before drawing, so blocks can be stacked from the bottom.
+const lineW=l=>l.reduce((a,x)=>a+x.w,0);
+// o: hl = colour of highlighted words; mark = colour of a block behind them; center = x is the middle.
+function paint(L,x,y,size,lh,font,color,o={}){ctx.font=font;ctx.textBaseline='alphabetic';let yy=y;for(const line of L){let xx=o.center?x-lineW(line)/2:x;
+ for(const r of line){if(r.h&&o.mark&&r.t.trim()){ctx.fillStyle=o.mark;ctx.fillRect(xx-6,yy-size*.82,r.w+12,size*1.02)}ctx.fillStyle=r.h?(o.hl||color):color;ctx.fillText(r.t,xx,yy);xx+=r.w}yy+=size*lh}return yy}
 const blockH=(L,size,lh)=>L.length*size*lh;
 function mono(t,x,y,color,size=24,align='left'){ctx.font=`700 ${size}px JB`;ctx.fillStyle=color;ctx.textAlign=align;ctx.letterSpacing=(size*.14)+'px';ctx.fillText(t.toUpperCase(),x,y);ctx.letterSpacing='0px';ctx.textAlign='left'}
+// Photo cropped to cover a box; darkness is a black layer on top (canvas filters are missing in older iOS).
+function cover(im,x,y,w,h,dim){if(!im)return;ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();const r=Math.max(w/im.width,h/im.height),iw=im.width*r,ih=im.height*r;ctx.drawImage(im,x+(w-iw)/2,y+(h-ih)/2,iw,ih);
+ if(dim<1){ctx.fillStyle=`rgba(0,0,0,${1-dim})`;ctx.fillRect(x,y,w,h)}ctx.restore()}
+function grad(W,H,a,b){const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,`rgba(0,0,0,${a})`);g.addColorStop(.22,'rgba(0,0,0,0)');g.addColorStop(.4,'rgba(0,0,0,0)');g.addColorStop(1,`rgba(0,0,0,${b})`);ctx.fillStyle=g;ctx.fillRect(0,0,W,H)}
+function rrect(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
 
-async function draw(){const [W,H]=FORMATS[st.fmt];cv.width=W;cv.height=H;const top=st.fmt==='story'?210:72,bot=st.fmt==='story'?250:64,X=72,MW=W-2*X;
- ctx.fillStyle='#0B0B0C';ctx.fillRect(0,0,W,H);
- const im=st.custom||await loadImg('img/'+st.img);
- if(im){const r=Math.max(W/im.width,H/im.height),w=im.width*r,h=im.height*r;ctx.filter=`brightness(${st.dim/100}) saturate(1.1)`;ctx.drawImage(im,(W-w)/2,(H-h)/2,w,h);ctx.filter='none'}
- const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'rgba(0,0,0,.5)');g.addColorStop(.22,'rgba(0,0,0,0)');g.addColorStop(.4,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.95)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
- if(st.lay==='list'||st.lay==='todo'){ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(0,0,W,H)}
- logo=logo||await loadImg('logo.svg');if(logo)ctx.drawImage(logo,X,top,180,180*logo.height/logo.width);
- mono('Компьютерный клуб',W-X,top+22,'rgba(255,255,255,.7)',22,'right');mono('Мытищи',W-X,top+56,'rgba(255,255,255,.7)',22,'right');
- // footer
- const fy=H-bot;ctx.fillStyle='rgba(255,255,255,.22)';ctx.fillRect(X,fy-56,MW,2);
- mono(document.getElementById('fl').value||'Мира, 37',X,fy-12,'rgba(255,255,255,.75)',22);mono(document.getElementById('fr').value||'24/7',W-X,fy-12,'rgba(255,255,255,.75)',22,'right');
- const base=fy-100;const L=st.lay;
+async function draw(){const [W,H]=FORMATS[st.fmt];cv.width=W;cv.height=H;const story=st.fmt==='story',top=story?210:72,bot=story?250:64,X=72,MW=W-2*X;
+ const A=ACC[st.acc][0],OA=onAcc(A),L=st.lay,solid=!!LAYOUTS[L].solid,dim=st.dim/100;
+ const im=st.custom||await loadImg('img/'+st.img);await logos();
+ const fy=H-bot,base=fy-100,fl=document.getElementById('fl').value||'Мира, 37',fr=document.getElementById('fr').value||'24/7';
+ // head and foot in the given colours
+ const head=(col,dark,sub=col)=>{const lg=dark?logoB:logoW;if(lg)ctx.drawImage(lg,X,top,180,180*lg.height/lg.width);mono('Компьютерный клуб',W-X,top+22,sub,22,'right');mono('Мытищи',W-X,top+56,sub,22,'right')};
+ const foot=(col,line)=>{ctx.fillStyle=line;ctx.fillRect(X,fy-56,MW,2);mono(fl,X,fy-12,col,22);mono(fr,W-X,fy-12,col,22,'right')};
+ if(!solid){ctx.fillStyle='#0B0B0C';ctx.fillRect(0,0,W,H);cover(im,0,0,W,H,L==='terminal'?dim*.35:dim);
+  if(L==='top'){const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'rgba(0,0,0,.95)');g.addColorStop(.55,'rgba(0,0,0,.2)');g.addColorStop(.8,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.6)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H)}
+  else if(L==='center'){ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(0,0,W,H)}
+  else grad(W,H,.5,.95);
+  if(['list','todo','chat','vs','terminal'].includes(L)){ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(0,0,W,H)}
+  head('#fff',false,'rgba(255,255,255,.7)');foot('rgba(255,255,255,.75)','rgba(255,255,255,.22)')}
+ const T=(L2,x,y,s,lh,w,col,o)=>paint(L2,x,y+s*.8,s,lh,`${w} ${s}px UB`,col,o);
+ const hlD={hl:A};
  if(L==='headline'){const s=fit(val('s'),500,40,'UB',MW,4,26),h=fit(val('h'),900,104,'UB',MW,4,48);
-  let y=base-blockH(s.L,s.s,1.3);const hy=y-30-blockH(h.L,h.s,.98);mono(val('kick'),X,hy-h.s*.2-24,LIME);paint(h.L,X,hy+h.s*.8,h.s,.98,`900 ${h.s}px UB`,'#fff');paint(s.L,X,y+s.s*.9,s.s,1.3,`500 ${s.s}px UB`,'rgba(255,255,255,.88)')}
+  let y=base-blockH(s.L,s.s,1.3);const hy=y-30-blockH(h.L,h.s,.98);mono(val('kick'),X,hy-h.s*.2-24,A);T(h.L,X,hy,h.s,.98,900,'#fff',hlD);paint(s.L,X,y+s.s*.9,s.s,1.3,`500 ${s.s}px UB`,'rgba(255,255,255,.88)',hlD)}
+ if(L==='top'){let y=top+(story?260:230);mono(val('kick'),X,y,A);const h=fit(val('h'),900,112,'UB',MW,4,48);y=T(h.L,X,y+30,h.s,.98,900,'#fff',hlD);
+  const s=fit(val('s'),500,40,'UB',MW,3,26);paint(s.L,X,y+10+s.s*.9,s.s,1.3,`500 ${s.s}px UB`,'rgba(255,255,255,.88)',hlD)}
+ if(L==='center'){ctx.strokeStyle=A;ctx.lineWidth=4;ctx.strokeRect(36,36,W-72,H-72);
+  const h=fit(val('h'),900,130,'UB',MW-40,4,48),s=fit(val('s'),500,38,'UB',MW-40,3,26);const tot=60+blockH(h.L,h.s,.98)+30+blockH(s.L,s.s,1.3);let y=(H-tot)/2;
+  mono(val('kick'),W/2,y+24,A,24,'center');y=T(h.L,W/2,y+60,h.s,.98,900,'#fff',{hl:A,center:1});paint(s.L,W/2,y+30+s.s*.9,s.s,1.3,`500 ${s.s}px UB`,'rgba(255,255,255,.88)',{hl:A,center:1})}
  if(L==='word'){const d=fit(val('d'),500,40,'UB',MW,4,26),w=fit(val('w'),900,150,'UB',MW,1,60);let y=base-blockH(d.L,d.s,1.3);
-  ctx.font='700 28px JB';ctx.fillStyle=LIME;ctx.fillText(val('tr'),X,y-30);const wy=y-60-w.s*.15;paint(w.L,X,wy,w.s,1,`900 ${w.s}px UB`,'#fff');paint(d.L,X,y+d.s*.9,d.s,1.3,`500 ${d.s}px UB`,'#fff')}
+  ctx.font='700 28px JB';ctx.fillStyle=A;ctx.fillText(val('tr'),X,y-30);const wy=y-60-w.s*.15;paint(w.L,X,wy,w.s,1,`900 ${w.s}px UB`,'#fff',hlD);paint(d.L,X,y+d.s*.9,d.s,1.3,`500 ${d.s}px UB`,'#fff',hlD)}
  if(L==='quote'){const h=fit(val('h'),900,96,'UB',MW,5,44);let y=base-30;mono(val('a'),X,y,'rgba(255,255,255,.75)');const hy=y-50-blockH(h.L,h.s,.98);
-  ctx.font='900 220px UB';ctx.fillStyle=LIME;ctx.fillText('“',X-6,hy+40);paint(h.L,X,hy+h.s*.8,h.s,.98,`900 ${h.s}px UB`,'#fff')}
+  ctx.font='900 220px UB';ctx.fillStyle=A;ctx.fillText('“',X-6,hy+40);T(h.L,X,hy,h.s,.98,900,'#fff',hlD)}
  if(L==='big'){const s=fit(val('s'),600,42,'UB',MW,3,26),h=fit(val('h'),900,150,'UB',MW,4,60);const sy=base-(val('s')?blockH(s.L,s.s,1.3):0);
-  const hy=sy-(val('s')?36:0)-blockH(h.L,h.s,.98);paint(h.L,X,hy+h.s*.8,h.s,.98,`900 ${h.s}px UB`,'#fff');if(val('s'))paint(s.L,X,sy+s.s*.9,s.s,1.3,`600 ${s.s}px UB`,'#fff')}
- if(L==='list'){const items=val('li').split(';').map(x=>x.trim()).filter(Boolean).slice(0,7);let y=top+200;mono(val('kick'),X,y,LIME);const h=fit(val('h'),900,80,'UB',MW,3,44);
-  y=paint(h.L,X,y+30+h.s*.85,h.s,.98,`900 ${h.s}px UB`,'#fff')+10;items.forEach((it,i)=>{const t=fit(it,600,36,'UB',MW-80,2,26);ctx.fillStyle='rgba(255,255,255,.16)';ctx.fillRect(X,y,MW,2);
-   ctx.font='700 26px JB';ctx.fillStyle=LIME;ctx.fillText(String(i+1).padStart(2,'0'),X,y+22+t.s);y=paint(t.L,X+76,y+22+t.s,t.s,1.25,`600 ${t.s}px UB`,'#fff')+4})}
- if(L==='todo'){const items=val('li').split(';').map(x=>x.trim()).filter(Boolean).slice(0,6);let y=base-items.length*86;mono(val('kick'),X,y-40,LIME);
-  items.forEach(it=>{const on=it.startsWith('+'),t=on?it.slice(1).trim():it;ctx.lineWidth=5;if(on){ctx.fillStyle=LIME;ctx.fillRect(X,y,44,44);ctx.strokeStyle='#000';ctx.beginPath();ctx.moveTo(X+10,y+22);ctx.lineTo(X+19,y+32);ctx.lineTo(X+35,y+12);ctx.stroke()}else{ctx.strokeStyle='#fff';ctx.strokeRect(X+2.5,y+2.5,39,39)}
-   const f=fit(t,800,52,'UB',MW-80,1,30);paint(f.L,X+76,y+40,f.s,1,`800 ${f.s}px UB`,on?'#fff':'rgba(255,255,255,.5)');if(!on){const w=f.L[0]?.reduce((a,x)=>a+x.w,0)||0;ctx.fillStyle='rgba(255,255,255,.5)';ctx.fillRect(X+76,y+22,w,5)}y+=86})}
+  const hy=sy-(val('s')?36:0)-blockH(h.L,h.s,.98);T(h.L,X,hy,h.s,.98,900,'#fff',hlD);if(val('s'))paint(s.L,X,sy+s.s*.9,s.s,1.3,`600 ${s.s}px UB`,'#fff',hlD)}
+ if(L==='sticker'){const h=fit(val('h'),900,110,'UB',MW-120,4,48),s=fit(val('s'),600,40,'UB',MW,3,26);const bh=blockH(h.L,h.s,.98)+90,by=base-blockH(s.L,s.s,1.3)-60-bh;
+  ctx.save();ctx.translate(W/2,by+bh/2);ctx.rotate(-4*Math.PI/180);ctx.fillStyle=A;ctx.fillRect(-MW/2+10,-bh/2,MW-20,bh);T(h.L,-MW/2+60,-bh/2+45,h.s,.98,900,OA);ctx.restore();
+  paint(s.L,X,base-blockH(s.L,s.s,1.3)+s.s*.9,s.s,1.3,`600 ${s.s}px UB`,'#fff',hlD)}
+ if(L==='number'){const k=val('kick'),num=val('num'),s=fit(val('s'),600,40,'UB',MW,3,26);let size=300;ctx.font=`900 ${size}px UB`;while(ctx.measureText(num).width>MW&&size>80){size-=10;ctx.font=`900 ${size}px UB`}
+  const sy=base-blockH(s.L,s.s,1.3),ny=sy-50;ctx.lineWidth=6;ctx.strokeStyle=A;ctx.strokeText(num,X,ny);mono(k,X,ny-size*.78-30,A);paint(s.L,X,sy+s.s*.9,s.s,1.3,`600 ${s.s}px UB`,'#fff',hlD)}
+ if(L==='list'){const it=items('li',7);let y=top+200;mono(val('kick'),X,y,A);const h=fit(val('h'),900,80,'UB',MW,3,44);
+  y=T(h.L,X,y+30,h.s,.98,900,'#fff',hlD)+10;it.forEach((t0,i)=>{const t=fit(t0,600,36,'UB',MW-80,2,26);ctx.fillStyle='rgba(255,255,255,.16)';ctx.fillRect(X,y,MW,2);
+   ctx.font='700 26px JB';ctx.fillStyle=A;ctx.fillText(String(i+1).padStart(2,'0'),X,y+22+t.s);y=paint(t.L,X+76,y+22+t.s,t.s,1.25,`600 ${t.s}px UB`,'#fff',hlD)+4})}
+ if(L==='todo'){const it=items('li',6);let y=base-it.length*86;mono(val('kick'),X,y-40,A);
+  it.forEach(t0=>{const on=t0.startsWith('+'),t=on?t0.slice(1).trim():t0;ctx.lineWidth=5;if(on){ctx.fillStyle=A;ctx.fillRect(X,y,44,44);ctx.strokeStyle=OA;ctx.beginPath();ctx.moveTo(X+10,y+22);ctx.lineTo(X+19,y+32);ctx.lineTo(X+35,y+12);ctx.stroke()}else{ctx.strokeStyle='#fff';ctx.strokeRect(X+2.5,y+2.5,39,39)}
+   const f=fit(t,800,52,'UB',MW-80,1,30);paint(f.L,X+76,y+40,f.s,1,`800 ${f.s}px UB`,on?'#fff':'rgba(255,255,255,.5)');if(!on){ctx.fillStyle='rgba(255,255,255,.5)';ctx.fillRect(X+76,y+22,lineW(f.L[0]||[]),5)}y+=86})}
+ if(L==='chat'){const it=items('li',6);let y=top+(story?300:230);ctx.font='700 22px JB';
+  for(const m0 of it){const me=m0.startsWith('>'),m=me?m0.slice(1).trim():m0;if(!me){mono(val('who'),X,y,'rgba(255,255,255,.6)',22);y+=18}
+   const f=fit(m,600,40,'UB',620,3,28),bw=Math.max(...f.L.map(lineW))+68,bh=blockH(f.L,f.s,1.25)+44,bx=me?W-X-bw:X;
+   ctx.fillStyle=me?A:'rgba(255,255,255,.16)';rrect(bx,y,bw,bh,36);ctx.fill();paint(f.L,bx+34,y+22+f.s*.85,f.s,1.25,`600 ${f.s}px UB`,me?OA:'#fff');y+=bh+(me?34:22)}}
+ if(L==='dialog'){const h=fit(val('h'),900,54,'UB',MW-260,3,32),s=fit(val('s'),500,32,'UB',MW-260,3,22);const ww=MW-40,inner=Math.max(130,blockH(h.L,h.s,1.05)+24+blockH(s.L,s.s,1.3)),wh=80+50+inner+50+110;
+  const wx=(W-ww)/2,wy=(H-wh)/2;ctx.fillStyle='rgba(0,0,0,.5)';rrect(wx+10,wy+24,ww,wh,18);ctx.fill();ctx.fillStyle='#ECECEC';rrect(wx,wy,ww,wh,18);ctx.fill();ctx.fillStyle='#fff';ctx.fillRect(wx,wy+18,ww,62);rrect(wx,wy,ww,80,18);ctx.fill();
+  ctx.font='700 24px JB';ctx.fillStyle='#111';ctx.fillText('system.exe',wx+30,wy+50);ctx.font='700 32px UB';ctx.fillText('✕',wx+ww-56,wy+52);
+  ctx.fillStyle='#E5363A';ctx.beginPath();ctx.arc(wx+100,wy+80+50+60,58,0,7);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=11;ctx.beginPath();ctx.moveTo(wx+80,wy+170);ctx.lineTo(wx+120,wy+210);ctx.moveTo(wx+120,wy+170);ctx.lineTo(wx+80,wy+210);ctx.stroke();
+  let y=T(h.L,wx+200,wy+130,h.s,1.05,900,'#111');paint(s.L,wx+200,y+24+s.s*.9,s.s,1.3,`500 ${s.s}px UB`,'#111');
+  const bt=val('b')||'OK';ctx.font='800 30px UB';const bw=ctx.measureText(bt).width+70,by=wy+wh-100;ctx.fillStyle='#111';rrect(wx+ww-40-bw,by,bw,72,10);ctx.fill();ctx.fillStyle=A==='#FFFFFF'?'#A3FF10':A;ctx.fillText(bt,wx+ww-40-bw+35,by+48);
+  ctx.font='700 30px UB';const cw=ctx.measureText('Отмена').width+70;ctx.strokeStyle='#999';ctx.lineWidth=3;rrect(wx+ww-60-bw-cw,by,cw,72,10);ctx.stroke();ctx.fillStyle='#111';ctx.fillText('Отмена',wx+ww-60-bw-cw+35,by+48)}
+ if(L==='terminal'){let y=top+(story?300:240);const h=fit(val('h'),800,64,'UB',MW,2,36);y=T(h.L,X,y,h.s,1,800,'#fff')+30;ctx.fillStyle='rgba(255,255,255,.2)';ctx.fillRect(X,y,MW,2);y+=70;
+  ctx.font='700 34px JB';for(const ln of items('li',9)){const t='> '+ln;let words=t.split(' '),line='';for(const w0 of words){if(ctx.measureText(line+w0).width>MW&&line){ctx.fillStyle=A;ctx.fillText(line,X,y);y+=54;line='  '}line+=w0+' '}ctx.fillStyle=A;ctx.fillText(line,X,y);y+=66}
+  ctx.fillStyle=A;ctx.fillRect(X,y-34,24,40)}
+ if(L==='vs'){const it=items('li',5).map(x=>x.split('|').map(y=>y.trim()));const half=W/2,y0=top+(story?320:250);ctx.fillStyle=A;ctx.fillRect(half-2,y0-60,4,H-y0-bot-40);
+  const l=fit(val('l'),900,64,'UB',half-X-40,1,34),r=fit(val('r'),900,64,'UB',half-X-40,1,34);paint(l.L,X,y0+l.s*.8,l.s,1,`900 ${l.s}px UB`,'rgba(255,255,255,.8)');paint(r.L,half+40,y0+r.s*.8,r.s,1,`900 ${r.s}px UB`,A);
+  let y=y0+120;for(const [a,b] of it){const fa=fit(a||'',500,32,'UB',half-X-50,3,22),fb=fit(b||'',800,32,'UB',half-X-50,3,22),rh=Math.max(blockH(fa.L,fa.s,1.25),blockH(fb.L,fb.s,1.25))+48;
+   ctx.fillStyle='rgba(255,255,255,.16)';ctx.fillRect(X,y,MW,2);paint(fa.L,X,y+24+fa.s*.85,fa.s,1.25,`500 ${fa.s}px UB`,'rgba(255,255,255,.7)');paint(fb.L,half+40,y+24+fb.s*.85,fb.s,1.25,`800 ${fb.s}px UB`,'#fff');y+=rh}}
+ if(L==='ticker'){const tape=(val('tape')||'1SHOT')+'  ·  ';const band=(cy,ang,rev)=>{ctx.save();ctx.translate(W/2,cy);ctx.rotate(ang*Math.PI/180);ctx.fillStyle=rev?'#0B0B0C':A;ctx.fillRect(-W,-50,W*2,100);ctx.font='800 40px UB';ctx.fillStyle=rev?A:OA;const tw=ctx.measureText(tape).width;for(let x=-W;x<W;x+=tw)ctx.fillText(tape,x,14);ctx.restore()};
+  band(H*.36,-7,0);band(H*.36+40,5,1);const s=fit(val('s'),500,40,'UB',MW,3,26),h=fit(val('h'),900,110,'UB',MW,3,48);const sy=base-blockH(s.L,s.s,1.3);T(h.L,X,sy-30-blockH(h.L,h.s,.98),h.s,.98,900,'#fff',hlD);paint(s.L,X,sy+s.s*.9,s.s,1.3,`500 ${s.s}px UB`,'rgba(255,255,255,.88)',hlD)}
+ if(L==='poster'){ctx.fillStyle=A;ctx.fillRect(0,0,W,H);const ph=Math.round(H*(story?.4:.42)),py=top+110;ctx.save();rrect(X,py,MW,ph,28);ctx.clip();cover(im,X,py,MW,ph,Math.min(1,dim+.25));ctx.restore();
+  head(OA,OA==='#000');foot(OA,OA==='#000'?'rgba(0,0,0,.25)':'rgba(255,255,255,.3)');let y=py+ph+60;mono(val('kick'),X,y+20,OA);const h=fit(val('h'),900,104,'UB',MW,3,44);y=T(h.L,X,y+50,h.s,.98,900,OA,{hl:A,mark:OA});
+  const s=fit(val('s'),600,38,'UB',MW,3,26);paint(s.L,X,y+16+s.s*.9,s.s,1.3,`600 ${s.s}px UB`,OA)}
+ if(L==='split'){const sh=Math.round(H*.55);ctx.fillStyle=A;ctx.fillRect(0,0,W,H);cover(im,0,0,W,sh,Math.min(1,dim+.2));const g=ctx.createLinearGradient(0,0,0,300);g.addColorStop(0,'rgba(0,0,0,.6)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,300);
+  head('#fff',false,'rgba(255,255,255,.8)');foot(OA,OA==='#000'?'rgba(0,0,0,.25)':'rgba(255,255,255,.3)');let y=sh+60;mono(val('kick'),X,y+20,OA);const h=fit(val('h'),900,100,'UB',MW,3,44);y=T(h.L,X,y+50,h.s,.98,900,OA,{hl:A,mark:OA});
+  const s=fit(val('s'),600,36,'UB',MW,3,24);paint(s.L,X,y+16+s.s*.9,s.s,1.3,`600 ${s.s}px UB`,OA)}
+ if(L==='light'){const M=A==='#FFFFFF'?'#A3FF10':A,MT=onAcc(M);ctx.fillStyle='#F3F1EC';ctx.fillRect(0,0,W,H);head('#0B0B0C',true,'rgba(0,0,0,.6)');foot('rgba(0,0,0,.6)','rgba(0,0,0,.2)');
+  let y=top+(story?300:230);mono(val('kick'),X,y,'rgba(0,0,0,.6)');const h=fit(val('h'),900,104,'UB',MW,3,44);y=T(h.L,X,y+34,h.s,1.02,900,'#0B0B0C',{hl:MT,mark:M});
+  const ph=Math.max(200,fy-120-(y+40)-130);cover(im,X,y+40,MW,ph,Math.min(1,dim+.25));const s=fit(val('s'),600,36,'UB',MW,2,24);paint(s.L,X,y+40+ph+50+s.s*.6,s.s,1.3,`600 ${s.s}px UB`,'#0B0B0C')}
+ if(L==='polaroid'){ctx.fillStyle=A;ctx.fillRect(0,0,W,H);head(OA,OA==='#000');foot(OA,OA==='#000'?'rgba(0,0,0,.25)':'rgba(255,255,255,.3)');
+  const fyy=top+(story?330:200),avail=fy-130-fyy-170,fh=Math.round(Math.min((MW-60)*1.12,avail)),fw=Math.round(Math.min(MW-60,fh/1.0));ctx.save();ctx.translate(W/2,fyy+fh/2);ctx.rotate(3*Math.PI/180);ctx.shadowColor='rgba(0,0,0,.35)';ctx.shadowBlur=40;ctx.shadowOffsetY=20;ctx.fillStyle='#fff';ctx.fillRect(-fw/2,-fh/2,fw,fh);ctx.shadowColor='transparent';
+  cover(im,-fw/2+34,-fh/2+34,fw-68,fh-210,Math.min(1,dim+.25));const c=fit(val('h'),700,48,'UB',fw-80,1,28);paint(c.L,0,fh/2-70,c.s,1,`700 ${c.s}px UB`,'#111',{center:1});ctx.restore();
+  const s=fit(val('s'),700,40,'UB',MW,2,26);paint(s.L,X,fyy+fh+90+s.s*.6,s.s,1.3,`700 ${s.s}px UB`,OA)}
 }
 
 function photos(list){const g=document.getElementById('ph');g.innerHTML='';list.forEach(n=>{const i=document.createElement('img');i.src='img/t_'+n;i.className=!st.custom&&st.img===n?'on':'';i.onclick=()=>{st.custom=null;st.img=n;photos(list);draw()};g.appendChild(i)});
@@ -167,7 +252,7 @@ async function access(){const t=document.getElementById('lockT');
  try{const r=await fetch(FN,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({initData:tg.initData,mode:'check'})});
   if(r.ok){document.getElementById('lock').remove();return true}}catch{}
  t.textContent='Доступ только для команды 1SHOT';return false}
-(async()=>{if(!await access())return;chips(document.getElementById('fmt'),FORMATS,'fmt',x=>x[2]);chips(document.getElementById('lay'),LAYOUTS,'lay',x=>x.n);fields();
+(async()=>{if(!await access())return;chips(document.getElementById('fmt'),FORMATS,'fmt',x=>x[2]);chips(document.getElementById('lay'),LAYOUTS,'lay',x=>x.n);chips(document.getElementById('acc'),ACC,'acc',x=>x[1]);fields();
  const list=await (await fetch('list.json')).json();photos(list);document.getElementById('rnd').onclick=()=>randomize(list);
  await Promise.all([document.fonts.load('900 40px UB'),document.fonts.load('500 40px UB'),document.fonts.load('700 20px JB','АБВ abc')]);draw()})();
 </script>
