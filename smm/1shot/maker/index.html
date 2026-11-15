@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>1SHOT · конструктор постов</title>
+<meta name="robots" content="noindex">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+@font-face{font-family:UB;src:url(fonts/Unbounded.ttf);font-weight:200 900}
+@font-face{font-family:JB;src:url(fonts/jbm-cyr-700.woff2);unicode-range:U+0400-045F}
+@font-face{font-family:JB;src:url(fonts/jbm-lat-700.woff2);unicode-range:U+0000-00FF,U+2000-206F}
+:root{--bg:#0B0B0C;--card:#16161A;--line:rgba(255,255,255,.12);--txt:#fff;--mut:rgba(255,255,255,.55);--lime:#A3FF10}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.4 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+main{max-width:560px;margin:0 auto;padding:16px 16px 120px}
+h1{font:800 20px UB;margin:4px 0 14px;letter-spacing:-.01em}
+.lab{font:700 11px JB;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin:20px 0 8px}
+.prev{background:#000;border-radius:14px;overflow:hidden;display:flex;justify-content:center}
+canvas{display:block;width:100%;height:auto}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:999px;padding:9px 14px;font:600 14px system-ui;cursor:pointer}
+.chip.on{background:var(--lime);color:#000;border-color:var(--lime)}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.grid img,.grid label{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;border:2px solid transparent;cursor:pointer;display:block}
+.grid img.on{border-color:var(--lime)}
+.grid label{background:var(--card);display:flex;align-items:center;justify-content:center;font:700 22px system-ui;color:var(--mut);border:1px dashed var(--line)}
+input[type=text],textarea{width:100%;background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:11px 12px;font:15px system-ui;outline:none}
+textarea{resize:none;min-height:46px}
+input:focus,textarea:focus{border-color:var(--lime)}
+.f{margin-top:8px}
+.hint{color:var(--mut);font-size:12.5px;margin-top:6px}
+input[type=range]{width:100%;accent-color:var(--lime)}
+.bar{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(transparent,var(--bg) 30%);padding:22px 16px calc(16px + env(safe-area-inset-bottom))}
+.bar div{max-width:560px;margin:0 auto;display:flex;gap:8px}
+button.b{flex:1;border:0;border-radius:12px;padding:15px 10px;font:800 14px UB;cursor:pointer}
+.b1{background:var(--lime);color:#000}.b2{background:var(--card);color:var(--txt);border:1px solid var(--line)!important}
+.toast{position:fixed;left:50%;top:16px;transform:translateX(-50%);background:#fff;color:#000;border-radius:10px;padding:10px 14px;font-weight:700;opacity:0;transition:.2s;pointer-events:none;z-index:9}
+.toast.on{opacity:1}
+</style></head><body>
+<main>
+<h1>Конструктор постов 1SHOT</h1>
+<div class="prev"><canvas id="cv"></canvas></div>
+
+<div class="lab">Формат</div><div class="chips" id="fmt"></div>
+<div class="lab">Макет</div><div class="chips" id="lay"></div>
+<div class="lab">Фон</div><div class="grid" id="ph"></div>
+<div class="f"><input type="range" id="dim" min="15" max="95" value="62"></div>
+<div class="hint">Яркость фона. Своё фото можно добавить через «+».</div>
+
+<div class="lab">Текст</div><div id="fields"></div>
+<div class="hint">Новая строка: « / ». Выделить лаймовым: *слово*.</div>
+<div class="lab">Низ картинки</div>
+<div class="f" style="display:flex;gap:8px"><input type="text" id="fl" enterkeyhint="done" placeholder="слева"><input type="text" id="fr" enterkeyhint="done" placeholder="справа"></div>
+
+<div class="lab">Подпись к посту</div>
+<textarea id="cap" enterkeyhint="done" rows="3" placeholder="Текст поста в канале"></textarea>
+<div class="hint">Новая строка « / », пустая строка « // », жирный *так*. Эмодзи из нашего пака станут фирменными.</div>
+<div class="f"><input type="text" id="btn" enterkeyhint="done" placeholder="Текст кнопки (по умолчанию «Забронировать место»)"></div>
+</main>
+<div class="bar"><div><button class="b b2" id="sendImg">Только картинка</button><button class="b b1" id="sendPost">Пост в бот</button></div></div>
+<div class="toast" id="toast"></div>
+<input type="file" id="up" accept="image/*" hidden>
+<script>
+const tg=window.Telegram?.WebApp;tg?.ready();tg?.expand();
+const FN='https://zqhfvtgktbfnxcclqqny.supabase.co/functions/v1/smm-maker';
+const LIME='#A3FF10';
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+const FORMATS={post:[1080,1350,'Пост 4:5'],story:[1080,1920,'Сторис 9:16']};
+// Fields per layout; defaults show how each one is meant to be filled.
+const LAYOUTS={
+ headline:{n:'Заголовок',f:[['kick','Надпись сверху','Классика'],['h','Заголовок','«Последняя / катка»'],['s','Текст','сказал он в 22:00. / Сейчас 4:17.']]},
+ word:{n:'Словарь',f:[['w','Слово','Кемпер'],['tr','Транскрипция','[кем-пер] · сущ.'],['d','Определение','Сидит в углу всю катку. / Уверен, что это тактика.']]},
+ list:{n:'Список',f:[['kick','Надпись сверху','Проверь себя'],['h','Заголовок','Ты наш / постоянник, если'],['li','Пункты через « ; »','Админ помнит твой ник; Называешь цены быстрее админа; «На часок» уже никто не верит']]},
+ quote:{n:'Цитата',f:[['h','Цитата','Я не проиграл. / Я собирал / *данные.*'],['a','Кто сказал','Каждый второй после катки']]},
+ todo:{n:'Чек-лист',f:[['kick','Надпись сверху','Планы на пятницу'],['li','Пункты через « ; », «+» в начале = отмечено','Выспаться; Сходить в спортзал; +Ночь в 1SHOT']]},
+ big:{n:'Крупно',f:[['h','Крупный текст','Тихо. / *Тут тащат.*'],['s','Под ним (можно пусто)','']]},
+};
+const st={fmt:'post',lay:'headline',img:'club_02.jpg',dim:62,v:{},custom:null};
+const imgCache={};let logo;
+const loadImg=src=>imgCache[src]||(imgCache[src]=new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src}));
+
+function chips(el,obj,key,label){el.innerHTML='';for(const k in obj){const b=document.createElement('button');b.className='chip'+(st[key]===k?' on':'');b.textContent=label(obj[k]);b.onclick=()=>{st[key]=k;if(key==='lay')fields();chips(el,obj,key,label);draw()};el.appendChild(b)}}
+function fields(){const box=document.getElementById('fields');box.innerHTML='';for(const [k,lab,def] of LAYOUTS[st.lay].f){const id=st.lay+'_'+k;if(st.v[id]===undefined)st.v[id]=def;
+ const t=document.createElement('textarea');t.rows=k==='li'||k==='d'||k==='s'?2:1;t.placeholder=lab;t.value=st.v[id];t.setAttribute('enterkeyhint','done');t.className='f';
+ t.oninput=()=>{st.v[id]=t.value;draw()};box.appendChild(t)}}
+const val=k=>st.v[st.lay+'_'+k]||'';
+
+// Rich text: " / " is a line break, *word* is lime. Lines wrap by words to the given width.
+function parseRuns(s){const out=[];let on=false;for(const part of s.split('*')){if(part)out.push({t:part,c:on?LIME:null});on=!on}return out}
+function layout(text,font,maxW){ctx.font=font;const lines=[];for(const para of text.split(/\s+\/\s+|\s*\n\s*/)){let line=[],w=0;
+ for(const run of parseRuns(para))for(const word of run.t.split(/(\s+)/)){if(!word)continue;const ww=ctx.measureText(word).width;
+  if(w+ww>maxW&&line.length&&word.trim()){lines.push(line);line=[];w=0;if(!word.trim())continue}
+  if(!line.length&&!word.trim())continue;line.push({t:word,c:run.c,w:ww});w+=ww}
+ lines.push(line)}return lines}
+function fit(text,weight,size,family,maxW,maxLines,min=36){let s=size,L;do{L=layout(text,`${weight} ${s}px ${family}`,maxW);if(L.length<=maxLines&&L.every(l=>l.reduce((a,x)=>a+x.w,0)<=maxW))break;s-=4}while(s>min);return {L,s}}
+function paint(L,x,y,size,lh,font,color){ctx.font=font;ctx.textBaseline='alphabetic';let yy=y;for(const line of L){let xx=x;for(const r of line){ctx.fillStyle=r.c||color;ctx.fillText(r.t,xx,yy);xx+=r.w}yy+=size*lh}return yy}
+// Measures a block's height before drawing, so blocks can be stacked from the bottom.
+const blockH=(L,size,lh)=>L.length*size*lh;
+function mono(t,x,y,color,size=24,align='left'){ctx.font=`700 ${size}px JB`;ctx.fillStyle=color;ctx.textAlign=align;ctx.letterSpacing=(size*.14)+'px';ctx.fillText(t.toUpperCase(),x,y);ctx.letterSpacing='0px';ctx.textAlign='left'}
+
+async function draw(){const [W,H]=FORMATS[st.fmt];cv.width=W;cv.height=H;const top=st.fmt==='story'?210:72,bot=st.fmt==='story'?250:64,X=72,MW=W-2*X;
+ ctx.fillStyle='#0B0B0C';ctx.fillRect(0,0,W,H);
+ const im=st.custom||await loadImg('img/'+st.img);
+ if(im){const r=Math.max(W/im.width,H/im.height),w=im.width*r,h=im.height*r;ctx.filter=`brightness(${st.dim/100}) saturate(1.1)`;ctx.drawImage(im,(W-w)/2,(H-h)/2,w,h);ctx.filter='none'}
+ const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'rgba(0,0,0,.5)');g.addColorStop(.22,'rgba(0,0,0,0)');g.addColorStop(.4,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.95)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ if(st.lay==='list'||st.lay==='todo'){ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(0,0,W,H)}
+ logo=logo||await loadImg('logo.svg');if(logo)ctx.drawImage(logo,X,top,180,180*logo.height/logo.width);
+ mono('Компьютерный клуб',W-X,top+22,'rgba(255,255,255,.7)',22,'right');mono('Мытищи',W-X,top+56,'rgba(255,255,255,.7)',22,'right');
+ // footer
+ const fy=H-bot;ctx.fillStyle='rgba(255,255,255,.22)';ctx.fillRect(X,fy-56,MW,2);
+ mono(document.getElementById('fl').value||'Мира, 37',X,fy-12,'rgba(255,255,255,.75)',22);mono(document.getElementById('fr').value||'24/7',W-X,fy-12,'rgba(255,255,255,.75)',22,'right');
+ const base=fy-100;const L=st.lay;
+ if(L==='headline'){const s=fit(val('s'),500,40,'UB',MW,4,26),h=fit(val('h'),900,104,'UB',MW,4,48);
+  let y=base-blockH(s.L,s.s,1.3);const hy=y-30-blockH(h.L,h.s,.98);mono(val('kick'),X,hy-h.s*.2-24,LIME);paint(h.L,X,hy+h.s*.8,h.s,.98,`900 ${h.s}px UB`,'#fff');paint(s.L,X,y+s.s*.9,s.s,1.3,`500 ${s.s}px UB`,'rgba(255,255,255,.88)')}
+ if(L==='word'){const d=fit(val('d'),500,40,'UB',MW,4,26),w=fit(val('w'),900,150,'UB',MW,1,60);let y=base-blockH(d.L,d.s,1.3);
+  ctx.font='700 28px JB';ctx.fillStyle=LIME;ctx.fillText(val('tr'),X,y-30);const wy=y-60-w.s*.15;paint(w.L,X,wy,w.s,1,`900 ${w.s}px UB`,'#fff');paint(d.L,X,y+d.s*.9,d.s,1.3,`500 ${d.s}px UB`,'#fff')}
+ if(L==='quote'){const h=fit(val('h'),900,96,'UB',MW,5,44);let y=base-30;mono(val('a'),X,y,'rgba(255,255,255,.75)');const hy=y-50-blockH(h.L,h.s,.98);
+  ctx.font='900 220px UB';ctx.fillStyle=LIME;ctx.fillText('“',X-6,hy+40);paint(h.L,X,hy+h.s*.8,h.s,.98,`900 ${h.s}px UB`,'#fff')}
+ if(L==='big'){const s=fit(val('s'),600,42,'UB',MW,3,26),h=fit(val('h'),900,150,'UB',MW,4,60);const sy=base-(val('s')?blockH(s.L,s.s,1.3):0);
+  const hy=sy-(val('s')?36:0)-blockH(h.L,h.s,.98);paint(h.L,X,hy+h.s*.8,h.s,.98,`900 ${h.s}px UB`,'#fff');if(val('s'))paint(s.L,X,sy+s.s*.9,s.s,1.3,`600 ${s.s}px UB`,'#fff')}
+ if(L==='list'){const items=val('li').split(';').map(x=>x.trim()).filter(Boolean).slice(0,7);let y=top+200;mono(val('kick'),X,y,LIME);const h=fit(val('h'),900,80,'UB',MW,3,44);
+  y=paint(h.L,X,y+30+h.s*.85,h.s,.98,`900 ${h.s}px UB`,'#fff')+10;items.forEach((it,i)=>{const t=fit(it,600,36,'UB',MW-80,2,26);ctx.fillStyle='rgba(255,255,255,.16)';ctx.fillRect(X,y,MW,2);
+   ctx.font='700 26px JB';ctx.fillStyle=LIME;ctx.fillText(String(i+1).padStart(2,'0'),X,y+22+t.s);y=paint(t.L,X+76,y+22+t.s,t.s,1.25,`600 ${t.s}px UB`,'#fff')+4})}
+ if(L==='todo'){const items=val('li').split(';').map(x=>x.trim()).filter(Boolean).slice(0,6);let y=base-items.length*86;mono(val('kick'),X,y-40,LIME);
+  items.forEach(it=>{const on=it.startsWith('+'),t=on?it.slice(1).trim():it;ctx.lineWidth=5;if(on){ctx.fillStyle=LIME;ctx.fillRect(X,y,44,44);ctx.strokeStyle='#000';ctx.beginPath();ctx.moveTo(X+10,y+22);ctx.lineTo(X+19,y+32);ctx.lineTo(X+35,y+12);ctx.stroke()}else{ctx.strokeStyle='#fff';ctx.strokeRect(X+2.5,y+2.5,39,39)}
+   const f=fit(t,800,52,'UB',MW-80,1,30);paint(f.L,X+76,y+40,f.s,1,`800 ${f.s}px UB`,on?'#fff':'rgba(255,255,255,.5)');if(!on){const w=f.L[0]?.reduce((a,x)=>a+x.w,0)||0;ctx.fillStyle='rgba(255,255,255,.5)';ctx.fillRect(X+76,y+22,w,5)}y+=86})}
+}
+
+function photos(list){const g=document.getElementById('ph');g.innerHTML='';list.forEach(n=>{const i=document.createElement('img');i.src='img/t_'+n;i.className=!st.custom&&st.img===n?'on':'';i.onclick=()=>{st.custom=null;st.img=n;photos(list);draw()};g.appendChild(i)});
+ const up=document.createElement('label');up.textContent='+';up.onclick=()=>document.getElementById('up').click();g.appendChild(up)}
+document.getElementById('up').onchange=e=>{const f=e.target.files[0];if(!f)return;const i=new Image();i.onload=()=>{st.custom=i;document.querySelectorAll('#ph img').forEach(x=>x.className='');draw()};i.src=URL.createObjectURL(f)};
+document.getElementById('dim').oninput=e=>{st.dim=+e.target.value;draw()};
+['fl','fr'].forEach(id=>document.getElementById(id).oninput=draw);
+// Done on every field only closes the keyboard; nothing is sent from the keyboard.
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input,textarea')){e.preventDefault();e.target.blur()}});
+
+const toast=t=>{const el=document.getElementById('toast');el.textContent=t;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),2600)};
+async function send(mode){if(!tg?.initData){toast('Открой конструктор из бота 1SHOT');return}
+ const b=document.getElementById(mode==='post'?'sendPost':'sendImg');b.disabled=true;const old=b.textContent;b.textContent='Отправляю…';
+ try{await draw();const png=cv.toDataURL('image/png').split(',')[1];
+  const r=await fetch(FN,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({initData:tg.initData,png,mode,caption:document.getElementById('cap').value,button:document.getElementById('btn').value,format:st.fmt})});
+  const j=await r.json().catch(()=>({}));if(r.ok&&j.ok){toast(mode==='post'?'Пост в боте ✓':'Картинка в боте ✓');tg.HapticFeedback?.notificationOccurred('success')}else toast('Не вышло: '+(j.error||r.status))}
+ catch(e){toast('Нет связи, попробуй ещё раз')}b.disabled=false;b.textContent=old}
+document.getElementById('sendPost').onclick=()=>send('post');document.getElementById('sendImg').onclick=()=>send('image');
+
+(async()=>{chips(document.getElementById('fmt'),FORMATS,'fmt',x=>x[2]);chips(document.getElementById('lay'),LAYOUTS,'lay',x=>x.n);fields();
+ const list=await (await fetch('list.json')).json();photos(list);
+ await Promise.all([document.fonts.load('900 40px UB'),document.fonts.load('500 40px UB'),document.fonts.load('700 20px JB','АБВ abc')]);draw()})();
+</script>
+</body></html>
