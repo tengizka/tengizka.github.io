@@ -36,8 +36,10 @@
   color-scheme:light;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{background:var(--cream);color:var(--ink);font-family:var(--text);font-size:17px;line-height:1.6;overflow-x:hidden}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden;overflow-x:clip}
+body{background:var(--cream);color:var(--ink);font-family:var(--text);font-size:17px;line-height:1.6;overflow-x:hidden;overflow-x:clip;width:100%;position:relative}
+section,header,footer{max-width:100%;overflow-x:clip}
+.wrap>*,.cards>*,.sold .row>*{min-width:0}
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
@@ -107,18 +109,22 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:36px}
 .chip{padding:10px 16px;border:1px solid var(--line);font-size:14px;transition:all .2s}
 .chip[aria-pressed="true"]{background:var(--wine);border-color:var(--wine);color:var(--cream)}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:28px;margin-top:36px}
-.card{background:#fff;border:1px solid var(--line);text-align:left;display:flex;flex-direction:column;transition:transform .35s,box-shadow .35s}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:28px;margin-top:36px}
+.card{background:#fff;border:1px solid var(--line);display:flex;flex-direction:column;cursor:pointer;width:100%;transition:transform .35s,box-shadow .35s}
 .card:hover{transform:translateY(-4px);box-shadow:0 26px 50px -30px rgba(58,15,23,.5)}
 .fr{position:relative;background:var(--wine)}
 .fr .in{position:absolute;inset:12px;overflow:hidden;background:#2a1a1d}
 .fr::after{content:"";position:absolute;inset:19px;border:1px solid rgba(184,151,95,.85);pointer-events:none;z-index:2}
 .fr .mk{position:absolute;top:27px;right:27px;width:26px;height:26px;color:var(--cream);z-index:3;opacity:.95}
-.card .pic{aspect-ratio:4/3}
+.pic.fr{width:100%;aspect-ratio:4/3;height:auto}
+@supports not (aspect-ratio:1/1){.pic.fr{height:0;padding-bottom:75%}}
 .card .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .5s,transform 1.2s}
-.card .pic img+img{opacity:0}
-.card:hover .pic img+img{opacity:1}
-.card:hover .pic img{transform:scale(1.04)}
+.card:hover .pic img{transform:scale(1.03)}
+.fr .in img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sl{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:40px;height:40px;background:rgba(244,239,232,.92);color:var(--wine);display:grid;place-items:center;font-size:18px;line-height:1;transition:background .2s}
+.sl:hover{background:#fff}
+.sl.l{left:24px}.sl.r{right:24px}
+.fr .cnt{position:absolute;right:27px;bottom:27px;z-index:3;background:rgba(29,26,27,.62);color:#fff;font-size:12px;padding:5px 9px}
 .card .cnt{position:absolute;right:27px;bottom:27px;z-index:3;background:rgba(29,26,27,.62);color:#fff;font-size:12px;padding:5px 9px}
 .card .body{padding:22px 22px 24px;display:flex;flex-direction:column;gap:6px;flex:1}
 .card .jk{color:var(--wine)}
@@ -133,10 +139,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 /* sold */
 .sold{background:var(--deep);color:var(--cream)}
 .sold .sechead p{color:var(--mute-d)}
-.sold .row{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px;background:var(--line-d);border:1px solid var(--line-d)}
-.sold .s{background:var(--deep);display:flex;flex-direction:column}
+.sold .row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;margin-top:48px;background:var(--line-d);border:1px solid var(--line-d)}
+.sold .s{background:var(--deep);display:flex;flex-direction:column;cursor:pointer}
 .sold .s .pic{aspect-ratio:4/3}
-.sold .s .pic .in{background-size:cover;background-position:center}
+
 .sold .s .pic .tag{position:absolute;top:27px;left:27px;z-index:3;background:var(--brass);color:var(--deep);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;padding:6px 10px}
 .sold .s .b{padding:20px 20px 24px}
 .sold .s h3{font-size:24px}
@@ -172,7 +178,8 @@ a.lk:hover{background:rgba(244,239,232,.07)}
 .lk .ico{width:46px;height:46px;border-radius:50%;background:var(--cream);display:grid;place-items:center;flex:none}
 .lk .ico svg{width:22px;height:22px;color:var(--wine)}
 .lk small{display:block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute-d)}
-.lk strong{font-weight:500;font-size:18px}
+.lk strong{font-weight:500;font-size:18px;white-space:nowrap}
+.lk>span:nth-child(2){min-width:0}
 .lk .cp{margin-left:auto;font-size:13px;color:var(--brass);padding:6px 8px}
 footer{background:var(--deep);color:var(--mute-d);font-size:13px}
 footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-block:28px}
@@ -217,7 +224,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
   .steps{row-gap:36px}.steps::before{display:none}
   .sheet{grid-template-columns:1fr}
   .gal .main{flex:none;aspect-ratio:4/3;min-height:0}
-  .sold .row{grid-template-columns:1fr 1fr}
+  .sold .row{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (max-width:560px){
   .brand b{font-size:18px}
@@ -225,7 +232,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
   .about .grid,.steps{grid-template-columns:1fr}
   .portrait .stamp{left:12px}
   .cards{grid-template-columns:1fr}
-  .sold .row{grid-template-columns:1fr}
+  .sold .row{grid-template-columns:minmax(0,1fr)}
+  .sl{width:36px;height:36px}
   .rev{flex-basis:84%}
   .info{padding:26px 20px}
 }
@@ -354,7 +362,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
     <div class="pr" id="mPrice"></div>
     <div class="params" id="mParams"></div>
     <div class="desc" id="mDesc"></div>
-    <div class="acts"><a class="btn btn-wine" id="mTg" target="_blank" rel="noopener"><svg><use href="#tg"/></svg>Записаться на показ</a><a class="btn" id="mWa" target="_blank" rel="noopener" style="border:1px solid var(--line)"><svg><use href="#wa"/></svg>WhatsApp</a></div>
+    <div class="acts"><a class="btn btn-wine" id="mTg" target="_blank" rel="noopener"><svg><use href="#tg"/></svg><span>Записаться на показ</span></a><a class="btn" id="mWa" target="_blank" rel="noopener" style="border:1px solid var(--line)"><svg><use href="#wa"/></svg>WhatsApp</a></div>
   </div>
 </div></div>
 
@@ -377,12 +385,13 @@ function renderCards(){
   const list=listings.filter(l=>filter==='Все'||l.details.complex===filter);
   const el=document.getElementById('cards');
   if(!list.length){el.innerHTML='<p class="empty">Пока нет объектов.</p>';return;}
-  el.innerHTML=list.slice(0,shown).map((l,i)=>{const d=l.details;return `<button class="card" data-i="${listings.indexOf(l)}">
-    <div class="pic fr"><div class="in"><img loading="lazy" src="${img(l.photos[0])}" alt="">${l.photos[1]?`<img loading="lazy" src="${img(l.photos[1])}" alt="">`:''}</div><svg class="mk"><use href="#nz"/></svg><span class="cnt">${l.photos.length} фото</span></div>
+  el.innerHTML=list.slice(0,shown).map(l=>{const d=l.details;return `<div class="card" role="button" tabindex="0" data-i="${listings.indexOf(l)}">
+    ${slider(l.photos)}
     <div class="body"><div class="lab jk">${esc(d.complex)}</div><h3>${esc(niceTitle(d))}</h3><div class="meta">Этаж ${esc(d.floor)}${d.kitchen?` · кухня ${String(d.kitchen).replace('.',',')} м²`:''}</div>
-    <div class="price"><b>${rub(d.price)}</b><span>${d.price&&d.area?rub(d.price/d.area).replace(' ₽','')+' ₽/м²':''}</span></div></div></button>`}).join('');
+    <div class="price"><b>${rub(d.price)}</b><span>${d.price&&d.area?rub(d.price/d.area).replace(' ₽','')+' ₽/м²':''}</span></div></div></div>`}).join('');
+  bindSliders(el,p=>listings[+p.closest('.card').dataset.i].photos);
+  el.querySelectorAll('.card').forEach(c=>clickable(c,k=>openModal(listings[+c.dataset.i],k)));
   document.getElementById('moreWrap').hidden=list.length<=shown;
-  el.querySelectorAll('.card').forEach(c=>c.onclick=()=>openModal(+c.dataset.i));
 }
 function renderFilters(){
   const jks=['Все',...new Set(listings.map(l=>l.details.complex))];
@@ -392,38 +401,52 @@ function renderFilters(){
 }
 document.getElementById('more').onclick=()=>{shown+=9;renderCards();};
 
+// slider on cards
+function slider(photos,extraTop=''){
+  return `<div class="pic fr" data-k="0"><div class="in"><img loading="lazy" src="${img(photos[0])}" alt=""></div>${extraTop}<svg class="mk"><use href="#nz"/></svg>${photos.length>1?`<button class="sl l" aria-label="Предыдущее фото">←</button><button class="sl r" aria-label="Следующее фото">→</button>`:''}<span class="cnt">1 / ${photos.length}</span></div>`;}
+function bindSliders(root,getPhotos){
+  root.querySelectorAll('.pic.fr').forEach(p=>{
+    const ph=getPhotos(p); if(!ph||ph.length<2) return;
+    const go=d=>{let k=(+p.dataset.k+d+ph.length)%ph.length;p.dataset.k=k;p.querySelector('.in img').src=img(ph[k]);p.querySelector('.cnt').textContent=`${k+1} / ${ph.length}`;};
+    p.querySelector('.sl.l').onclick=e=>{e.stopPropagation();go(-1)};
+    p.querySelector('.sl.r').onclick=e=>{e.stopPropagation();go(1)};
+    let sx=0;p.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+    p.addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>35){e.preventDefault();go(d<0?1:-1);p._swiped=true;setTimeout(()=>p._swiped=false,300);}});
+  });}
+
 // modal
 let cur=null,ci=0;const M=document.getElementById('modal');
 function show(i){ci=(i+cur.photos.length)%cur.photos.length;document.getElementById('mImg').src=img(cur.photos[ci]);
   document.getElementById('mCnt').textContent=`${ci+1} / ${cur.photos.length}`;
   document.querySelectorAll('#mThumbs img').forEach((t,k)=>t.classList.toggle('on',k===ci));
   const t=document.querySelectorAll('#mThumbs img')[ci];t&&t.scrollIntoView({block:'nearest',inline:'center'});}
-function openModal(i){cur=listings[i];const d=cur.details;
-  document.getElementById('mJk').textContent=`${d.complex} · ${(d.address||'').replace(/^Сочи г,\s*/,'')}`;
-  document.getElementById('mTitle').textContent=niceTitle(d);
+function openModal(item,start=0){cur=item;const d=item.details||{};const sold=item.kind==='case';
+  document.getElementById('mJk').textContent=sold?`${d.complex} · продано`:`${d.complex} · ${(d.address||'').replace(/^Сочи г,\s*/,'').replace(/^Хостинский внутригородской р-н,\s*/,'')}`;
+  document.getElementById('mTitle').textContent=sold?d.title:niceTitle(d);
   document.getElementById('mPrice').textContent=rub(d.price);
-  const p=[['Этаж',d.floor],['Общая площадь',d.area&&d.area+' м²'],['Жилая',d.living&&d.living+' м²'],['Кухня',d.kitchen&&d.kitchen+' м²'],['Потолки',d.ceiling&&d.ceiling+' м'],['Окна',d.windows],['Санузел',d.bath],['Балкон',d.balcony]].filter(x=>x[1]);
-  document.getElementById('mParams').innerHTML=p.map(([a,b])=>`<div>${a}</div><div>${esc(String(b).replace('.',','))}</div>`).join('');
-  document.getElementById('mDesc').textContent=(d.description||'').replace(/Звоните[^\n]*$/,'').trim();
-  const msg=`Здравствуйте, Никита! Интересует объект: ${d.complex}, ${niceTitle(d)}, ${rub(d.price)}. Хочу посмотреть.`;
-  document.getElementById('mTg').href=tgLink(msg);document.getElementById('mWa').href=waLink(msg);
-  document.getElementById('mThumbs').innerHTML=cur.photos.map(p=>`<img loading="lazy" src="${img(p)}" alt="">`).join('');
+  const p=sold?(d.area_note?[['Район',d.area_note]]:[]):[['Этаж',d.floor],['Общая площадь',d.area&&d.area+' м²'],['Жилая',d.living&&d.living+' м²'],['Кухня',d.kitchen&&d.kitchen+' м²'],['Потолки',d.ceiling&&d.ceiling+' м'],['Окна',d.windows],['Санузел',d.bath],['Балкон',d.balcony]].filter(x=>x[1]);
+  const P=document.getElementById('mParams');P.innerHTML=p.map(([a,b])=>`<div>${a}</div><div>${esc(String(b).replace('.',','))}</div>`).join('');P.hidden=!p.length;
+  document.getElementById('mDesc').textContent=sold?'':(d.description||'').replace(/Звоните[^\n]*$/,'').trim();
+  const msg=sold?`Здравствуйте, Никита! Видел на сайте проданную квартиру в ${d.complex}. Ищу похожую.`:`Здравствуйте, Никита! Интересует объект: ${d.complex}, ${niceTitle(d)}, ${rub(d.price)}. Хочу посмотреть.`;
+  const tg=document.getElementById('mTg');tg.href=tgLink(msg);tg.lastChild.textContent=sold?'Хочу похожую':'Записаться на показ';
+  document.getElementById('mWa').href=waLink(msg);
+  document.getElementById('mThumbs').innerHTML=item.photos.map(p=>`<img loading="lazy" src="${img(p)}" alt="">`).join('');
   document.querySelectorAll('#mThumbs img').forEach((t,k)=>t.onclick=()=>show(k));
-  show(0);M.classList.add('open');M.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';document.getElementById('mClose').focus();}
-function closeModal(){M.classList.remove('open');M.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+  show(start);M.classList.add('open');M.setAttribute('aria-hidden','false');document.documentElement.style.overflow='hidden';document.getElementById('mClose').focus();}
+function closeModal(){M.classList.remove('open');M.setAttribute('aria-hidden','true');document.documentElement.style.overflow='';}
 document.getElementById('mPrev').onclick=()=>show(ci-1);document.getElementById('mNext').onclick=()=>show(ci+1);
 document.getElementById('mClose').onclick=closeModal;M.onclick=e=>{if(e.target===M)closeModal();};
 document.addEventListener('keydown',e=>{if(!M.classList.contains('open'))return;if(e.key==='Escape')closeModal();if(e.key==='ArrowRight')show(ci+1);if(e.key==='ArrowLeft')show(ci-1);});
 let tx=0;document.querySelector('.gal .main').addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
 document.querySelector('.gal .main').addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>40)show(ci+(d<0?1:-1));});
+function clickable(el,fn){el.addEventListener('click',e=>{const p=el.querySelector('.pic.fr');if(p&&p._swiped)return;fn(p?+p.dataset.k:0)});el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fn(0)}});}
 
 // sold
-function parseCase(c){const L=(c.caption||'').split('\n').map(s=>s.trim()).filter(Boolean);
-  const jk=L[0]||'';const priceL=L.find(s=>/продан/i.test(s))||'';const price=parseInt(priceL.replace(/\D/g,''));
-  const rest=L.slice(1).filter(s=>s!==priceL).map(s=>s.replace(/(\d+)\s*м2/,'$1 м²')).join(', ');
-  return {jk,rest,price};}
-function renderSold(cases){document.getElementById('sold-row').innerHTML=cases.map(c=>{const p=parseCase(c);
-  return `<div class="s"><div class="pic fr"><div class="in" style="background-image:url('${img(c.photos[0])}')"></div><span class="tag">Продано</span><svg class="mk"><use href="#nz"/></svg></div><div class="b"><h3>${esc(p.jk)}</h3><p>${esc(p.rest)}</p>${p.price?`<b>${rub(p.price)}</b>`:''}</div></div>`}).join('');}
+let cases=[];
+function renderSold(){const row=document.getElementById('sold-row');
+  row.innerHTML=cases.map((c,i)=>{const d=c.details||{};return `<div class="s" role="button" tabindex="0" data-i="${i}">${slider(c.photos,'<span class="tag">Продано</span>')}<div class="b"><h3>${esc(d.complex)}</h3><p>${esc(d.title)}${d.area_note?', '+esc(d.area_note):''}</p>${d.price?`<b>${rub(d.price)}</b>`:''}</div></div>`}).join('');
+  bindSliders(row,p=>cases[+p.closest('.s').dataset.i].photos);
+  row.querySelectorAll('.s').forEach(s=>clickable(s,k=>openModal(cases[+s.dataset.i],k)));}
 function renderReviews(r){document.getElementById('revs').innerHTML=r.map(x=>`<a class="rev" href="${img(x.photos[0])}" target="_blank" rel="noopener"><div class="pic fr"><div class="in" style="background-image:url('${img(x.photos[0])}')"></div><svg class="mk"><use href="#nz"/></svg></div><p>${esc(x.details?.title||x.caption)}</p></a>`).join('');}
 const rv=document.getElementById('revs');document.getElementById('revL').onclick=()=>rv.scrollBy({left:-322,behavior:'smooth'});document.getElementById('revR').onclick=()=>rv.scrollBy({left:322,behavior:'smooth'});
 
@@ -435,10 +458,10 @@ document.getElementById('cp').onclick=async()=>{const b=document.getElementById(
 fetch(`${SB}/rest/v1/cases?select=kind,num,caption,photos,details&order=num.asc`,{headers:{apikey:KEY,Authorization:`Bearer ${KEY}`}})
  .then(r=>r.json()).then(rows=>{
    listings=rows.filter(r=>r.kind==='listing'&&r.details&&r.photos.length);
-   const cases=rows.filter(r=>r.kind==='case'&&r.photos.length);
+   cases=rows.filter(r=>r.kind==='case'&&r.photos.length);
    const revs=rows.filter(r=>r.kind==='review'&&r.photos.length);
-   renderFilters();renderCards();renderSold(cases);renderReviews(revs);
-   renderTicker([...new Set([...listings.map(l=>l.details.complex),...cases.map(c=>parseCase(c).jk)])]);
+   renderFilters();renderCards();renderSold();renderReviews(revs);
+   renderTicker([...new Set([...listings.map(l=>l.details.complex),...cases.map(c=>(c.details||{}).complex).filter(Boolean)])]);
  }).catch(()=>{document.getElementById('cards').innerHTML='<p class="empty">Не удалось загрузить объекты. Напишите мне, пришлю подборку.</p>';});
 </script>
 </body>
