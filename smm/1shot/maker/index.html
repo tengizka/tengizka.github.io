@@ -25,6 +25,8 @@ canvas{display:block;width:100%;height:auto}
 .grid label{background:var(--card);display:flex;align-items:center;justify-content:center;font:700 22px system-ui;color:var(--mut);border:1px dashed var(--line)}
 input[type=text],textarea{width:100%;background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:11px 12px;font:15px system-ui;outline:none}
 textarea{resize:none;min-height:46px}
+.fw{display:flex;gap:8px;align-items:stretch;margin-top:8px}.fw>textarea,.fw>input{flex:1;min-width:0;margin:0}
+.dice{flex:none;width:46px;border:1px solid var(--line);background:var(--card);border-radius:10px;font-size:20px;cursor:pointer;padding:0}.dice:active{transform:scale(.92)}
 input:focus,textarea:focus{border-color:var(--lime)}
 .f{margin-top:8px}
 .hint{color:var(--mut);font-size:12.5px;margin-top:6px}
@@ -130,8 +132,20 @@ async function logos(){if(logoW)return;logoW=await loadImg('logo.svg');const t=a
 
 function chips(el,obj,key,label){el.innerHTML='';for(const k in obj){const b=document.createElement('button');b.className='chip'+(st[key]===k?' on':'');b.textContent=label(obj[k]);b.onclick=()=>{st[key]=k;if(key==='lay')fields();chips(el,obj,key,label);draw()};el.appendChild(b)}}
 function fields(){const box=document.getElementById('fields');box.innerHTML='';for(const [k,lab,def] of LAYOUTS[st.lay].f){const id=st.lay+'_'+k;if(st.v[id]===undefined)st.v[id]=def;
- const t=document.createElement('textarea');t.rows=k==='li'||k==='d'||k==='s'?2:1;t.placeholder=lab;t.value=st.v[id];t.setAttribute('enterkeyhint','done');t.className='f';
- t.oninput=()=>{st.v[id]=t.value;draw()};box.appendChild(t)}}
+ const t=document.createElement('textarea');t.rows=k==='li'||k==='d'||k==='s'?2:1;t.placeholder=lab;t.value=st.v[id];t.setAttribute('enterkeyhint','done');
+ t.oninput=()=>{st.v[id]=t.value;draw()};const i=LAYOUTS[st.lay].f.findIndex(x=>x[0]===k);
+ box.appendChild(withDice(t,()=>{const opts=[...new Set((BANK[st.lay]||[]).map(x=>x[i]).filter(Boolean))];if(!opts.length)return;t.value=st.v[id]=pick(opts,t.value);draw()}))}}
+// A 🎲 next to every text window: it swaps in a ready text for just that window.
+function withDice(el,fn){const w=document.createElement('div');w.className='fw';const b=document.createElement('button');b.className='dice';b.type='button';b.textContent='🎲';
+ b.onclick=()=>{fn();tg?.HapticFeedback?.impactOccurred('light')};el.parentNode?.insertBefore(w,el);w.append(el,b);return w}
+let CAPS=null;const BTNS=['Забронировать место','Занять ПК','Забронировать ПК','Хочу в клуб','Бронь за минуту','Занять свой ПК','Иду играть','Держи место за мной'];
+async function caps(){if(CAPS)return CAPS;try{const t=await (await fetch('../posts/1SHOT_captions_50.txt')).text();CAPS=t.split(/\n\s*\n/).filter(b=>/^\d+\.\s/.test(b.trim())).map(b=>b.trim().replace(/^\d+\.\s*/,'').split('\n').map(x=>x.trim()).filter(Boolean).join(' / '))}catch{CAPS=[]}return CAPS}
+function bottomDice(){const fl=document.getElementById('fl'),fr=document.getElementById('fr'),cap=document.getElementById('cap'),btn=document.getElementById('btn');
+ const row=fl.parentNode;row.style.flexDirection='column';row.style.gap='0';
+ withDice(fl,()=>{fl.value=pick([...new Set(FOOT.map(x=>x[0]))],fl.value);draw()}).style.marginTop='0';
+ withDice(fr,()=>{fr.value=pick([...new Set(FOOT.map(x=>x[1]))],fr.value);draw()});
+ withDice(cap,async()=>{const c=await caps();if(c.length)cap.value=pick(c,cap.value)});
+ withDice(btn,()=>{btn.value=pick(BTNS,btn.value)}).style.marginTop='0'}
 const val=k=>st.v[st.lay+'_'+k]||'';
 const items=(k,n)=>val(k).split(';').map(x=>x.trim()).filter(Boolean).slice(0,n);
 
@@ -252,7 +266,7 @@ async function access(){const t=document.getElementById('lockT');
  try{const r=await fetch(FN,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({initData:tg.initData,mode:'check'})});
   if(r.ok){document.getElementById('lock').remove();return true}}catch{}
  t.textContent='Доступ только для команды 1SHOT';return false}
-(async()=>{if(!await access())return;chips(document.getElementById('fmt'),FORMATS,'fmt',x=>x[2]);chips(document.getElementById('lay'),LAYOUTS,'lay',x=>x.n);chips(document.getElementById('acc'),ACC,'acc',x=>x[1]);fields();
+(async()=>{if(!await access())return;bottomDice();chips(document.getElementById('fmt'),FORMATS,'fmt',x=>x[2]);chips(document.getElementById('lay'),LAYOUTS,'lay',x=>x.n);chips(document.getElementById('acc'),ACC,'acc',x=>x[1]);fields();
  const list=await (await fetch('list.json')).json();photos(list);document.getElementById('rnd').onclick=()=>randomize(list);
  await Promise.all([document.fonts.load('900 40px UB'),document.fonts.load('500 40px UB'),document.fonts.load('700 20px JB','АБВ abc')]);draw()})();
 </script>
