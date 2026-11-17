@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кристина Гиголаева</title>
+<meta name="description" content="Кристина Гиголаева. Самая лучшая мама.">
+<meta property="og:title" content="Кристина Гиголаева">
+<meta property="og:description" content="Самая лучшая мама на свете">
+<meta property="og:image" content="https://tengizka.fun/momo/img/portrait.jpg">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#F6EFE6">
+<link rel="stylesheet" href="/assets/fonts.css">
+<style>
+@font-face{font-family:Montserrat;src:url(/assets/fonts/montserrat-cyrillic-wght-normal.woff2) format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:Montserrat;src:url(/assets/fonts/montserrat-latin-wght-normal.woff2) format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122}
+:root{--bg:#F6EFE6;--card:#FFFAF4;--ink:#2A1F1C;--muted:#7A6A63;--wine:#8E2C3A;--line:#E6D9CB;--pad:clamp(20px,5vw,64px)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:Montserrat,system-ui,sans-serif;font-size:17px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+.nw{white-space:nowrap}
+.em{display:inline-block;width:1.15em;height:1.15em;vertical-align:-.2em}
+.wrap{max-width:1120px;margin:0 auto;padding:0 var(--pad)}
+section{padding:clamp(64px,10vw,120px) 0}
+.kicker{font-family:Caveat,cursive;font-size:clamp(26px,3vw,32px);color:var(--wine);line-height:1}
+h1,h2{font-family:Lora,Georgia,serif;font-weight:500;line-height:1.08;letter-spacing:-.01em}
+h1{font-size:clamp(44px,7.4vw,92px)}
+h1 i,h2 i{color:var(--wine)}
+h2{font-size:clamp(34px,4.6vw,56px);margin:10px 0 28px}
+
+/* hero */
+.hero{min-height:100svh;display:flex;align-items:center;padding:48px 0}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(32px,6vw,80px);align-items:center}
+.hero p.lead{font-size:clamp(17px,1.6vw,20px);color:var(--muted);margin-top:24px;max-width:30em}
+.photo-main{position:relative;justify-self:center;width:min(100%,420px)}
+.photo-main img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:220px 220px 24px 24px;box-shadow:0 30px 60px -30px rgba(80,30,30,.45)}
+.photo-main .tag{position:absolute;left:-18px;bottom:28px;background:var(--card);border-radius:999px;padding:10px 20px;font-family:Caveat,cursive;font-size:26px;color:var(--wine);box-shadow:0 10px 30px -12px rgba(80,30,30,.35);transform:rotate(-4deg)}
+.btn{display:inline-flex;align-items:center;gap:10px;margin-top:32px;padding:14px 26px;border-radius:999px;background:var(--wine);color:#fff;text-decoration:none;font-weight:600;font-size:15px}
+
+/* facts */
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.fact{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:28px}
+.fact small{display:block;color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.fact b{font-family:Lora,serif;font-weight:500;font-size:clamp(24px,2.4vw,30px);line-height:1.2;display:block}
+.fact span{display:block;color:var(--muted);margin-top:6px;font-size:15px}
+.bday{margin-top:20px;background:var(--wine);color:#fff;border-radius:24px;padding:28px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.bday .num{font-family:Lora,serif;font-size:clamp(44px,6vw,64px);line-height:1}
+.bday p{opacity:.9;max-width:26em}
+
+/* kids */
+.kids{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.kid{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:32px 28px;text-align:center}
+.kid .ltr{width:76px;height:76px;margin:0 auto 18px;border-radius:50%;display:grid;place-items:center;background:var(--bg);font-family:Lora,serif;font-size:36px;color:var(--wine);border:1px solid var(--line)}
+.kid b{font-family:Lora,serif;font-weight:500;font-size:28px;display:block}
+.kid span{color:var(--muted);font-size:15px}
+
+/* gallery */
+.gal{columns:3 280px;column-gap:20px}
+.gal figure{break-inside:avoid;margin-bottom:20px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:10px 10px 14px;cursor:zoom-in;transition:transform .25s}
+.gal figure:hover{transform:translateY(-4px)}
+.gal img{width:100%;border-radius:14px}
+.gal figcaption{font-family:Caveat,cursive;font-size:24px;color:var(--wine);text-align:center;margin-top:10px;line-height:1.15}
+
+/* letter */
+.letter{background:var(--card);border:1px solid var(--line);border-radius:32px;padding:clamp(32px,6vw,72px);text-align:center;max-width:820px;margin:0 auto}
+.letter p{font-family:Lora,serif;font-style:italic;font-size:clamp(20px,2.3vw,26px);line-height:1.5}
+.letter .sign{font-family:Caveat,cursive;font-style:normal;color:var(--wine);font-size:34px;margin-top:24px}
+
+footer{padding:40px 0 56px;text-align:center;color:var(--muted);font-size:14px}
+footer a{color:var(--wine)}
+
+/* lightbox */
+.lb{position:fixed;inset:0;background:rgba(30,18,16,.92);display:none;align-items:center;justify-content:center;padding:24px;z-index:9;cursor:zoom-out}
+.lb.on{display:flex}
+.lb img{max-height:88vh;border-radius:16px}
+
+.rv{opacity:0;transform:translateY(24px);transition:opacity .8s,transform .8s}
+.rv.in{opacity:1;transform:none}
+
+@media(max-width:860px){
+  .hero{min-height:auto;padding-top:40px}
+  .hero .wrap{grid-template-columns:1fr;text-align:center}
+  .hero p.lead{margin-left:auto;margin-right:auto}
+  .photo-main{order:-1;width:min(78%,340px);margin-bottom:24px}
+  .photo-main .tag{left:50%;transform:translateX(-50%) rotate(-4deg);bottom:-18px;white-space:nowrap}
+  .facts,.kids{grid-template-columns:1fr}
+  h2{text-align:center}
+  .kicker.c{text-align:center}
+  .bday{justify-content:center;text-align:center}
+}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <div class="kicker">Знакомьтесь</div>
+      <h1>Кристина<br><i>Гиголаева</i></h1>
+      <p class="lead">Мама троих детей, душа нашей семьи и человек, у&nbsp;которого всегда найдётся время, тёплое слово и что-то вкусное на&nbsp;кухне.</p>
+      <a class="btn" href="#gallery">Смотреть фото <img class="em" src="/assets/emoji/red_heart.webp" alt=""></a>
+    </div>
+    <div class="photo-main">
+      <img src="img/portrait.jpg" alt="Кристина Гиголаева">
+      <div class="tag">самая лучшая мама</div>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <div class="kicker c rv">Пара слов о ней</div>
+    <h2 class="rv">Немного <i>фактов</i></h2>
+    <div class="facts">
+      <div class="fact rv"><small>Родилась</small><b class="nw">14 августа 1983</b><span>под знаком Льва, и это многое объясняет</span></div>
+      <div class="fact rv"><small>Родной город</small><b>Беслан</b><span>Северная Осетия</span></div>
+      <div class="fact rv"><small>Дети</small><b>Трое</b><span>два сына и дочка</span></div>
+    </div>
+    <div class="bday rv">
+      <div>
+        <div class="num" id="days">…</div>
+        <div id="daysLabel">дней до дня рождения</div>
+      </div>
+      <p><img class="em" src="/assets/emoji/birthday_cake.webp" alt=""> Отсчёт до 14 августа. Подарки готовим заранее, мам, мы помним.</p>
+    </div>
+  </div>
+</section>
+
+<section id="kids" style="padding-top:0">
+  <div class="wrap">
+    <div class="kicker c rv">Её главная гордость</div>
+    <h2 class="rv">Трое <i>детей</i></h2>
+    <div class="kids">
+      <div class="kid rv"><div class="ltr">Т</div><b>Тенгиз</b><span>старший сын</span></div>
+      <div class="kid rv"><div class="ltr">А</div><b>Алан</b><span>средний сын</span></div>
+      <div class="kid rv"><div class="ltr">Э</div><b>Эля</b><span>младшая дочка</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="gallery" style="padding-top:0">
+  <div class="wrap">
+    <div class="kicker c rv">Семейный альбом</div>
+    <h2 class="rv">Моменты, которые <i>греют</i></h2>
+    <div class="gal">
+      <figure class="rv"><img src="img/summer.jpg" alt="" loading="lazy"><figcaption>лето, арбуз и молодость</figcaption></figure>
+      <figure class="rv"><img src="img/smile.jpg" alt="" loading="lazy"><figcaption>улыбка, которая лечит</figcaption></figure>
+      <figure class="rv"><img src="img/love.jpg" alt="" loading="lazy"><figcaption>«Люблю!» и этим всё сказано</figcaption></figure>
+      <figure class="rv"><img src="img/newyear.jpg" alt="" loading="lazy"><figcaption>Новый год всей семьёй</figcaption></figure>
+      <figure class="rv"><img src="img/son.jpg" alt="" loading="lazy"><figcaption>дурачимся с сыном</figcaption></figure>
+      <figure class="rv"><img src="img/autumn.jpg" alt="" loading="lazy"><figcaption>осенняя прогулка</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="letter rv">
+      <p>Мам, спасибо тебе за всё. За терпение, за заботу, за то, что ты всегда рядом, даже когда мы далеко. Ты у нас самая лучшая, и этот сайт тому доказательство.</p>
+      <div class="sign">твои Тенгиз, Алан и Эля <img class="em" src="/assets/emoji/red_heart.webp" alt=""></div>
+    </div>
+  </div>
+</section>
+
+<footer>Сделано с любовью сыном · <a href="/">tengizka</a></footer>
+
+<div class="lb" id="lb"><img alt=""></div>
+
+<script>
+// дни до дня рождения
+(function(){
+  var now=new Date(), y=now.getFullYear();
+  var today=new Date(y,now.getMonth(),now.getDate());
+  var b=new Date(y,7,14); if(b<today) b=new Date(y+1,7,14);
+  var d=Math.round((b-today)/864e5);
+  var el=document.getElementById('days'), lb=document.getElementById('daysLabel');
+  if(d===0){el.textContent='Сегодня!';lb.textContent='С днём рождения, мама!';return}
+  var n=d%100, w=(n>10&&n<20)?'дней':(d%10===1?'день':(d%10>=2&&d%10<=4?'дня':'дней'));
+  el.textContent=d; lb.textContent=w+' до дня рождения';
+})();
+// лайтбокс
+var box=document.getElementById('lb'), big=box.querySelector('img');
+document.querySelectorAll('.gal figure').forEach(function(f){f.onclick=function(){big.src=f.querySelector('img').src;box.classList.add('on')}});
+box.onclick=function(){box.classList.remove('on')};
+document.addEventListener('keydown',function(e){if(e.key==='Escape')box.classList.remove('on')});
+// появление
+var io='IntersectionObserver' in window?new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12}):null;
+document.querySelectorAll('.rv').forEach(function(el){io?io.observe(el):el.classList.add('in')});
+</script>
+</body>
+</html>
