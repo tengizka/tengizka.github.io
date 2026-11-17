@@ -8,7 +8,7 @@
 :root{--bg:#000;--fg:#fff;--lime:#a3ff10;--muted:#8d8d8d;--rule:#262626;--pink:#ff4fa3;--blue:#5b7bff;--orange:#ff8a1f;color-scheme:dark}
 html,body{width:100%;height:100%;background:var(--bg);overflow:hidden}
 body{display:grid;place-items:center;font-family:Unb,system-ui,sans-serif;color:var(--fg)}
-.stage{position:relative;width:1600px;height:900px;flex:none;transform-origin:center;overflow:hidden;background:var(--bg)}
+.stage{position:absolute;left:50%;top:50%;width:1600px;height:900px;transform-origin:center;overflow:hidden;background:var(--bg)}
 .grid{position:absolute;inset:-80px;background-image:linear-gradient(#ffffff0d 2px,transparent 2px),linear-gradient(90deg,#ffffff0d 2px,transparent 2px);background-size:80px 80px;animation:drift 18s linear infinite}
 @keyframes drift{to{transform:translate(80px,80px)}}
 .scan{position:absolute;left:0;right:0;height:180px;background:linear-gradient(transparent,#a3ff1012,transparent);animation:scan 7s ease-in-out infinite;pointer-events:none}
@@ -89,7 +89,7 @@ h1 .lime{color:var(--lime)}
 </svg></div><script>
 // Fit the 1600x900 stage into whatever frame Gizmo gives the news item.
 const stage=document.querySelector('.stage');
-const fit=()=>{const k=Math.min(innerWidth/1600,innerHeight/900);stage.style.transform=`scale(${k})`};
+const fit=()=>{const k=Math.min(innerWidth/1600,innerHeight/900);stage.style.transform=`translate(-50%,-50%) scale(${k})`};
 addEventListener('resize',fit);fit();
 // Titles rise word by word.
 document.querySelectorAll('h1').forEach(h=>{let i=0;h.querySelectorAll('.w').forEach(w=>w.style.animationDelay=(0.15+0.12*i++)+'s')});
