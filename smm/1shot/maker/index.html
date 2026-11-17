@@ -306,7 +306,7 @@ async function draw(){const [W,H]=FORMATS[st.fmt];cv.width=W;cv.height=H;const s
   ctx.lineWidth=6;ctx.beginPath();ctx.arc(cx-38,cyy-22,14,Math.PI/2,Math.PI*1.5);ctx.stroke();ctx.beginPath();ctx.arc(cx+38,cyy-22,14,-Math.PI/2,Math.PI/2);ctx.stroke();
   const tx=X+210;mono(val('kick'),tx,by+62,A,22);let y=paint(h.L,tx,by+80+h.s*.85,h.s,1.05,`900 ${h.s}px UB`,'#fff');paint(s.L,tx,y+14+s.s*.6,s.s,1.3,`500 ${s.s}px UB`,'rgba(255,255,255,.8)');
   ctx.font='900 34px UB';const xp=val('xp');const xw=ctx.measureText(xp).width+40;ctx.fillStyle=A;rrect(W-X-xw,by-28,xw,56,28);ctx.fill();ctx.fillStyle=OA;ctx.fillText(xp,W-X-xw+20,by+12)}
- if(L==='loading'){const p=Math.max(0,Math.min(100,parseFloat(val('pct'))||0)),h=fit(val('h'),900,110,'UB',MW,3,48);const by=base-60;
+ if(L==='loading'){const p=Math.max(0,Math.min(100,parseFloat(val('pct'))||0)),h=fit(val('h'),900,110,'UB',MW,3,48);const by=base-100;
   const n=20,g=10,sw=(MW-g*(n-1))/n;for(let i=0;i<n;i++){ctx.fillStyle=i<Math.round(p/100*n)?A:'rgba(255,255,255,.14)';ctx.fillRect(X+i*(sw+g),by,sw,56)}
   mono(val('s'),X,by+110,'rgba(255,255,255,.8)',24);ctx.font='900 64px JB';ctx.fillStyle=A;ctx.textAlign='right';ctx.fillText(Math.round(p)+'%',W-X,by-36);ctx.textAlign='left';
   T(h.L,X,by-60-blockH(h.L,h.s,.98)-40,h.s,.98,900,'#fff',hlD)}
