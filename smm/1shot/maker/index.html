@@ -6,6 +6,7 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 @font-face{font-family:UB;src:url(fonts/Unbounded.ttf);font-weight:200 900}
+@font-face{font-family:RS;src:url(fonts/ReSquare-Bold.ttf);font-weight:700}
 @font-face{font-family:JB;src:url(fonts/jbm-cyr-700.woff2);unicode-range:U+0400-045F}
 @font-face{font-family:JB;src:url(fonts/jbm-lat-700.woff2);unicode-range:U+0000-00FF,U+2000-206F}
 :root{--bg:#0B0B0C;--card:#16161A;--line:rgba(255,255,255,.12);--txt:#fff;--mut:rgba(255,255,255,.55);--lime:#A3FF10}
@@ -37,12 +38,15 @@ button.b{flex:1;border:0;border-radius:12px;padding:15px 10px;font:800 14px UB;c
 .b1{background:var(--lime);color:#000}.b2{background:var(--card);color:var(--txt);border:1px solid var(--line)!important}
 .toast{position:fixed;left:50%;top:16px;transform:translateX(-50%);background:#fff;color:#000;border-radius:10px;padding:10px 14px;font-weight:700;opacity:0;transition:.2s;pointer-events:none;z-index:9}
 .toast.on{opacity:1}
-</style></head><body>
+</style><script src="nav.js" data-cur="posts" data-root=""></script>
+</head><body>
 <div id="lock" style="position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px"><div><div style="font:800 20px UB">1SHOT</div><div id="lockT" style="color:var(--mut);margin-top:10px">Проверяю доступ…</div></div></div>
 <main>
-<div style="display:flex;align-items:center;justify-content:space-between;margin:4px 0 14px"><h1 style="margin:0">Конструктор постов 1SHOT</h1><a href="price/" style="flex:none;color:#000;background:var(--lime);text-decoration:none;font:800 12px UB;border-radius:999px;padding:9px 13px">Прайс →</a></div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin:4px 0 14px"><h1 style="margin:0">Конструктор постов 1SHOT</h1></div>
 <div class="prev"><canvas id="cv"></canvas></div>
 <button class="b b1" id="rnd" style="width:100%;margin-top:10px">🎲 Случайный пост</button>
+<button class="b b2" id="presetsBtn" style="width:100%;margin-top:8px">🗓 Готовые посты на праздники</button>
+<div id="lyHost"></div>
 
 <div class="lab">Формат</div><div class="chips" id="fmt"></div>
 <div class="lab">Макет</div><div class="chips" id="lay"></div>
@@ -64,6 +68,8 @@ button.b{flex:1;border:0;border-radius:12px;padding:15px 10px;font:800 14px UB;c
 <div class="bar"><div><button class="b b2" id="sendImg">Только картинка</button><button class="b b1" id="sendPost">Пост в бот</button></div></div>
 <div class="toast" id="toast"></div>
 <input type="file" id="up" accept="image/*" hidden>
+<script src="layers.js"></script>
+<script src="presets.js"></script>
 <script>
 const tg=window.Telegram?.WebApp;tg?.ready();tg?.expand();
 const FN='https://zqhfvtgktbfnxcclqqny.supabase.co/functions/v1/smm-maker';
@@ -209,7 +215,8 @@ function cover(im,x,y,w,h,dim){if(!im)return;ctx.save();ctx.beginPath();ctx.rect
 function grad(W,H,a,b){const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,`rgba(0,0,0,${a})`);g.addColorStop(.22,'rgba(0,0,0,0)');g.addColorStop(.4,'rgba(0,0,0,0)');g.addColorStop(1,`rgba(0,0,0,${b})`);ctx.fillStyle=g;ctx.fillRect(0,0,W,H)}
 function rrect(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
 
-async function draw(){const [W,H]=FORMATS[st.fmt];cv.width=W;cv.height=H;const story=st.fmt==='story',top=story?210:72,bot=story?250:64,X=72,MW=W-2*X;
+async function draw(){await drawBase();await LY.after()}
+async function drawBase(){const [W,H]=FORMATS[st.fmt];cv.width=W;cv.height=H;const story=st.fmt==='story',top=story?210:72,bot=story?250:64,X=72,MW=W-2*X;
  const A=ACC[st.acc][0],OA=onAcc(A),L=st.lay,solid=!!LAYOUTS[L].solid,dim=st.dim/100;
  const im=st.custom||await loadImg('img/'+st.img);await logos();
  const fy=H-bot,base=fy-100,fl=document.getElementById('fl').value||'Мира, 37',fr=document.getElementById('fr').value||'24/7';
@@ -294,7 +301,7 @@ async function draw(){const [W,H]=FORMATS[st.fmt];cv.width=W;cv.height=H;const s
   const it=pairs('li',5);let by=base-it.length*118+40;for(const [n,p0] of it){const p=Math.max(0,Math.min(100,parseFloat(p0)||0));ctx.font='600 34px UB';ctx.fillStyle='#fff';ctx.fillText(n||'',X,by);mono(Math.round(p)+'%',W-X,by,A,28,'right');
    ctx.fillStyle='rgba(255,255,255,.14)';rrect(X,by+22,MW,30,15);ctx.fill();if(p>0){ctx.fillStyle=A;rrect(X,by+22,Math.max(30,MW*p/100),30,15);ctx.fill()}by+=118}}
  if(L==='notify'){const cy=top+(story?440:330);ctx.font=`300 ${story?220:180}px UB`;ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(val('clk'),W/2,cy);ctx.textAlign='left';
-  mono('пятница',W/2,cy-(story?200:165),'rgba(255,255,255,.75)',24,'center');
+
   const h=fit(val('h'),800,40,'UB',MW-90,2,28),s=fit(val('s'),500,32,'UB',MW-90,4,22),ch=110+blockH(h.L,h.s,1.15)+blockH(s.L,s.s,1.3)+20,cyy=cy+(story?120:90);
   ctx.fillStyle='rgba(28,28,32,.86)';rrect(X-12,cyy,MW+24,ch,44);ctx.fill();ctx.fillStyle=A;rrect(X+26,cyy+30,56,56,14);ctx.fill();ctx.font='900 24px UB';ctx.fillStyle=OA;ctx.textAlign='center';ctx.fillText('1S',X+54,cyy+67);ctx.textAlign='left';
   mono(val('app'),X+104,cyy+66,'rgba(255,255,255,.7)',22);mono('сейчас',W-X-20,cyy+66,'rgba(255,255,255,.5)',20,'right');
@@ -412,14 +419,31 @@ async function send(mode){if(!tg?.initData){toast('Открой конструк
  catch(e){toast('Нет связи, попробуй ещё раз')}b.disabled=false;b.textContent=old}
 document.getElementById('sendPost').onclick=()=>send('post');document.getElementById('sendImg').onclick=()=>send('image');
 
+
+// Ready seasonal posts: one tap fills the whole editor.
+let PHOTOS=[];
+function loadPreset(p){st.fmt='post';st.lay=p.lay;st.acc=p.acc;st.custom=null;if(p.img)st.img=p.img;st.dim=55;
+ LAYOUTS[p.lay].f.forEach(([k],i)=>st.v[p.lay+'_'+k]=p.v[i]||'');st.layers=(p.ly||[]).map(l=>({rot:0,...l}));
+ document.getElementById('fl').value='Мира, 37';document.getElementById('fr').value='24/7';document.getElementById('cap').value=p.cap||'';document.getElementById('dim').value=st.dim;
+ chips(document.getElementById('fmt'),FORMATS,'fmt',x=>x[2]);chips(document.getElementById('lay'),LAYOUTS,'lay',x=>x.n);chips(document.getElementById('acc'),ACC,'acc',x=>x[1]);fields();photos(PHOTOS);draw();
+ document.getElementById('cv').scrollIntoView({behavior:'smooth',block:'start'});toast('Загружен пост «'+p.n+'». Меняй что хочешь')}
+function presetsSheet(){let sh=document.getElementById('prSheet');if(!sh){sh=document.createElement('div');sh.id='prSheet';sh.className='lsheet';
+  sh.innerHTML='<div class="lsheet-in"><div class="lsheet-h"><b>Готовые посты</b><button class="lclose">Закрыть</button></div><div id="prList"></div></div>';document.body.appendChild(sh);
+  sh.querySelector('.lclose').onclick=()=>sh.classList.remove('on');const L=sh.querySelector('#prList');let mon='';
+  const MON={'12':'Декабрь','01':'Январь','02':'Февраль'};
+  for(const p of PRESETS){const m=p.d.slice(3);if(m!==mon){mon=m;const h=document.createElement('div');h.className='lab';h.textContent=MON[m]||m;L.appendChild(h)}
+   const b=document.createElement('button');b.className='prItem';b.innerHTML='<span></span><b></b>';b.querySelector('span').textContent=p.d;b.querySelector('b').textContent=p.n;b.onclick=()=>{sh.classList.remove('on');loadPreset(p)};L.appendChild(b)}
+  const css=document.createElement('style');css.textContent='.prItem{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:#0f0f12;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px 14px;margin-top:6px;color:#fff;font:600 15px system-ui}.prItem span{font:700 12px JB;color:#A3FF10;letter-spacing:.06em;flex:none;width:44px}';document.head.appendChild(css)}
+ sh.classList.add('on')}
+document.getElementById('presetsBtn').onclick=presetsSheet;
 // The editor opens only for the club's SMM admins: the server checks Telegram's signature of initData.
 async function access(){const t=document.getElementById('lockT');
  if(!tg?.initData){t.textContent='Доступ только для команды 1SHOT';return false}
  try{const r=await fetch(FN,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({initData:tg.initData,mode:'check'})});
   if(r.ok){document.getElementById('lock').remove();return true}}catch{}
  t.textContent='Доступ только для команды 1SHOT';return false}
-(async()=>{if(!await access())return;bottomDice();chips(document.getElementById('fmt'),FORMATS,'fmt',x=>x[2]);chips(document.getElementById('lay'),LAYOUTS,'lay',x=>x.n);chips(document.getElementById('acc'),ACC,'acc',x=>x[1]);fields();
- const list=await (await fetch('list.json')).json();photos(list);document.getElementById('rnd').onclick=()=>randomize(list);
- await Promise.all([document.fonts.load('900 40px UB'),document.fonts.load('500 40px UB'),document.fonts.load('700 20px JB','АБВ abc')]);draw()})();
+(async()=>{if(!await access())return;bottomDice();LY.ui();chips(document.getElementById('fmt'),FORMATS,'fmt',x=>x[2]);chips(document.getElementById('lay'),LAYOUTS,'lay',x=>x.n);chips(document.getElementById('acc'),ACC,'acc',x=>x[1]);fields();
+ const list=await (await fetch('list.json')).json();PHOTOS=list;photos(list);document.getElementById('rnd').onclick=()=>randomize(list);
+ await Promise.all([document.fonts.load('900 40px UB'),document.fonts.load('500 40px UB'),document.fonts.load('700 20px JB','АБВ abc'),document.fonts.load('700 40px RS','АБВ')]);draw()})();
 </script>
 </body></html>
