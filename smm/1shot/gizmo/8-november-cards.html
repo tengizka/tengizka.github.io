@@ -5,7 +5,8 @@
 
 *{box-sizing:border-box;margin:0}
 html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#050507}body{display:grid;place-items:center;color:#fff;font-family:Unb}
-.stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;overflow:hidden;transform-origin:center}
+.stage{position:absolute;left:50%;top:50%;width:1920px;height:986px;overflow:hidden;transform-origin:center}
+.wrap{inset:52px 96px!important}.cards{margin-top:36px!important}.bot{margin-top:26px!important}
 .bg{position:absolute;inset:0;background:
  radial-gradient(60% 50% at 10% 100%,rgba(163,255,16,.10),transparent 70%),
  radial-gradient(50% 60% at 95% 0%,rgba(233,62,151,.16),transparent 70%),
@@ -77,4 +78,4 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#050507}bod
  </div>
  <div class="bot"><span><em class="fn">* только с 18 лет</em>Подробности у администратора</span></div>
 </div>
-</div><script>const st=document.querySelector('.stage');const fit=()=>{const k=Math.min(innerWidth/1920,innerHeight/1080);st.style.transform=`translate(-50%,-50%) scale(${k})`};addEventListener('resize',fit);fit();</script></body></html>
+</div><script>const st=document.querySelector('.stage');const fit=()=>{const k=Math.min(innerWidth/1920,innerHeight/986);st.style.transform=`translate(-50%,-50%) scale(${k})`};addEventListener('resize',fit);fit();</script></body></html>
