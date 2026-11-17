@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>1SHOT · баннеры Gizmo</title>
+<meta name="robots" content="noindex">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="../nav.js" data-cur="gizmo" data-root="../"></script>
+<script src="qrcode.js"></script>
+<style>
+@font-face{font-family:UB;src:url(../fonts/Unbounded.ttf);font-weight:200 900}
+@font-face{font-family:JB;src:url(../fonts/jbm-cyr-700.woff2);unicode-range:U+0400-045F}
+@font-face{font-family:JB;src:url(../fonts/jbm-lat-700.woff2);unicode-range:U+0000-00FF,U+2000-206F}
+:root{--bg:#0B0B0C;--card:#16161A;--line:rgba(255,255,255,.12);--txt:#fff;--mut:rgba(255,255,255,.55);--lime:#A3FF10}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.4 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+main{max-width:620px;margin:0 auto;padding:16px 16px 120px}
+h1{font:800 20px UB;margin:4px 0 14px}
+.lab{font:700 11px JB;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin:22px 0 8px}
+.prev{position:relative;background:#000;border-radius:12px;overflow:hidden;aspect-ratio:2/1}
+.prev iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:999px;padding:9px 14px;font:600 14px system-ui;cursor:pointer}
+.chip.on{background:var(--lime);color:#000;border-color:var(--lime)}
+input[type=text],textarea{width:100%;background:#0f0f12;border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:11px 12px;font:15px system-ui;outline:none;resize:none}
+input:focus,textarea:focus{border-color:var(--lime)}
+.f{margin-top:8px}.row{display:flex;gap:8px;margin-top:8px;align-items:center}.row>*{flex:1;min-width:0}
+.blk{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:10px}
+.blk h3{margin:0 0 4px;font:800 14px UB;display:flex;justify-content:space-between;align-items:center}
+.hint{color:var(--mut);font-size:12.5px;margin-top:6px}
+.sub{font:700 11px JB;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:12px 0 4px}
+.cols{display:flex;gap:8px;flex-wrap:wrap}.col{width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.25)}.col.on{outline:3px solid var(--lime);outline-offset:2px}
+.sm{border:1px solid var(--line);background:#0f0f12;color:#fff;border-radius:10px;padding:8px 12px;font:700 13px system-ui}
+.bar{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(transparent,var(--bg) 22%);padding:22px 16px calc(14px + env(safe-area-inset-bottom))}
+.bar>div{max-width:620px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+button.b{border:0;border-radius:12px;padding:14px 8px;font:800 13px UB;cursor:pointer}.b1{background:var(--lime);color:#000}.b2{background:var(--card);color:#fff;border:1px solid var(--line)!important}.b:disabled{opacity:.5}
+.toast{position:fixed;left:50%;top:16px;transform:translateX(-50%);background:#fff;color:#000;border-radius:10px;padding:10px 14px;font-weight:700;opacity:0;transition:.2s;pointer-events:none;z-index:40;max-width:90vw;text-align:center}.toast.on{opacity:1}
+.lsl{display:flex;align-items:center;gap:10px;margin-top:10px;color:var(--mut);font:700 11px JB;text-transform:uppercase;letter-spacing:.1em}.lsl span{width:70px}.lsl input{flex:1}
+.lsheet{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:30;display:none;align-items:flex-end}.lsheet.on{display:flex}
+.lsheet-in{background:#16161A;width:100%;max-height:70vh;border-radius:18px 18px 0 0;padding:14px;overflow:auto}.lsheet-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.lclose{background:var(--lime);border:0;border-radius:999px;padding:8px 14px;font-weight:800}.lgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.lgrid img{width:100%;aspect-ratio:1;object-fit:contain;background:#0f0f12;border-radius:10px;padding:6px}
+</style></head><body>
+<div id="lock" style="position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px"><div><div style="font:800 20px UB">1SHOT</div><div id="lockT" style="color:var(--mut);margin-top:10px">Проверяю доступ…</div></div></div>
+<main>
+<h1>Баннеры для Gizmo</h1>
+<div class="prev"><iframe id="pv" title="Превью"></iframe></div>
+<div class="row"><button class="sm" id="replay">▶ Анимация заново</button><button class="sm" id="reset">Вернуть как было</button></div>
+<div class="hint">Слои можно двигать пальцем прямо на превью. Баннер сам подстраивается под Full HD и 2K.</div>
+<div class="lab">Шаблон</div><div class="chips" id="tpls"></div>
+<div id="form"></div>
+<div class="lab">Слои поверх баннера</div>
+<div class="chips"><button class="chip" id="addT">+ Текст</button><button class="chip" id="addE">+ Эмодзи</button><button class="chip" id="addP">+ Своя PNG</button></div>
+<div id="lyForm"></div>
+<input type="file" id="pngIn" accept="image/png,image/webp,image/*" hidden>
+<input type="file" id="imgIn" accept="image/png,image/webp,image/*" hidden>
+</main>
+<div class="bar"><div><button class="b b2" id="dl">Скачать HTML</button><button class="b b1" id="send">HTML в бот</button></div></div>
+<div class="lsheet" id="sheet"><div class="lsheet-in"><div class="lsheet-h"><b>Эмодзи</b><button class="lclose">Готово</button></div><div class="lgrid"></div></div></div>
+<div class="toast" id="toast"></div>
+<script src="../layers.js"></script>
+<script>
+const tg=window.Telegram?.WebApp;tg?.ready();tg?.expand();
+const FN='https://zqhfvtgktbfnxcclqqny.supabase.co/functions/v1/smm-maker';
+const toast=t=>{const e=document.getElementById('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2600)};
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+// text marks: « / » new line, *word* highlighted
+const md=(s,tag='b')=>String(s??'').split(/\s+\/\s+/).map(x=>esc(x).replace(/\*([^*]+)\*/g,`<${tag}>$1</${tag}>`)).join('<br>');
+const mdLime=s=>String(s??'').split(/\s+\/\s+/).map(x=>esc(x).replace(/\*([^*]+)\*/g,'<span class="lime">$1</span>')).join('<br>');
+function titleHtml(s){return String(s).split(/\s+\/\s+/).map(line=>line.split(/\s+/).filter(Boolean).map(w=>{const hl=/^\*.*\*$/.test(w)||w.startsWith('*')||w.endsWith('*');return `<span class="w${hl?' lime':''}">${esc(w.replace(/\*/g,''))}</span>`}).join(' ')).join('<br>')}
+function qrSvg(url){const q=qrcode(0,'M');q.addData(url);q.make();const n=q.getModuleCount();let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))d+=`M${c+1},${r+1}h1v1h-1z`;return `<svg class="qr" viewBox="0 0 ${n+2} ${n+2}" aria-label="QR-код"><rect width="${n+2}" height="${n+2}" fill="#fff"/><path d="${d}"/></svg>`}
+const CARDCOL={g:['#A3FF10','Лайм'],n:['#8B5BFF','Фиолетовый'],p:['#E93E97','Розовый'],o:['#FF8A1F','Оранжевый'],b:['#5B7BFF','Синий']};
+const EMOS=Object.fromEntries(Object.entries(LY.EMO).map(([k,v])=>[k,v[0]]));
+// ---------- templates: default content = what hangs now ----------
+const T={
+ cards:{n:'Цветные карточки',file:'tpl/cards.html',def:{title:'Акции ноября',fn:'* только с 18 лет',foot:'Подробности у администратора',cards:[
+  {col:'g',k:'Подарок',h:'Банка / Gorilla',age:true,pre:'от',num:'600',suf:'₽',items:'Одна банка за пополнение / баланса от 600 ₽',can:true},
+  {col:'n',k:'Пятница · 20 и 27 ноября',h:'Ночь / до 13:00',age:true,pre:'',num:'+5',suf:'ч',items:'Ночной пакет с пятницы / длится до 13:00 субботы; Покупается только в ночь / с пятницы на субботу',can:false},
+  {col:'p',k:'Чёрная пятница · 27–29 ноября',h:'+500 ₽ / на баланс',age:false,pre:'от',num:'2 000',suf:'₽',items:'Пополнение одним чеком; Раз в день на гостя; Не суммируется с часами / за пополнение',can:false}]}},
+ three:{n:'Карточки лайм',file:'tpl/three.html',def:{tag:'Бессрочно',title:'Акции *всегда*',emo:'stars',cards:[
+  {k:'День рождения',h:'Часы / в подарок',type:'chips',chips:'3 часа STANDART тебе; по 1 часу STANDART / трём друзьям',big:'',bigsub:'',lines:'',qr1:'',qr2:'',note:'Отмечай в день рождения. / Возьми с собой документ.'},
+  {k:'Одним чеком',h:'Пополняй / получай часы',type:'big',chips:'',big:'+1 час',bigsub:'с каждой 1 000 ₽',lines:'2 000 ₽ = 2 часа / 5 000 ₽ = 5 часов / и так до бесконечности',qr1:'',qr2:'',note:'В любом зале: STANDART, / VIP или TV-зона.'},
+  {k:'Яндекс Карты и 2ГИС',h:'+1 час / за отзыв',type:'qr',chips:'',big:'',bigsub:'',lines:'',qr1:'Яндекс | https://yandex.ru/profile/204221279175',qr2:'2ГИС | https://2gis.ru/mytishchi/search/1SHOT%20%D0%9C%D0%B8%D1%80%D0%B0%2037',note:'Покажи отзыв админу / и получи 1 час STANDART.'}]}},
+ promo:{n:'Одна акция',file:'tpl/promo.html',def:{tag:'До 30 ноября',title:'Банка *Gorilla* / в подарок',sub:'За пополнение баланса *от 600 ₽*',pill:'1 банка за пополнение',badge:'18+',note:'Только с 18 лет. Возьми с собой документ. / Одна банка на одно пополнение.',img:'tpl',emo:'bolt'}},
+ qr:{n:'QR-код',file:'tpl/qr.html',def:{tag:'Бесплатные минуты',title:'Подпишись / и *играй*',big:'*+30 минут* за подписку / на наш Telegram-канал',note:'Наведи камеру на QR-код / и покажи подписку администратору',label:'Telegram',tgicon:true,url:'https://t.me/oneshotmira17',pill:'+30 мин',emo:'stars'}}};
+let cur='cards',M={},tplText={},layersOf={};
+try{const s=JSON.parse(localStorage.getItem('gz_state')||'null');if(s){cur=s.cur||cur;M=s.M||{};layersOf=s.L||{}}}catch{}
+for(const k in T){if(!M[k])M[k]=JSON.parse(JSON.stringify(T[k].def))}
+const save=()=>{try{localStorage.setItem('gz_state',JSON.stringify({cur,M,L:layersOf}))}catch{toast('Память браузера заполнена: свои PNG могут не сохраниться')}};
+// review links: take them from the template so they stay exactly as printed
+async function tpl(k){if(!tplText[k])tplText[k]=await (await fetch(T[k].file)).text();return tplText[k]}
+function setEmotion(doc,svg,emo){if(!svg)return;const g=svg.querySelector('#mascot')||svg;g.querySelectorAll('#eyeL,#eyeR,#mouth').forEach(e=>e.remove());const e=LY.EMO[emo]||LY.EMO.normal;
+ const tmp=doc.createElementNS('http://www.w3.org/2000/svg','g');tmp.innerHTML=e[1]+e[2];tmp.setAttribute('fill','currentColor');g.appendChild(tmp)}
+// ---------- build the banner HTML from template + model + layers ----------
+async function build(k,forExport){const src=await tpl(k);const doc=new DOMParser().parseFromString(src,'text/html');const m=M[k];
+ const css=doc.createElement('style');let extra='';
+ if(k==='cards'){const top=doc.querySelector('.top h1');top.textContent=m.title;
+  const box=doc.querySelector('.cards');const can=box.querySelector('img.can')?.getAttribute('src')||'';box.innerHTML='';
+  extra+=`.cards{grid-template-columns:repeat(${m.cards.length},1fr)!important}.o{--a:#FF8A1F;--g:rgba(255,138,31,.3)}.b{--a:#5B7BFF;--g:rgba(91,123,255,.3)}`;
+  m.cards.forEach((c,i)=>{const d=.35+i*.2,el=doc.createElement('div');el.className='c '+c.col;el.style.animationDelay=d+'s';
+   const items=String(c.items||'').split(/\s*;\s*/).filter(Boolean);
+   el.innerHTML=(c.can&&can?`<img class="can" src="${can}">`:'')+`<div class="k">${esc(c.k)}</div><h2>${md(c.h)}${c.age?' <span class="age">18+</span><span class="ast">*</span>':''}</h2>`+
+    (c.num?`<div class="big" style="animation-delay:${d+.55}s">${c.pre?`<i>${esc(c.pre)}</i>`:''}${esc(c.num)}<small>${esc(c.suf)}</small></div>`:'')+
+    `<ul>${items.map((t,j)=>`<li style="animation-delay:${(d+.85+j*.15).toFixed(2)}s">${md(t)}</li>`).join('')}</ul>`;box.appendChild(el)});
+  const bot=doc.querySelector('.bot span');bot.innerHTML=(m.fn?`<em class="fn">${esc(m.fn)}</em>`:'')+esc(m.foot)}
+ if(k==='three'){doc.querySelector('.tag').textContent=m.tag;doc.querySelector('.head h1').innerHTML=titleHtml(m.title);setEmotion(doc,doc.querySelector('.head svg.mascot'),m.emo);
+  const box=doc.querySelector('.cards');box.innerHTML='';extra+=`.cards{grid-template-columns:repeat(${m.cards.length},1fr)!important}`;
+  m.cards.forEach((c,i)=>{const el=doc.createElement('div');el.className='card';el.style.animationDelay=(.6+i*.2)+'s';
+   const parts=String(c.h).split(/\s+\/\s+/);let body='';
+   if(c.type==='chips')body=`<div class="chips">${String(c.chips).split(/\s*;\s*/).filter(Boolean).map((t,j)=>`<span class="chip${j%2?' w':''}">${md(t)}</span>`).join('')}</div>`;
+   if(c.type==='big')body=`<div class="plus1"><b>${esc(c.big)}</b><span>${esc(c.bigsub)}</span></div>`+(c.lines?`<p class="ex">${md(c.lines)}</p>`:'');
+   if(c.type==='lines')body=`<p class="ex">${md(c.lines)}</p>`;
+   if(c.type==='qr'){const q=[c.qr1,c.qr2].filter(Boolean).map(x=>{const [l,u]=x.split('|').map(s=>s.trim());return u?`<div><span>${esc(l)}</span><div class="qrbox">${qrSvg(u)}</div></div>`:''}).join('');body=`<div class="qrs">${q}</div>`}
+   el.innerHTML=`<i class="glow" style="animation-delay:${i*1.5}s"></i><span class="d">${esc(c.k)}</span><h2>${esc(parts[0]||'')}<br><span class="lime">${esc(parts.slice(1).join(' '))}</span></h2>${body}<p class="note">${md(c.note)}</p>`;box.appendChild(el)})}
+ if(k==='promo'){doc.querySelector('.tag').textContent=m.tag;doc.querySelector('.copy h1').innerHTML=titleHtml(m.title);doc.querySelector('.copy .sub').innerHTML=md(m.sub);
+  doc.querySelector('.pills').innerHTML=`<span class="pill">${esc(m.pill)}</span>`+(m.badge?`<span class="age">${esc(m.badge)}</span>`:'');doc.querySelector('.copy .note').innerHTML=md(m.note);
+  const cw=doc.querySelector('.canwrap');if(m.img==='none')cw.remove();else if(m.img==='custom'&&m.custom)cw.querySelector('img').src=m.custom;
+  setEmotion(doc,doc.querySelector('svg.mascot'),m.emo)}
+ if(k==='qr'){doc.querySelector('.tag').textContent=m.tag;doc.querySelector('.copy h1').innerHTML=titleHtml(m.title);doc.querySelector('.copy .big').innerHTML=md(m.big);doc.querySelector('.copy .note').innerHTML=md(m.note);
+  const h2=doc.querySelector('.card h2');const ico=h2.querySelector('svg');h2.textContent=m.label;if(m.tgicon&&ico)h2.prepend(ico);
+  doc.querySelector('.card .qrbox').innerHTML=qrSvg(m.url||'https://t.me/oneshotmira17');doc.querySelector('.card .pill').textContent=m.pill;setEmotion(doc,doc.querySelector('svg.mascot'),m.emo)}
+ // free layers
+ const st=doc.querySelector('.stage');const L=layersOf[k]||[];
+ extra+='.fl{position:absolute;white-space:nowrap;line-height:1.05;text-align:center;animation:flin .7s ease both}.fl img{display:block}@keyframes flin{from{opacity:0}to{opacity:1}}';
+ for(const [i,l] of L.entries()){const e=doc.createElement('div');e.className='fl';e.dataset.i=i;e.style.left=l.x+'%';e.style.top=l.y+'px';e.style.animationDelay=(1.2+i*.15)+'s';e.style.transform=`translate(-50%,-50%) rotate(${l.rot||0}deg)`;
+  if(l.t==='text'){e.innerHTML=md(l.text);e.style.font=`${l.font==='rs'?'700':l.font==='ub6'?'600':'900'} ${l.size}px ${l.font==='rs'?'ReSquare,Unb':'Unb'},sans-serif`;e.style.color=l.col;if(l.plate){e.style.background=l.plate;e.style.padding='.15em .4em'}if(l.font==='rs')e.style.textTransform='uppercase'}
+  else{let s=l.src;if(forExport&&!s.startsWith('data:'))s=await toData(s);e.innerHTML=`<img src="${s}" style="width:${l.w}px">`}
+  st.appendChild(e)}
+ css.textContent=extra;doc.head.appendChild(css);
+ if(!forExport){const s=doc.createElement('script');s.textContent='window.__edit=1';doc.head.appendChild(s)}
+ return '<!doctype html>'+doc.documentElement.outerHTML}
+async function toData(url){const b=await (await fetch(url)).blob();return await new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)})}
+// ---------- preview + dragging layers inside the iframe ----------
+const pv=document.getElementById('pv');let tmr=0,sel=-1;
+function refresh(now){clearTimeout(tmr);tmr=setTimeout(async()=>{save();pv.srcdoc=await build(cur,false)},now?0:350)}
+pv.onload=()=>{const d=pv.contentDocument;if(!d)return;const stg=d.querySelector('.stage');if(!stg)return;
+ d.querySelectorAll('.fl').forEach(e=>{e.style.cursor='move';e.style.touchAction='none';if(+e.dataset.i===sel)e.style.outline='3px dashed #A3FF10';
+  e.addEventListener('pointerdown',ev=>{ev.preventDefault();sel=+e.dataset.i;lyForm();d.querySelectorAll('.fl').forEach(x=>x.style.outline='');e.style.outline='3px dashed #A3FF10';e.style.animation='none';
+   const k=parseFloat(stg.style.zoom)||1,r=stg.getBoundingClientRect(),W=r.width;e.setPointerCapture(ev.pointerId);
+   const mv=me=>{const l=layersOf[cur][sel];let x=(me.clientX-r.left)/W*100,y=(me.clientY-r.top)/k;if(Math.abs(x-50)<1.2)x=50;l.x=+x.toFixed(2);l.y=Math.round(y);e.style.left=l.x+'%';e.style.top=l.y+'px'};
+   const up=()=>{e.removeEventListener('pointermove',mv);e.removeEventListener('pointerup',up);save()};e.addEventListener('pointermove',mv);e.addEventListener('pointerup',up)})})};
+// ---------- forms ----------
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+function inp(obj,key,ph,area){const i=el(area?'textarea':'input');if(!area)i.type='text';else i.rows=2;i.value=obj[key]??'';i.placeholder=ph;i.setAttribute('enterkeyhint','done');i.className='f';i.oninput=()=>{obj[key]=i.value;refresh()};return i}
+function chipRow(opts,cur,on){const d=el('div','chips f');for(const k in opts){const b=el('button','chip'+(cur===k?' on':''),opts[k]);b.onclick=()=>{on(k);refresh();form()};d.appendChild(b)}return d}
+function toggle(obj,key,label){const b=el('button','chip'+(obj[key]?' on':''),label);b.onclick=()=>{obj[key]=!obj[key];refresh();form()};return b}
+function form(){const f=document.getElementById('form');f.innerHTML='';const m=M[cur];const add=(...x)=>x.forEach(e=>f.appendChild(e));
+ const t=document.getElementById('tpls');t.innerHTML='';for(const k in T){const b=el('button','chip'+(k===cur?' on':''),T[k].n);b.onclick=()=>{cur=k;sel=-1;form();lyForm();refresh(true)};t.appendChild(b)}
+ const hint=el('div','hint','« / » новая строка, *слово* выделить лаймовым.');
+ if(cur==='cards'){add(el('div','lab','Заголовок и низ'),inp(m,'title','Заголовок'),inp(m,'fn','Сноска (пусто, если не нужна)'),inp(m,'foot','Нижняя строка'),hint);
+  m.cards.forEach((c,i)=>{const b=el('div','blk');const h=el('h3',null,'Карточка '+(i+1));const del=el('button','sm','Убрать');del.onclick=()=>{m.cards.splice(i,1);refresh();form()};if(m.cards.length>1)h.appendChild(del);b.appendChild(h);
+   const cols=el('div','cols f');for(const k in CARDCOL){const x=el('button','col'+(c.col===k?' on':''));x.style.background=CARDCOL[k][0];x.title=CARDCOL[k][1];x.onclick=()=>{c.col=k;refresh();form()};cols.appendChild(x)}
+   b.append(cols,inp(c,'k','Надпись сверху'),inp(c,'h','Заголовок ( / вторая строка)'));
+   const r=el('div','row');r.append(inp(c,'pre','от'),inp(c,'num','Крупно: 600'),inp(c,'suf','₽'));b.append(el('div','sub','Крупная цифра'),r,el('div','sub','Пункты через « ; »'),inp(c,'items','Пункт; пункт',true));
+   const tg2=el('div','chips f');tg2.append(toggle(c,'age','18+'),toggle(c,'can','Банка Gorilla'));b.appendChild(tg2);f.appendChild(b)});
+  if(m.cards.length<4){const a=el('button','sm f','+ Карточка');a.onclick=()=>{m.cards.push({col:'o',k:'Новая акция',h:'Заголовок / акции',age:false,pre:'',num:'+1',suf:'ч',items:'Условие акции',can:false});refresh();form()};add(a)}}
+ if(cur==='three'){add(el('div','lab','Шапка'),inp(m,'tag','Плашка справа'),inp(m,'title','Заголовок, *слово* лаймом'),hint,el('div','sub','Эмоция маскота'),chipRow(EMOS,m.emo,k=>m.emo=k));
+  m.cards.forEach((c,i)=>{const b=el('div','blk');const h=el('h3',null,'Карточка '+(i+1));const del=el('button','sm','Убрать');del.onclick=()=>{m.cards.splice(i,1);refresh();form()};if(m.cards.length>1)h.appendChild(del);b.appendChild(h);
+   b.append(inp(c,'k','Надпись сверху'),inp(c,'h','Заголовок ( / вторая строка лаймом)'),chipRow({chips:'Плашки',big:'Крупно',lines:'Строки',qr:'QR-коды'},c.type,k=>c.type=k));
+   if(c.type==='chips')b.append(inp(c,'chips','Плашки через « ; »',true));
+   if(c.type==='big')b.append(inp(c,'big','+1 час'),inp(c,'bigsub','с каждой 1 000 ₽'),inp(c,'lines','Строки ( / новая)',true));
+   if(c.type==='lines')b.append(inp(c,'lines','Строки ( / новая)',true));
+   if(c.type==='qr')b.append(inp(c,'qr1','Подпись | ссылка'),inp(c,'qr2','Подпись | ссылка (второй, можно пусто)'));
+   b.append(inp(c,'note','Мелкий текст внизу'));f.appendChild(b)});
+  if(m.cards.length<4){const a=el('button','sm f','+ Карточка');a.onclick=()=>{m.cards.push({k:'Новое',h:'Заголовок / акции',type:'lines',chips:'',big:'',bigsub:'',lines:'Условие',qr1:'',qr2:'',note:''});refresh();form()};add(a)}}
+ if(cur==='promo'){add(el('div','lab','Тексты'),inp(m,'tag','Плашка справа'),inp(m,'title','Заголовок'),inp(m,'sub','Подзаголовок'),inp(m,'pill','Лаймовая плашка'),inp(m,'badge','Значок рядом (18+ или пусто)'),inp(m,'note','Мелкий текст',true),hint,
+  el('div','lab','Картинка справа'),chipRow({tpl:'Банка Gorilla',custom:'Своя PNG',none:'Без картинки'},m.img,k=>{m.img=k;if(k==='custom')document.getElementById('imgIn').click()}),el('div','sub','Эмоция маскота'),chipRow(EMOS,m.emo,k=>m.emo=k))}
+ if(cur==='qr'){add(el('div','lab','Тексты'),inp(m,'tag','Плашка справа'),inp(m,'title','Заголовок'),inp(m,'big','Главная строка'),inp(m,'note','Мелкий текст',true),hint,
+  el('div','lab','QR-карточка'),inp(m,'label','Подпись над QR'),toggle(m,'tgicon','Значок Telegram'),inp(m,'url','Ссылка для QR'),inp(m,'pill','Плашка под QR'),el('div','sub','Эмоция маскота'),chipRow(EMOS,m.emo,k=>m.emo=k))}}
+document.getElementById('imgIn').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{M.promo.custom=r.result;M.promo.img='custom';refresh();form()};r.readAsDataURL(f);e.target.value=''};
+// ---------- layers ----------
+const LCOL=['#FFFFFF','#0B0B0C','#A3FF10','#FF8A1F','#E93E97','#5B7BFF','#8B5BFF'];
+function lyForm(){const f=document.getElementById('lyForm');f.innerHTML='';const L=layersOf[cur]||[];
+ if(L.length){const r=el('div','chips f');L.forEach((l,i)=>{const b=el('button','chip'+(i===sel?' on':''),l.t==='text'?'Т: '+String(l.text).slice(0,12):'Картинка '+(i+1));b.onclick=()=>{sel=i;lyForm();refresh(true)};r.appendChild(b)});f.appendChild(r)}
+ const l=L[sel];if(!l){f.appendChild(el('div','hint','Добавь слой и двигай его пальцем на превью.'));return}
+ const b=el('div','blk');f.appendChild(b);
+ if(l.t==='text'){b.append(inp(l,'text','Текст ( / новая строка, *слово* жирно)'),chipRow({ub9:'Жирный',ub6:'Обычный',rs:'Квадратный'},l.font,k=>l.font=k));
+  const c=el('div','cols f');LCOL.forEach(x=>{const z=el('button','col'+(l.col===x?' on':''));z.style.background=x;z.onclick=()=>{l.col=x;refresh();lyForm()};c.appendChild(z)});b.append(el('div','sub','Цвет'),c);
+  const p=el('div','cols f');[''].concat(LCOL).forEach(x=>{const z=el('button','col'+((l.plate||'')===x?' on':''),x?'':'✕');z.style.background=x||'#0f0f12';z.style.color='#fff';z.onclick=()=>{l.plate=x||null;refresh();lyForm()};p.appendChild(z)});b.append(el('div','sub','Подложка'),p)}
+ const sl=(lab,min,max,key)=>{const w=el('div','lsl');const i=el('input');i.type='range';i.min=min;i.max=max;i.value=l[key]||0;i.oninput=()=>{l[key]=+i.value;refresh()};w.append(el('span',null,lab),i);return w};
+ b.append(l.t==='text'?sl('Размер',16,200,'size'):sl('Размер',40,900,'w'),sl('Поворот',-180,180,'rot'));
+ const a=el('div','chips f');const act=(t,fn)=>{const x=el('button','chip',t);x.onclick=()=>{fn();refresh();lyForm()};a.appendChild(x)};
+ act('По центру',()=>l.x=50);act('Копия',()=>{L.push({...l,x:l.x+3,y:l.y+30});sel=L.length-1});act('Удалить',()=>{L.splice(sel,1);sel=-1});b.appendChild(a)}
+function addLayer(l){(layersOf[cur]||(layersOf[cur]=[])).push({x:50,y:380,rot:0,...l});sel=layersOf[cur].length-1;lyForm();refresh(true)}
+document.getElementById('addT').onclick=()=>addLayer({t:'text',text:'Твой текст',font:'ub9',col:'#FFFFFF',plate:null,size:64});
+document.getElementById('addP').onclick=()=>document.getElementById('pngIn').click();
+document.getElementById('pngIn').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>addLayer({t:'img',src:r.result,w:300});r.readAsDataURL(f);e.target.value=''};
+document.getElementById('addE').onclick=async()=>{const sh=document.getElementById('sheet'),g=sh.querySelector('.lgrid');if(!g.children.length){const list=await (await fetch('../stickers/emoji.json')).json();
+  for(const n of ['gorilla',...list]){const i=el('img');i.src=n==='gorilla'?'../stickers/gorilla.png':'../stickers/emoji/'+n+'.webp';i.loading='lazy';i.onclick=()=>{sh.classList.remove('on');addLayer({t:'img',src:i.getAttribute('src'),w:n==='gorilla'?260:160})};g.appendChild(i)}}
+ sh.classList.add('on');sh.querySelector('.lclose').onclick=()=>sh.classList.remove('on')};
+document.getElementById('replay').onclick=()=>refresh(true);
+document.getElementById('reset').onclick=()=>{M[cur]=JSON.parse(JSON.stringify(T[cur].def));layersOf[cur]=[];sel=-1;form();lyForm();refresh(true);toast('Шаблон как было')};
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input,textarea')){e.preventDefault();e.target.blur()}});
+// ---------- output ----------
+const fname=()=>`1SHOT_gizmo_${cur}_${new Date(Date.now()+3*3600e3).toISOString().slice(5,16).replace(/[-T:]/g,'')}.html`;
+document.getElementById('dl').onclick=async()=>{const h=await build(cur,true);const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([h],{type:'text/html'}));a.download=fname();a.click()};
+document.getElementById('send').onclick=async()=>{const b=document.getElementById('send');if(!tg?.initData){toast('Открой конструктор из бота 1SHOT');return}b.disabled=true;b.textContent='Отправляю…';
+ try{const html=await build(cur,true);const r=await fetch(FN,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({initData:tg.initData,mode:'html',html,name:fname()})});
+  const j=await r.json().catch(()=>({}));if(r.ok&&j.ok){toast('HTML в боте ✓');tg.HapticFeedback?.notificationOccurred('success')}else toast('Не вышло: '+(j.error||r.status))}catch{toast('Нет связи, попробуй ещё раз')}
+ b.disabled=false;b.textContent='HTML в бот'};
+async function access(){const t=document.getElementById('lockT');if(!tg?.initData){t.textContent='Доступ только для команды 1SHOT';return false}
+ try{const r=await fetch(FN,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({initData:tg.initData,mode:'check'})});if(r.ok){document.getElementById('lock').remove();return true}}catch{}
+ t.textContent='Доступ только для команды 1SHOT';return false}
+(async()=>{if(!await access())return;form();lyForm();refresh(true)})();
+</script>
+</body></html>
