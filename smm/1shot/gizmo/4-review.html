@@ -102,7 +102,7 @@ body{-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}</styl
 </svg></div><script>
 // Fit the 1600x900 stage into whatever frame Gizmo gives the news item.
 const stage=document.querySelector('.stage');
-const fit=()=>{const k=Math.min(innerWidth/1600,innerHeight/900);stage.style.zoom=k;stage.style.left=Math.round((innerWidth-1600*k)/2)/k+'px';stage.style.top=Math.round((innerHeight-900*k)/2)/k+'px'};
+const fit=()=>{const W=1600,H=900,r=innerWidth/innerHeight;const k=r>W/H?innerHeight/H:innerWidth/W;const w=Math.min(innerWidth/k,H*2.3);stage.style.zoom=k;stage.style.width=w+'px';stage.style.height=H+'px';stage.style.left=Math.round((innerWidth-w*k)/2)/k+'px';stage.style.top=Math.round((innerHeight-H*k)/2)/k+'px'};
 addEventListener('resize',fit);fit();
 // Titles rise word by word.
 document.querySelectorAll('h1').forEach(h=>{let i=0;h.querySelectorAll('.w').forEach(w=>w.style.animationDelay=(0.15+0.12*i++)+'s')});

@@ -62,7 +62,7 @@ h1 .lime{color:var(--lime)}
 .age{display:inline-block;border:3px solid var(--lime);color:var(--lime);font:800 20px Unb;padding:4px 10px;margin-left:10px;vertical-align:middle}
 .m-stars #eyeL,.m-stars #eyeR{transform-box:fill-box;transform-origin:center;animation:twinkle 1.6s ease-in-out infinite}.m-stars #eyeR{animation-delay:.4s}
 .cards{bottom:130px}.foot{position:absolute;left:72px;bottom:44px;display:grid;gap:8px}.foot .fn{font:700 16px Unb;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}.ast{font:800 26px Unb;color:var(--lime);margin-left:4px;vertical-align:top}.foot .ad{font:700 16px Unb;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-body{-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}</style></head><body>
+</style></head><body>
 <div class="stage"><div class="grid"></div><div class="scan"></div><svg class="logo" aria-hidden="true" viewBox="0 0 522 138"><path fill-rule="evenodd" d="M478.042 17.5467V52.4814H440.879V61.4825H478.042V127.032H487.105V61.4825H521.737V52.478H487.105V17.5502L478.042 17.5467ZM97.1209 52.4814H50.0112V61.4825H125.311V77.1869L103.824 108.092V72.4431H94.7577V136.975L134.371 79.9952V52.4814H108.213L125.307 28.397V41.7347H134.371V0.00345001L97.1209 52.478V52.4814ZM263.77 52.4814H230.108V17.5502H221.045V52.4814H156.306V61.4825H221.045V127.032H230.108V61.4825H263.77V127.032H272.829V17.5536H263.773V52.4849L263.77 52.4814ZM346.594 0L346.58 52.4814H296.165V61.4859H346.58L346.573 79.3259L386.283 137.11V61.4859H410.954V52.4814H383.823L346.594 0ZM355.64 76.5486L355.65 28.397L372.735 52.4814H365.814V61.4859H377.22V107.957L355.64 76.5486ZM14.3692 17.5502V52.4814H0V61.4859H14.3692V118.031H0V127.036H37.7982V118.031H23.4324V17.5536H14.3692V17.5502Z"/></svg><div class="tag">Ноябрь</div>
 <div class="head"><h1><span class="w">Акции</span> <span class="w lime">ноября</span></h1><svg viewBox="-1 -1 47 45" class="mascot m-stars" aria-hidden="true">
 
@@ -96,7 +96,7 @@ body{-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}</styl
 <div class="foot"><span class="fn">* только с 18 лет</span><span class="ad">Подробности у администратора</span></div></div><script>
 // Fit the 1600x900 stage into whatever frame Gizmo gives the news item.
 const stage=document.querySelector('.stage');
-const fit=()=>{const k=Math.min(innerWidth/1600,innerHeight/900);stage.style.zoom=k;stage.style.left=Math.round((innerWidth-1600*k)/2)/k+'px';stage.style.top=Math.round((innerHeight-900*k)/2)/k+'px'};
+const fit=()=>{const W=1600,H=900,r=innerWidth/innerHeight;const k=r>W/H?innerHeight/H:innerWidth/W;const w=Math.min(innerWidth/k,H*2.3);stage.style.zoom=k;stage.style.width=w+'px';stage.style.height=H+'px';stage.style.left=Math.round((innerWidth-w*k)/2)/k+'px';stage.style.top=Math.round((innerHeight-H*k)/2)/k+'px'};
 addEventListener('resize',fit);fit();
 // Titles rise word by word.
 document.querySelectorAll('h1').forEach(h=>{let i=0;h.querySelectorAll('.w').forEach(w=>w.style.animationDelay=(0.15+0.12*i++)+'s')});
