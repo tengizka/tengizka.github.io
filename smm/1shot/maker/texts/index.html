@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>1SHOT · тексты</title>
+<meta name="robots" content="noindex">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="../nav.js" data-cur="texts" data-root="../"></script>
+<style>
+@font-face{font-family:UB;src:url(../fonts/Unbounded.ttf);font-weight:200 900}
+@font-face{font-family:JB;src:url(../fonts/jbm-cyr-700.woff2);unicode-range:U+0400-045F}
+@font-face{font-family:JB;src:url(../fonts/jbm-lat-700.woff2);unicode-range:U+0000-00FF,U+2000-206F}
+:root{--bg:#0B0B0C;--card:#16161A;--line:rgba(255,255,255,.12);--mut:rgba(255,255,255,.55);--lime:#A3FF10}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:#fff;font:15px/1.45 -apple-system,system-ui,Segoe UI,Roboto,sans-serif}
+main{max-width:560px;margin:0 auto;padding:16px 16px 60px}h1{font:800 20px UB;margin:4px 0 14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid var(--line);background:var(--card);color:#fff;border-radius:999px;padding:8px 13px;font:600 13px system-ui}.chip.on{background:var(--lime);color:#000;border-color:var(--lime)}
+input{width:100%;background:#0f0f12;border:1px solid var(--line);color:#fff;border-radius:10px;padding:11px 12px;font:15px system-ui;outline:none;margin:12px 0 4px}input:focus{border-color:var(--lime)}
+.it{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:8px;white-space:pre-line}
+.row{display:flex;gap:8px;margin-top:10px}.sm{border:1px solid var(--line);background:#0f0f12;color:#fff;border-radius:10px;padding:8px 12px;font:700 13px system-ui}.sm.l{background:var(--lime);color:#000;border-color:var(--lime)}
+.n{color:var(--mut);font-size:12.5px;margin-top:6px}.toast{position:fixed;left:50%;top:16px;transform:translateX(-50%);background:#fff;color:#000;border-radius:10px;padding:10px 14px;font-weight:700;opacity:0;transition:.2s;z-index:9}.toast.on{opacity:1}
+</style></head><body>
+<div id="lock" style="position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px"><div><div style="font:800 20px UB">1SHOT</div><div id="lockT" style="color:var(--mut);margin-top:10px">Проверяю доступ…</div></div></div>
+<main>
+<h1>Тексты</h1>
+<div class="chips" id="cats"></div>
+<input type="search" id="q" placeholder="Поиск по текстам" enterkeyhint="done">
+<div class="n" id="cnt"></div>
+<div id="list"></div>
+</main>
+<div class="toast" id="toast"></div>
+<script src="texts.js"></script>
+<script>
+const tg=window.Telegram?.WebApp;tg?.ready();tg?.expand();
+const FN='https://zqhfvtgktbfnxcclqqny.supabase.co/functions/v1/smm-maker';
+const toast=t=>{const e=document.getElementById('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2000)};
+let cat='Все';
+async function copy(t){try{await navigator.clipboard.writeText(t);return true}catch{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();let ok=false;try{ok=document.execCommand('copy')}catch{}a.remove();return ok}}
+const isCaption=c=>c.startsWith('Подписи')||c==='Из прошлой пачки';
+function render(){const q=document.getElementById('q').value.trim().toLowerCase();const L=document.getElementById('list');L.innerHTML='';let n=0;
+ const c=document.getElementById('cats');c.innerHTML='';for(const k of ['Все',...Object.keys(TEXTS)]){const b=document.createElement('button');b.className='chip'+(k===cat?' on':'');b.textContent=k;b.onclick=()=>{cat=k;render()};c.appendChild(b)}
+ for(const [k,arr] of Object.entries(TEXTS)){if(cat!=='Все'&&cat!==k)continue;for(const t of arr){if(q&&!t.toLowerCase().includes(q))continue;n++;
+  const it=document.createElement('div');it.className='it';it.textContent=t;const r=document.createElement('div');r.className='row';
+  const cp=document.createElement('button');cp.className='sm l';cp.textContent='Скопировать';cp.onclick=async()=>{toast(await copy(t)?'Скопировано ✓':'Выдели текст и скопируй вручную');tg?.HapticFeedback?.impactOccurred('light')};r.appendChild(cp);
+  if(isCaption(k)){const u=document.createElement('button');u.className='sm';u.textContent='В подпись поста';u.onclick=()=>{try{localStorage.setItem('cap_pick',t)}catch{}location.href='../'};r.appendChild(u)}
+  it.appendChild(r);L.appendChild(it)}}
+ document.getElementById('cnt').textContent='Текстов: '+n}
+document.getElementById('q').oninput=render;
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input')){e.preventDefault();e.target.blur()}});
+(async()=>{const t=document.getElementById('lockT');if(!tg?.initData){t.textContent='Доступ только для команды 1SHOT';return}
+ try{const r=await fetch(FN,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({initData:tg.initData,mode:'check'})});if(!r.ok)throw 0;document.getElementById('lock').remove()}catch{t.textContent='Доступ только для команды 1SHOT';return}
+ try{const raw=await (await fetch('../../posts/1SHOT_captions_50.txt')).text();TEXTS['Из прошлой пачки']=raw.split(/\n\s*\n/).filter(b=>/^\d+\.\s/.test(b.trim())).map(b=>b.trim().replace(/^\d+\.\s*/,''))}catch{}
+ render()})();
+</script>
+</body></html>
