@@ -5,7 +5,7 @@
 
 *{box-sizing:border-box;margin:0}
 html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#050507}body{display:grid;place-items:center;color:#fff;font-family:Unb}
-.stage{position:absolute;left:50%;top:50%;width:1920px;height:986px;overflow:hidden;transform-origin:center}
+.stage{position:absolute;left:0;top:0;width:1920px;height:986px;overflow:hidden;transform-origin:center}
 .wrap{inset:52px 96px!important}.cards{margin-top:36px!important}.bot{margin-top:26px!important}
 .bg{position:absolute;inset:0;background:
  radial-gradient(60% 50% at 10% 100%,rgba(163,255,16,.10),transparent 70%),
@@ -38,7 +38,7 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#050507}bod
 .ast{font:900 30px Unb;color:var(--a);margin-left:6px;vertical-align:top}
 .bot b{color:#fff;font:800 26px Unb;letter-spacing:0;text-transform:none}
 
-.bg{inset:-72px;animation:drift 20s linear infinite}
+.bg{inset:-72px;animation:none}
 @keyframes drift{to{transform:translate(72px,72px)}}
 .scan{position:absolute;left:0;right:0;height:200px;background:linear-gradient(transparent,#a3ff1010,transparent);animation:scan 8s ease-in-out infinite;pointer-events:none}
 @keyframes scan{0%{top:-220px}60%,100%{top:1100px}}
@@ -46,8 +46,8 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#050507}bod
 .top h1{animation:rise .8s cubic-bezier(.2,.9,.25,1) .15s both}
 @keyframes rise{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
 @keyframes fade{from{opacity:0}to{opacity:1}}
-.c{animation:cardin .8s cubic-bezier(.2,.9,.25,1) both,pulse 4.5s ease-in-out infinite}
-.c.g{animation-delay:.35s,1.4s}.c.n{animation-delay:.55s,2.9s}.c.p{animation-delay:.75s,4.4s}
+.c{animation:cardin .8s cubic-bezier(.2,.9,.25,1) both}
+.c.g{animation-delay:.35s}.c.n{animation-delay:.55s}.c.p{animation-delay:.75s}
 @keyframes cardin{from{opacity:0;transform:translateY(50px)}to{opacity:1;transform:none}}
 @keyframes pulse{0%,100%{box-shadow:0 0 40px var(--g)}50%{box-shadow:0 0 90px var(--g),0 0 0 3px var(--a)}}
 .c .big{animation:rise .7s cubic-bezier(.2,.9,.25,1) both}
@@ -61,7 +61,7 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#050507}bod
 .age{animation:blink 3s ease-in-out 2.2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.45}}
 .bot{animation:fade 1s ease 2s both}
-.top svg{height:84px;width:auto}.top svg path{fill:#fff}</style></head><body><div class="stage"><div class="bg"></div><div class="scan"></div>
+.top svg{height:84px;width:auto}.top svg path{fill:#fff}body{-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}</style></head><body><div class="stage"><div class="bg"></div><div class="scan"></div>
 <div class="wrap">
  <div class="top"><svg width="522" height="138" viewBox="0 0 522 138" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M478.042 17.5467V52.4814H440.879V61.4825H478.042V127.032H487.105V61.4825H521.737V52.478H487.105V17.5502L478.042 17.5467ZM97.1209 52.4814H50.0112V61.4825H125.311V77.1869L103.824 108.092V72.4431H94.7577V136.975L134.371 79.9952V52.4814H108.213L125.307 28.397V41.7347H134.371V0.00345001L97.1209 52.478V52.4814ZM263.77 52.4814H230.108V17.5502H221.045V52.4814H156.306V61.4825H221.045V127.032H230.108V61.4825H263.77V127.032H272.829V17.5536H263.773V52.4849L263.77 52.4814ZM346.594 0L346.58 52.4814H296.165V61.4859H346.58L346.573 79.3259L386.283 137.11V61.4859H410.954V52.4814H383.823L346.594 0ZM355.64 76.5486L355.65 28.397L372.735 52.4814H365.814V61.4859H377.22V107.957L355.64 76.5486ZM14.3692 17.5502V52.4814H0V61.4859H14.3692V118.031H0V127.036H37.7982V118.031H23.4324V17.5536H14.3692V17.5502Z" fill-rule="evenodd" clip-rule="evenodd" fill="white"/>
@@ -78,4 +78,4 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#050507}bod
  </div>
  <div class="bot"><span><em class="fn">* только с 18 лет</em>Подробности у администратора</span></div>
 </div>
-</div><script>const st=document.querySelector('.stage');const fit=()=>{const k=Math.min(innerWidth/1920,innerHeight/986);st.style.transform=`translate(-50%,-50%) scale(${k})`};addEventListener('resize',fit);fit();</script></body></html>
+</div><script>const st=document.querySelector('.stage');const fit=()=>{const k=Math.min(innerWidth/1920,innerHeight/986);st.style.zoom=k;st.style.left=Math.round((innerWidth-1920*k)/2)/k+'px';st.style.top=Math.round((innerHeight-986*k)/2)/k+'px'};addEventListener('resize',fit);fit();</script></body></html>

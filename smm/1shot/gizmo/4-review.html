@@ -8,8 +8,8 @@
 :root{--bg:#000;--fg:#fff;--lime:#a3ff10;--muted:#8d8d8d;--rule:#262626;--pink:#ff4fa3;--blue:#5b7bff;--orange:#ff8a1f;color-scheme:dark}
 html,body{width:100%;height:100%;background:var(--bg);overflow:hidden}
 body{display:grid;place-items:center;font-family:Unb,system-ui,sans-serif;color:var(--fg)}
-.stage{position:absolute;left:50%;top:50%;width:1600px;height:900px;transform-origin:center;overflow:hidden;background:var(--bg)}
-.grid{position:absolute;inset:-80px;background-image:linear-gradient(#ffffff0d 2px,transparent 2px),linear-gradient(90deg,#ffffff0d 2px,transparent 2px);background-size:80px 80px;animation:drift 18s linear infinite}
+.stage{position:absolute;left:0;top:0;width:1600px;height:900px;transform-origin:center;overflow:hidden;background:var(--bg)}
+.grid{position:absolute;inset:-80px;background-image:linear-gradient(#ffffff0d 2px,transparent 2px),linear-gradient(90deg,#ffffff0d 2px,transparent 2px);background-size:80px 80px;animation:none}
 @keyframes drift{to{transform:translate(80px,80px)}}
 .scan{position:absolute;left:0;right:0;height:180px;background:linear-gradient(transparent,#a3ff1012,transparent);animation:scan 7s ease-in-out infinite;pointer-events:none}
 @keyframes scan{0%{top:-200px}60%,100%{top:960px}}
@@ -63,7 +63,7 @@ h1 .lime{color:var(--lime)}
 /* QR cards only fade in, both at once: no vertical slide, so the two QR codes stay on one line even where the screen freezes an animation half-way. */
 .card{animation-name:cardfade}
 @keyframes cardfade{from{opacity:0}to{opacity:1}}
-</style></head><body>
+body{-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}</style></head><body>
 <div class="stage"><div class="grid"></div><div class="scan"></div><svg class="logo" aria-hidden="true" viewBox="0 0 522 138"><path fill-rule="evenodd" d="M478.042 17.5467V52.4814H440.879V61.4825H478.042V127.032H487.105V61.4825H521.737V52.478H487.105V17.5502L478.042 17.5467ZM97.1209 52.4814H50.0112V61.4825H125.311V77.1869L103.824 108.092V72.4431H94.7577V136.975L134.371 79.9952V52.4814H108.213L125.307 28.397V41.7347H134.371V0.00345001L97.1209 52.478V52.4814ZM263.77 52.4814H230.108V17.5502H221.045V52.4814H156.306V61.4825H221.045V127.032H230.108V61.4825H263.77V127.032H272.829V17.5536H263.773V52.4849L263.77 52.4814ZM346.594 0L346.58 52.4814H296.165V61.4859H346.58L346.573 79.3259L386.283 137.11V61.4859H410.954V52.4814H383.823L346.594 0ZM355.64 76.5486L355.65 28.397L372.735 52.4814H365.814V61.4859H377.22V107.957L355.64 76.5486ZM14.3692 17.5502V52.4814H0V61.4859H14.3692V118.031H0V127.036H37.7982V118.031H23.4324V17.5536H14.3692V17.5502Z"/></svg><div class="tag" style="text-transform:none;letter-spacing:.06em">+1h STANDART</div>
 <div class="copy">
  <h1><span class="w lime">+1</span> <span class="w lime">час</span> <br> <span class="w">за</span> <span class="w">отзыв</span></h1>
@@ -102,7 +102,7 @@ h1 .lime{color:var(--lime)}
 </svg></div><script>
 // Fit the 1600x900 stage into whatever frame Gizmo gives the news item.
 const stage=document.querySelector('.stage');
-const fit=()=>{const k=Math.min(innerWidth/1600,innerHeight/900);stage.style.transform=`translate(-50%,-50%) scale(${k})`};
+const fit=()=>{const k=Math.min(innerWidth/1600,innerHeight/900);stage.style.zoom=k;stage.style.left=Math.round((innerWidth-1600*k)/2)/k+'px';stage.style.top=Math.round((innerHeight-900*k)/2)/k+'px'};
 addEventListener('resize',fit);fit();
 // Titles rise word by word.
 document.querySelectorAll('h1').forEach(h=>{let i=0;h.querySelectorAll('.w').forEach(w=>w.style.animationDelay=(0.15+0.12*i++)+'s')});
