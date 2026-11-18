@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Студия</title>
+<link rel="icon" href="../favicon.svg">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.3/build/mp4-muxer.min.js"></script>
+<style>
+@font-face{font-family:PF;src:url(../fonts/playfair-display-cyrillic-400-normal.woff2);unicode-range:U+0400-045F}
+@font-face{font-family:PF;src:url(../fonts/playfair-display-latin-400-normal.woff2);unicode-range:U+0000-00FF,U+2000-206F,U+20BD,U+2192}
+@font-face{font-family:PF;font-style:italic;src:url(../fonts/playfair-display-cyrillic-400-italic.woff2);unicode-range:U+0400-045F}
+@font-face{font-family:PF;font-style:italic;src:url(../fonts/playfair-display-latin-400-italic.woff2);unicode-range:U+0000-00FF,U+2000-206F}
+@font-face{font-family:MR;font-weight:400;src:url(../fonts/manrope-cyrillic-400-normal.woff2);unicode-range:U+0400-045F}
+@font-face{font-family:MR;font-weight:400;src:url(../fonts/manrope-latin-400-normal.woff2);unicode-range:U+0000-00FF,U+2000-206F,U+20BD,U+2192}
+@font-face{font-family:MR;font-weight:600;src:url(../fonts/manrope-cyrillic-600-normal.woff2);unicode-range:U+0400-045F}
+@font-face{font-family:MR;font-weight:600;src:url(../fonts/manrope-latin-600-normal.woff2);unicode-range:U+0000-00FF,U+2000-206F,U+20BD}
+@font-face{font-family:MR;font-weight:700;src:url(../fonts/manrope-cyrillic-700-normal.woff2);unicode-range:U+0400-045F}
+@font-face{font-family:MR;font-weight:700;src:url(../fonts/manrope-latin-700-normal.woff2);unicode-range:U+0000-00FF,U+2000-206F,U+20BD}
+:root{--wine:#561423;--deep:#2E0A12;--brass:#B8975F;--cream:#F4EFE8;--ink:#1D1A1B;--line:rgba(244,239,232,.16)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--deep);color:var(--cream);font-family:MR,system-ui,sans-serif;font-size:15px;overflow-x:clip}
+body{padding:16px 16px calc(110px + env(safe-area-inset-bottom))}
+h1{font-family:PF,serif;font-weight:400;font-size:30px;line-height:1.1}
+h1 i{color:var(--brass)}
+.lab{font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--brass)}
+.sec{margin-top:22px}
+.sec>.lab{display:block;margin-bottom:10px}
+.seg{display:flex;gap:6px;background:rgba(244,239,232,.06);padding:4px;border-radius:12px}
+.seg button{flex:1;border:0;background:none;color:var(--cream);padding:10px 6px;border-radius:9px;font:600 14px MR,sans-serif;opacity:.7}
+.seg button.on{background:var(--wine);opacity:1;box-shadow:inset 0 0 0 1px rgba(184,151,95,.5)}
+.tpls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.tpl{border:1px solid var(--line);border-radius:12px;padding:12px;background:rgba(86,20,35,.35);text-align:left;color:var(--cream);font:inherit}
+.tpl b{display:block;font:400 18px PF,serif}
+.tpl span{display:block;font-size:12px;opacity:.65;margin-top:4px;line-height:1.35}
+.tpl.on{border-color:var(--brass);background:var(--wine)}
+select,input[type=text],textarea{width:100%;background:rgba(244,239,232,.06);border:1px solid var(--line);color:var(--cream);border-radius:10px;padding:11px 12px;font:inherit;outline:none}
+textarea{min-height:90px;resize:vertical}
+select option{background:var(--deep)}
+.fields{display:grid;gap:8px}
+.fields label{display:grid;gap:5px;font-size:12px;opacity:.85}
+.row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.media{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.mi{position:relative;aspect-ratio:9/16;border-radius:8px;overflow:hidden;background:#000;border:1px solid var(--line)}
+.mi img,.mi video{width:100%;height:100%;object-fit:cover;display:block}
+.mi .x{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:14px}
+.mi .mv{position:absolute;bottom:4px;left:4px;right:4px;display:flex;justify-content:space-between}
+.mi .mv button{width:26px;height:22px;border:0;border-radius:6px;background:rgba(0,0,0,.6);color:#fff}
+.mi .n{position:absolute;top:4px;left:4px;background:var(--brass);color:var(--deep);font-size:11px;font-weight:700;border-radius:5px;padding:1px 6px}
+.add{display:grid;place-items:center;aspect-ratio:9/16;border:1px dashed rgba(184,151,95,.6);border-radius:8px;color:var(--brass);font-size:26px;background:none}
+.btn{display:block;width:100%;border:0;border-radius:12px;padding:15px;font:700 15px MR,sans-serif;background:var(--brass);color:var(--deep)}
+.btn.ghost{background:rgba(244,239,232,.08);color:var(--cream);font-weight:600}
+.chk{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)}
+.chk input{width:20px;height:20px;accent-color:#B8975F}
+#stage{position:relative;width:min(62%,260px);margin:0 auto;aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:#000;box-shadow:0 0 0 1px var(--line)}
+#cv{width:100%;height:100%;display:block}
+.pv{display:flex;gap:8px;align-items:center;margin-top:10px}
+.pv button{width:44px;height:36px;border:0;border-radius:10px;background:var(--wine);color:var(--cream);font-size:16px;flex:none}
+.pv input{flex:1;accent-color:#B8975F}
+.pv span{font-size:12px;opacity:.7;width:70px;text-align:right;flex:none}
+#bar{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--deep) 30%)}
+#prog{display:none;margin-top:8px;height:4px;border-radius:2px;background:rgba(244,239,232,.1);overflow:hidden}
+#prog i{display:block;height:100%;width:0;background:var(--brass)}
+#msg{font-size:12px;opacity:.8;margin-top:6px;text-align:center;min-height:16px}
+.hide{display:none!important}
+.hint{font-size:12px;opacity:.6;line-height:1.45;margin-top:8px}
+</style>
+</head>
+<body>
+<h1>Студия <i>Никиты</i></h1>
+<div class="hint" style="margin-top:6px">Рилсы и истории в фирменном стиле</div>
+
+<div class="sec"><div class="seg" id="fmt"><button data-f="reel" class="on">Рилс</button><button data-f="story">История</button></div></div>
+
+<div class="sec"><span class="lab">Шаблон</span><div class="tpls" id="tpls"></div></div>
+
+<div class="sec"><span class="lab">Превью</span>
+  <div id="stage"><canvas id="cv" width="1080" height="1920"></canvas></div>
+  <div class="pv"><button id="play">▶</button><input type="range" id="scrub" min="0" max="1000" value="0"><span id="tm">0,0 с</span></div>
+</div>
+
+<div class="sec" id="srcBox"><span class="lab">Квартира из базы</span>
+  <select id="obj"><option value="">Без привязки, заполню сам</option></select>
+</div>
+
+<div class="sec" id="fieldsBox"><span class="lab">Текст</span><div class="fields" id="fields"></div></div>
+
+<div class="sec" id="mediaBox"><span class="lab" id="mediaLab">Фото и видео</span>
+  <div class="media" id="media"></div>
+  <input type="file" id="file" accept="image/*,video/*" multiple class="hide">
+  <div class="hint" id="mediaHint"></div>
+</div>
+
+<div class="sec" id="optBox"><span class="lab">Настройки</span><div id="opts"></div></div>
+
+
+<div id="bar"><button class="btn" id="go">Готово, прислать в бот</button><div id="prog"><i></i></div><div id="msg"></div></div>
+
+<script>
+"use strict";
+const SB="https://zcmeqdqipufmrjouhwbj.supabase.co",KEY="sb_publishable_otsgvBZc39xilmT71Lh2cA_c44AecLk";
+const PUB=SB+"/storage/v1/object/public/cases/";
+const TG=window.Telegram&&Telegram.WebApp;if(TG){TG.ready();TG.expand();try{TG.setHeaderColor("#2E0A12");TG.setBackgroundColor("#2E0A12")}catch(e){}}
+const W=1080,H=1920,FPS=30;
+const C={wine:"#561423",deep:"#2E0A12",brass:"#B8975F",cream:"#F4EFE8",ink:"#1D1A1B"};
+const $=s=>document.querySelector(s);
+const cv=$("#cv"),ctx=cv.getContext("2d");
+
+// ---------- state ----------
+const TPL={
+  reel:[
+    {id:"flat",name:"Квартира",d:"Фото или видео объекта, плашка с ценой, концовка"},
+    {id:"sold",name:"Продано",d:"Проданная квартира со штампом"},
+    {id:"talk",name:"Никита в кадре",d:"Видео, где Никита рассказывает. Звук сохраняется"},
+    {id:"text",name:"Видео с текстом",d:"Любое видео с заголовком сверху"}],
+  story:[
+    {id:"s_flat",name:"Новый объект",d:"Фото или видео, ЖК, цена, кнопка"},
+    {id:"s_sold",name:"Продано",d:"Проданная квартира"},
+    {id:"s_rev",name:"Отзыв",d:"Цитата клиента на светлом фоне"},
+    {id:"s_text",name:"Свой текст",d:"Заголовок и текст, можно с фото"}]
+};
+const S={fmt:"reel",tpl:"flat",obj:null,media:[],f:{},o:{intro:true,outro:true,frame:true,photoDur:2.2,sound:true}};
+let OBJ=[];
+
+// ---------- data ----------
+const rub=n=>n?String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g," ")+" ₽":"";
+async function loadObjects(){
+  try{
+    const r=await fetch(SB+"/rest/v1/cases?select=id,kind,num,caption,details,photos&kind=in.(listing,case)&order=kind.desc,num.asc",{headers:{apikey:KEY,Authorization:"Bearer "+KEY}});
+    const rows=await r.json();
+    OBJ=rows.map(x=>{const d=x.details||{};const sold=x.kind==="case";
+      return{id:x.id,sold,jk:sold?(d.complex||""):(d.jk||(x.caption||"").split("\n")[0]),title:sold?(d.title||""):(d.short||d.title||""),price:d.price,floor:d.floor,area:d.area,bath:d.bath,points:d.points||[],photos:(x.photos||[]).filter(p=>!/\.(mp4|mov)$/i.test(p)).map(p=>PUB+p)}});
+    const sel=$("#obj");
+    const g1=document.createElement("optgroup");g1.label="В продаже";const g2=document.createElement("optgroup");g2.label="Проданные";
+    OBJ.forEach((o,i)=>{const op=new Option(`${o.jk} · ${o.title}`,i);(o.sold?g2:g1).appendChild(op)});
+    sel.append(g1,g2);
+  }catch(e){msg("Не загрузил базу квартир: "+e.message)}
+}
+
+// ---------- media ----------
+let MID=0;
+function addMedia(src,kind,file){
+  const m={id:++MID,src,kind,file,el:null,dur:kind==="video"?0:S.o.photoDur,ready:null};
+  if(kind==="image"){const im=new Image();im.crossOrigin="anonymous";im.decoding="async";m.ready=new Promise(r=>{im.onload=r;im.onerror=r});im.src=src;m.el=im}
+  else{const v=document.createElement("video");v.muted=true;v.playsInline=true;v.preload="auto";v.crossOrigin="anonymous";v.setAttribute("playsinline","");
+    m.ready=new Promise(r=>{v.onloadedmetadata=()=>{m.dur=Math.min(v.duration||5,60);r()};v.onerror=r});v.src=src;v.load();m.el=v}
+  S.media.push(m);return m;
+}
+function renderMediaList(){
+  const box=$("#media");box.innerHTML="";
+  S.media.forEach((m,i)=>{const d=document.createElement("div");d.className="mi";
+    d.innerHTML=(m.kind==="image"?`<img src="${m.src}">`:`<video src="${m.src}" muted playsinline preload="metadata"></video>`)+`<span class="n">${i+1}${m.kind==="video"?" ▶":""}</span><button class="x">✕</button><div class="mv"><button class="l">‹</button><button class="r">›</button></div>`;
+    d.querySelector(".x").onclick=()=>{S.media.splice(i,1);changed()};
+    d.querySelector(".l").onclick=()=>{if(i>0){[S.media[i-1],S.media[i]]=[S.media[i],S.media[i-1]];changed()}};
+    d.querySelector(".r").onclick=()=>{if(i<S.media.length-1){[S.media[i+1],S.media[i]]=[S.media[i],S.media[i+1]];changed()}};
+    box.appendChild(d)});
+  const a=document.createElement("button");a.className="add";a.textContent="+";a.onclick=()=>$("#file").click();box.appendChild(a);
+}
+$("#file").onchange=e=>{[...e.target.files].forEach(f=>addMedia(URL.createObjectURL(f),f.type.startsWith("video")?"video":"image",f));e.target.value="";changed()};
+
+// ---------- UI ----------
+const FIELDS={
+  flat:[["jk","ЖК"],["title","Квартира"],["price","Цена"]],
+  sold:[["jk","ЖК"],["title","Квартира"],["price","Продана за"]],
+  talk:[["topic","Тема видео (плашка сверху)"],["cta","Текст концовки"]],
+  text:[["topic","Заголовок"],["sub","Подпись под заголовком"],["cta","Текст концовки"]],
+  s_flat:[["jk","ЖК"],["title","Квартира"],["price","Цена"],["btn","Кнопка внизу"]],
+  s_sold:[["jk","ЖК"],["title","Квартира"],["price","Продана за"],["btn","Кнопка внизу"]],
+  s_rev:[["quote","Текст отзыва","area"],["name","Имя клиента"]],
+  s_text:[["head","Надпись сверху"],["topic","Заголовок"],["body","Текст","area"],["btn","Кнопка внизу"]]
+};
+const DEF={cta:"Пишите в Telegram",btn:"Записаться на показ · @neroeso",head:"Никита Звягинцев",name:""};
+function renderTpls(){
+  const b=$("#tpls");b.innerHTML="";
+  TPL[S.fmt].forEach(t=>{const e=document.createElement("button");e.className="tpl"+(S.tpl===t.id?" on":"");e.innerHTML=`<b>${t.name}</b><span>${t.d}</span>`;
+    e.onclick=()=>{S.tpl=t.id;onTpl()};b.appendChild(e)});
+}
+function renderFields(){
+  const b=$("#fields");b.innerHTML="";
+  (FIELDS[S.tpl]||[]).forEach(([k,l,t])=>{const w=document.createElement("label");w.textContent=l;
+    const i=document.createElement(t==="area"?"textarea":"input");if(t!=="area")i.type="text";
+    i.value=S.f[k]??DEF[k]??"";S.f[k]=i.value;i.oninput=()=>{S.f[k]=i.value;build();draw(cur)};w.appendChild(i);b.appendChild(w)});
+  if(S.tpl==="s_flat"&&S.obj&&S.obj.btnNote){}
+}
+function renderOpts(){
+  const b=$("#opts");b.innerHTML="";
+  const o=[];
+  if(S.fmt==="reel"){o.push(["intro","Заставка с именем"]);o.push(["outro","Концовка с контактом"]);o.push(["frame","Латунная рамка"]);
+    if(["talk","text","flat","sold"].includes(S.tpl))o.push(["sound","Оставить звук из видео"]);}
+  o.forEach(([k,l])=>{const r=document.createElement("label");r.className="chk";r.innerHTML=`<span>${l}</span><input type="checkbox" ${S.o[k]?"checked":""}>`;
+    r.querySelector("input").onchange=e=>{S.o[k]=e.target.checked;build();draw(cur)};b.appendChild(r)});
+  if(S.fmt==="reel"&&["flat","sold"].includes(S.tpl)){
+    const r=document.createElement("label");r.className="chk";r.innerHTML=`<span>Фото на экране, сек</span><select style="width:90px">${[1.5,2,2.2,2.5,3,4].map(v=>`<option ${v==S.o.photoDur?"selected":""}>${v}</option>`).join("")}</select>`;
+    r.querySelector("select").onchange=e=>{S.o.photoDur=+e.target.value;S.media.forEach(m=>{if(m.kind==="image")m.dur=S.o.photoDur});build();draw(cur)};b.appendChild(r)}
+}
+function onTpl(){
+  const needObj=["flat","sold","s_flat","s_sold"].includes(S.tpl);
+  $("#srcBox").classList.toggle("hide",!needObj);
+  $("#mediaBox").classList.toggle("hide",S.tpl==="s_rev");
+  $("#mediaHint").textContent={flat:"Фото из базы подставляются сами. Можно добавить свои видео и фото и поменять порядок.",sold:"Фото из базы подставляются сами.",talk:"Загрузи видео, где Никита говорит в камеру. Можно несколько, склею по порядку.",text:"Любые видео или фото.",s_flat:"Возьму первое фото или видео.",s_sold:"Возьму первое фото или видео.",s_text:"Фото или видео на фон, можно без него."}[S.tpl]||"";
+  if(needObj){
+    // keep chosen object only if it fits
+    const sel=$("#obj");if(S.obj&&S.obj.sold!==S.tpl.endsWith("sold"))setObj(null);
+    [...sel.querySelectorAll("optgroup")].forEach(g=>g.disabled=(g.label==="Проданные")!==S.tpl.endsWith("sold"));
+  }
+  renderTpls();renderFields();renderOpts();build();draw(Math.min(3,TL.dur*0.5));
+}
+function setObj(o){
+  S.obj=o;$("#obj").value=o?OBJ.indexOf(o):"";
+  S.media=S.media.filter(m=>!m.fromDb);
+  if(o){S.f.jk=o.jk;S.f.title=o.title;S.f.price=rub(o.price);
+    o.photos.slice(0,8).forEach(p=>{const m=addMedia(p,"image");m.fromDb=true});
+    if(S.tpl.endsWith("sold"))S.f.btn="Продаёте квартиру? · @neroeso";
+  }
+  changed();
+}
+$("#obj").onchange=e=>setObj(e.target.value===""?null:OBJ[+e.target.value]);
+$("#fmt").onclick=e=>{const f=e.target.dataset.f;if(!f)return;S.fmt=f;[...$("#fmt").children].forEach(b=>b.classList.toggle("on",b===e.target));
+  const map={flat:"s_flat",sold:"s_sold",s_flat:"flat",s_sold:"sold"};S.tpl=map[S.tpl]&&TPL[f].some(t=>t.id===map[S.tpl])?map[S.tpl]:TPL[f][0].id;onTpl()};
+async function changed(){renderMediaList();renderFields();await Promise.all(S.media.map(m=>m.ready));build();draw(cur)}
+
+// ---------- easing / drawing helpers ----------
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const io=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;          // easeInOutCubic
+const out=x=>1-Math.pow(1-x,3);                               // easeOutCubic
+const out5=x=>1-Math.pow(1-x,5);
+const seg=(t,a,d)=>cl((t-a)/d);
+function font(px,{it=false,pf=false,w=400}={}){ctx.font=`${it?"italic ":""}${w} ${px}px ${pf?"PF":"MR"}`}
+function wrap(text,maxW){const out=[];String(text||"").split("\n").forEach(par=>{let line="";par.split(" ").forEach(w=>{const t=line?line+" "+w:w;if(ctx.measureText(t).width>maxW&&line){out.push(line);line=w}else line=t});out.push(line)});return out}
+function spaced(text,x,y,sp,align="left"){ // letter-spaced text
+  const chars=[...text];let wsum=chars.reduce((s,c)=>s+ctx.measureText(c).width+sp,0)-sp;let cx=align==="center"?x-wsum/2:align==="right"?x-wsum:x;
+  ctx.textAlign="left";chars.forEach(c=>{ctx.fillText(c,cx,y);cx+=ctx.measureText(c).width+sp})}
+function cover(el,x,y,w,h){
+  const iw=el.videoWidth||el.naturalWidth,ih=el.videoHeight||el.naturalHeight;if(!iw||!ih)return;
+  const s=Math.max(w/iw,h/ih),sw=w/s,sh=h/s;ctx.drawImage(el,(iw-sw)/2,(ih-sh)/2,sw,sh,x,y,w,h)}
+function nz(x,y,s,color){ctx.save();ctx.translate(x,y);ctx.scale(s/100,s/100);ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2.4;ctx.strokeRect(4,4,92,92);
+  ctx.fillRect(23,19,3.2,62);ctx.fillRect(73.8,19,3.2,62);ctx.beginPath();ctx.moveTo(23,19);ctx.lineTo(34,19);ctx.lineTo(77,81);ctx.lineTo(66,81);ctx.closePath();ctx.fill();ctx.restore()}
+function plate(x,y,w,h,fill="rgba(86,20,35,.94)"){ctx.fillStyle=fill;ctx.fillRect(x,y,w,h);ctx.strokeStyle="rgba(184,151,95,.85)";ctx.lineWidth=2;ctx.strokeRect(x+12,y+12,w-24,h-24)}
+function lab(text,x,y,{color=C.brass,size=26,align="left",alpha=1}={}){ctx.globalAlpha*=alpha;font(size,{w:600});ctx.fillStyle=color;spaced(text.toUpperCase(),x,y,size*.22,align);ctx.globalAlpha/=alpha||1}
+
+// ---------- timeline ----------
+let TL={dur:5,clips:[]};
+function build(){
+  const isReel=S.fmt==="reel";
+  const clips=[];let t=0;
+  const media=S.media.length?S.media:[];
+  if(isReel){
+    media.forEach(m=>{const d=m.kind==="video"?(m.dur||5):S.o.photoDur;clips.push({m,start:t,dur:d});t+=d});
+    if(!clips.length){clips.push({m:null,start:0,dur:4});t=4}
+    const body=t;let outroDur=S.o.outro?3.4:0;
+    TL={dur:body+outroDur,body,clips,outroAt:body,outroDur};
+  }else{
+    const m=media[0];let d=m&&m.kind==="video"?Math.min(m.dur||5,15):0.1;
+    TL={dur:d,body:d,clips:m?[{m,start:0,dur:d}]:[],still:!(m&&m.kind==="video")};
+  }
+  $("#scrub").max=Math.round(TL.dur*1000);
+}
+function clipAt(t){for(let i=TL.clips.length-1;i>=0;i--)if(t>=TL.clips[i].start)return i;return 0}
+
+// draw a media clip at local time lt (video must already be seeked by caller in export mode)
+function drawClip(c,x=0,y=0,w=W,h=H){
+  if(!c||!c.m){ctx.fillStyle=C.wine;ctx.fillRect(x,y,w,h);return}
+  cover(c.m.el,x,y,w,h);
+}
+
+// ---------- reel overlays ----------
+function drawIntro(t){ // 0..2.7s: line draws, name rises from the line, then curtain splits
+  const D=2.7;if(t>D)return;
+  const ly=1010, lw=640*io(seg(t,0.1,0.9));
+  const split=io(seg(t,1.95,0.75)); // 0..1 opening
+  const off=split*H*0.62;
+  // top panel
+  ctx.save();ctx.beginPath();ctx.rect(0,-off,W,ly);ctx.clip();ctx.fillStyle=C.wine;ctx.fillRect(0,-off,W,ly);
+  // name rising out of the line
+  const rp=out5(seg(t,0.45,1.0));ctx.translate(0,-off+(1-rp)*190);
+  ctx.textAlign="center";font(118,{pf:true,it:true});ctx.fillStyle=C.brass;ctx.fillText("Никита",W/2,ly-170);
+  font(118,{pf:true});ctx.fillStyle=C.cream;ctx.fillText("Звягинцев",W/2,ly-45);
+  ctx.restore();
+  // bottom panel
+  ctx.save();ctx.beginPath();ctx.rect(0,ly+off,W,H-ly);ctx.clip();ctx.fillStyle=C.wine;ctx.fillRect(0,ly+off,W,H);
+  const sp=out5(seg(t,0.85,0.9));ctx.translate(0,off-(1-sp)*90);ctx.globalAlpha=sp;
+  lab("Недвижимость · Сочи",W/2,ly+78,{align:"center",size:28});ctx.globalAlpha=1;ctx.restore();
+  // brass line
+  if(split<1){ctx.globalAlpha=1-split;ctx.fillStyle=C.brass;ctx.fillRect(W/2-lw/2,ly-1,lw,3);ctx.globalAlpha=1}
+}
+function drawFrame(t){ if(!S.o.frame)return;
+  ctx.strokeStyle="rgba(184,151,95,.9)";ctx.lineWidth=2;ctx.strokeRect(36,36,W-72,H-72);nz(W-140,240,64,C.cream)}
+function titlePlate(t,a,lines){ // lines:{lab,title,pl,price,sold}
+  const D=4.6,lt=t-a;if(lt<0||lt>D)return;
+  const x=60,y=260,w=960;font(76,{pf:true});const tl=wrap(lines.title,w-104);const hasPrice=!!lines.price;
+  const h=46+34+22+tl.length*80+(hasPrice?34+28+30+62:0)+50;
+  const open=io(seg(lt,0.05,0.7)),close=io(seg(lt,D-0.55,0.55));
+  ctx.save();ctx.beginPath();ctx.rect(x+w*close,y,w*open-w*close,h);ctx.clip();
+  plate(x,y,w,h);
+  const r=k=>{const p=out(seg(lt,0.4+k*0.15,0.6));ctx.globalAlpha=p;return (1-p)*24};
+  let yy=y+46+26;
+  let d=r(0);lab(lines.lab||"",x+52,yy+d);ctx.globalAlpha=1;
+  d=r(1);font(76,{pf:true});ctx.fillStyle=C.cream;ctx.textAlign="left";yy+=22+60;tl.forEach((l,i)=>ctx.fillText(l,x+52,yy+i*80+d));ctx.globalAlpha=1;yy+=(tl.length-1)*80;
+  if(hasPrice){d=r(2);yy+=40;ctx.fillStyle="rgba(244,239,232,.25)";ctx.fillRect(x+52,yy+d,w-104,1);
+    lab(lines.pl,x+52,yy+50+d,{color:"rgba(244,239,232,.6)",size:22});font(62,{pf:true});ctx.fillStyle=C.brass;ctx.fillText(lines.price,x+52,yy+120+d);
+    if(lines.sold){font(26,{w:700});const tw=ctx.measureText("ПРОДАНО").width+26*.2*7+36;ctx.fillStyle=C.brass;ctx.fillRect(x+w-52-tw,yy+68+d,tw,52);ctx.fillStyle=C.deep;spaced("ПРОДАНО",x+w-52-tw+18,yy+103+d,5.2)}
+    else nz(x+w-52-56,yy+70+d,56,C.cream);ctx.globalAlpha=1}
+  ctx.restore();
+}
+function stamp(t,a){const D=2.8,lt=t-a;if(lt<0||lt>D)return;
+  const p=out5(seg(lt,0,0.5)),q=io(seg(lt,D-0.5,0.5));const s=1.12-0.12*p;ctx.save();ctx.globalAlpha=p*(1-q);
+  ctx.translate(W/2,1000);ctx.rotate(-4*Math.PI/180);ctx.scale(s,s);
+  ctx.fillStyle="rgba(46,10,18,.9)";ctx.fillRect(-300,-100,600,200);ctx.strokeStyle=C.brass;ctx.lineWidth=5;ctx.strokeRect(-300,-100,600,200);ctx.lineWidth=2;ctx.strokeStyle="rgba(184,151,95,.6)";ctx.strokeRect(-290,-90,580,180);
+  font(110,{pf:true,it:true});ctx.fillStyle=C.brass;ctx.textAlign="center";ctx.fillText("Продано",0,38);ctx.restore()}
+function lowerThird(t,a){const D=5,lt=t-a;if(lt<0||lt>D)return;
+  const x=60,y=1300,w=760,h=190;const open=io(seg(lt,0,0.6)),close=io(seg(lt,D-0.5,0.5));
+  ctx.save();ctx.beginPath();ctx.rect(x,y+h*(1-open)+h*close,w,h*open-h*close+1);ctx.clip();
+  ctx.fillStyle="rgba(86,20,35,.94)";ctx.fillRect(x,y,w,h);ctx.fillStyle=C.brass;ctx.fillRect(x,y,6,h);
+  const p=out(seg(lt,0.3,0.6));ctx.globalAlpha=p;font(60,{pf:true});ctx.fillStyle=C.cream;ctx.textAlign="left";ctx.fillText("Никита Звягинцев",x+48,y+86+(1-p)*20);
+  lab("Брокер по недвижимости · Сочи",x+48,y+142+(1-p)*20,{size:24});ctx.restore()}
+function infoCard(t,a,o){ // facts before outro
+  const D=3.2,lt=t-a;if(lt<0||lt>D+1)return;
+  const p=io(seg(lt,0,0.7));const x=60,w=960;const pts=(o.points||[]).slice(0,3);
+  font(30);const lines=pts.map(s=>wrap(s,w-160));const h=150+lines.reduce((s,l)=>s+l.length*42+28,0)+40;const y=H-460-h;
+  ctx.save();ctx.translate(0,(1-p)*(h+500));plate(x,y,w,h);
+  lab("Главное",x+52,y+80);let yy=y+150;ctx.textAlign="left";
+  lines.forEach((ls,i)=>{const q=out(seg(lt,0.5+i*0.15,0.6));ctx.globalAlpha=q;font(30,{pf:true});ctx.fillStyle=C.brass;ctx.fillText("✦",x+52,yy);font(30);ctx.fillStyle=C.cream;ls.forEach((l,j)=>ctx.fillText(l,x+100,yy+j*42));yy+=ls.length*42+28;ctx.globalAlpha=1});
+  ctx.restore()}
+function drawOutro(t){ // lt 0..outroDur: curtain closes to the line, text rises
+  const lt=t-TL.outroAt;if(lt<0)return;
+  const ly=900;const close=io(seg(lt,0,0.7));const off=(1-close)*H*0.62;
+  ctx.fillStyle=C.wine;ctx.fillRect(0,-off,W,ly);ctx.fillRect(0,ly+off,W,H);
+  if(close<1)return;
+  const lw=640*io(seg(lt,0.6,0.7));ctx.fillStyle=C.brass;ctx.fillRect(W/2-lw/2,ly-1,lw,3);
+  ctx.save();ctx.beginPath();ctx.rect(0,0,W,ly-2);ctx.clip();const rp=out5(seg(lt,0.85,0.9));ctx.translate(0,(1-rp)*220);
+  ctx.textAlign="center";font(104,{pf:true});ctx.fillStyle=C.cream;
+  const big=S.fmt==="reel"&&["talk","text"].includes(S.tpl)?(S.f.cta||"Пишите в Telegram"):"Записаться";
+  const small=["talk","text"].includes(S.tpl)?"":"на показ";
+  if(small){ctx.fillText(big,W/2,ly-160);font(104,{pf:true,it:true});ctx.fillStyle=C.brass;ctx.fillText(small,W/2,ly-45)}
+  else{const ls=wrap(big,900);ls.forEach((l,i)=>ctx.fillText(l,W/2,ly-45-(ls.length-1-i)*112))}
+  ctx.restore();
+  const bp=out(seg(lt,1.3,0.7));ctx.globalAlpha=bp;ctx.save();ctx.translate(0,-(1-bp)*30);
+  font(32);ctx.fillStyle="rgba(244,239,232,.85)";ctx.textAlign="center";ctx.fillText(["talk","text"].includes(S.tpl)?"отвечаю сам":"Пишите в Telegram, отвечаю сам",W/2,ly+90);
+  ctx.fillStyle=C.brass;ctx.fillRect(190,ly+150,700,104);font(36,{w:700});ctx.fillStyle=C.deep;ctx.fillText("@neroeso",W/2,ly+215);
+  ctx.restore();ctx.globalAlpha=1;
+  ctx.globalAlpha=out(seg(lt,1.6,0.6));lab("Никита Звягинцев · Сочи",W/2,ly+360,{align:"center"});ctx.globalAlpha=1;
+  ctx.strokeStyle="rgba(184,151,95,.8)";ctx.lineWidth=2;ctx.strokeRect(36,36,W-72,H-72);
+}
+
+// ---------- draw reel ----------
+const WIPE=0.5;
+function drawReel(t){
+  const tb=Math.min(t,TL.body-1/FPS);const i=clipAt(tb),c=TL.clips[i];
+  const lt=tb-c.start;
+  drawClip(c);
+  if(i>0&&lt<WIPE){ // line wipe from previous clip
+    const p=io(lt/WIPE),xw=W*p;const prev=TL.clips[i-1];
+    ctx.save();ctx.beginPath();ctx.rect(xw,0,W-xw,H);ctx.clip();drawClip(prev);ctx.restore();
+    ctx.fillStyle=C.brass;ctx.fillRect(xw-2,0,4,H);
+  }
+  // darken top a little so plates read well over bright photos
+  const g=ctx.createLinearGradient(0,0,0,700);g.addColorStop(0,"rgba(46,10,18,.35)");g.addColorStop(1,"rgba(46,10,18,0)");ctx.fillStyle=g;ctx.fillRect(0,0,W,700);
+  drawFrame(t);
+  const st=S.o.intro?2.2:0.4;
+  if(S.tpl==="flat"||S.tpl==="sold"){
+    titlePlate(t,st,{lab:(S.f.jk||"")+(S.tpl==="flat"?" · в продаже":""),title:(S.f.title||"").replace(", ",",\n"),pl:S.tpl==="sold"?"Продана за":"Цена",price:S.f.price,sold:S.tpl==="sold"});
+    if(S.tpl==="sold")stamp(t,st+4.8);
+    if(S.tpl==="flat"&&S.obj&&S.obj.points&&S.obj.points.length&&TL.body>st+9)infoCard(t,TL.body-3.6,S.obj);
+  }
+  if(S.tpl==="talk"){if(S.f.topic)titlePlate(t,st,{lab:"Никита Звягинцев",title:S.f.topic});lowerThird(t,st+0.6+(S.f.topic?0:0))}
+  if(S.tpl==="text"&&S.f.topic)titlePlate(t,st,{lab:S.f.sub||"Недвижимость · Сочи",title:S.f.topic});
+  if(S.o.intro)drawIntro(t);
+  if(S.o.outro&&t>=TL.outroAt)drawOutro(t);
+}
+
+// ---------- stories ----------
+function storyHead(text,color=C.brass,mk=C.cream){nz(60,232,60,mk);lab(text,146,274,{color})}
+function drawStory(t){
+  const T=S.tpl;ctx.textAlign="left";
+  if(T==="s_rev"){
+    ctx.fillStyle=C.cream;ctx.fillRect(0,0,W,H);ctx.strokeStyle="rgba(86,20,35,.25)";ctx.lineWidth=2;ctx.strokeRect(40,40,W-80,H-80);
+    storyHead("Отзыв клиента",C.wine,C.wine);
+    font(420,{pf:true});ctx.fillStyle="rgba(184,151,95,.35)";ctx.fillText("«",80,720);
+    let size=66;font(size,{pf:true});let ls=wrap(S.f.quote||"Текст отзыва",888);while(ls.length*size*1.25>760&&size>40){size-=4;font(size,{pf:true});ls=wrap(S.f.quote||"",888)}
+    ctx.fillStyle=C.ink;ls.forEach((l,i)=>ctx.fillText(l,96,800+i*size*1.25));
+    ctx.fillStyle="rgba(86,20,35,.3)";ctx.fillRect(96,1560,888,2);font(38,{w:700});ctx.fillStyle=C.wine;ctx.fillText(S.f.name||"",96,1630);
+    return}
+  ctx.fillStyle=C.wine;ctx.fillRect(0,0,W,H);
+  const c=TL.clips[0];
+  if(T==="s_text"){
+    if(c){drawClip(c);const g=ctx.createLinearGradient(0,600,0,H);g.addColorStop(0,"rgba(46,10,18,0)");g.addColorStop(.55,"rgba(46,10,18,.92)");g.addColorStop(1,"rgba(46,10,18,.97)");ctx.fillStyle=g;ctx.fillRect(0,0,W,H)}
+    ctx.strokeStyle="rgba(184,151,95,.85)";ctx.lineWidth=2;ctx.strokeRect(36,36,W-72,H-72);
+    storyHead(S.f.head||"");
+    font(96,{pf:true});const tl=wrap(S.f.topic||"Заголовок",940);font(34);const bl=wrap(S.f.body||"",940);
+    let y=1560-bl.length*50-(S.f.body?40:0);
+    font(96,{pf:true});ctx.fillStyle=C.cream;tl.forEach((l,i)=>ctx.fillText(l,70,y-(tl.length-1-i)*104));
+    if(S.f.body){font(34);ctx.fillStyle="rgba(244,239,232,.85)";bl.forEach((l,i)=>ctx.fillText(l,70,y+80+i*50))}
+    if(S.f.btn){ctx.fillStyle=C.brass;ctx.fillRect(60,1600,960,96);font(30,{w:700});ctx.fillStyle=C.deep;ctx.textAlign="center";ctx.fillText(S.f.btn,W/2,1659)}
+    return}
+  // s_flat / s_sold
+  storyHead(T==="s_sold"?"Продано":"Новый объект");
+  if(c){ctx.save();ctx.beginPath();ctx.rect(60,340,960,880);ctx.clip();drawClip(c,60,340,960,880);ctx.restore()}
+  else{ctx.fillStyle="rgba(244,239,232,.06)";ctx.fillRect(60,340,960,880)}
+  ctx.strokeStyle="rgba(184,151,95,.9)";ctx.lineWidth=2;ctx.strokeRect(74,354,932,852);
+  if(T==="s_sold"){font(24,{w:700});ctx.fillStyle=C.brass;ctx.fillRect(96,376,200,52);ctx.fillStyle=C.deep;spaced("ПРОДАНО",114,411,5)}
+  lab(S.f.jk||"",60,1300,{size:24});
+  font(66,{pf:true});ctx.fillStyle=C.cream;ctx.textAlign="left";const tl=wrap(S.f.title||"",960);tl.forEach((l,i)=>ctx.fillText(l,60,1380+i*72));
+  const py=1380+(tl.length-1)*72+50;ctx.fillStyle="rgba(244,239,232,.25)";ctx.fillRect(60,py,960,1);
+  lab(T==="s_sold"?"Продана за":"Цена",60,py+70,{color:"rgba(244,239,232,.6)",size:24});font(58,{pf:true});ctx.fillStyle=C.brass;ctx.textAlign="right";ctx.fillText(S.f.price||"",1020,py+78);
+  if(S.f.btn){ctx.fillStyle=C.brass;ctx.fillRect(60,1600,960,96);font(30,{w:700});ctx.fillStyle=C.deep;ctx.textAlign="center";ctx.fillText(S.f.btn,W/2,1659)}
+}
+function render(t){ctx.save();ctx.clearRect(0,0,W,H);if(S.fmt==="reel")drawReel(t);else drawStory(t);ctx.restore()}
+
+// ---------- preview ----------
+let cur=0,playing=false,t0=0,raf=0;
+function syncVideos(t,play){
+  const i=S.fmt==="reel"?clipAt(Math.min(t,TL.body-0.001)):0;
+  TL.clips.forEach((c,k)=>{if(!c.m||c.m.kind!=="video")return;const v=c.m.el;
+    const active=k===i||(k===i-1&&t-TL.clips[i].start<WIPE);
+    if(active){const want=cl(t-c.start,0,c.dur-0.05);if(Math.abs(v.currentTime-want)>0.25)v.currentTime=want;if(play&&v.paused&&k===i)v.play().catch(()=>{});if(!play&&!v.paused)v.pause()}
+    else if(!v.paused)v.pause()})
+}
+function draw(t){cur=t;syncVideos(t,false);render(t);$("#tm").textContent=t.toFixed(1).replace(".",",")+" с";$("#scrub").value=Math.round(t*1000)}
+function loop(){const t=(performance.now()-t0)/1000;if(t>=TL.dur){playing=false;$("#play").textContent="▶";draw(0);return}
+  cur=t;syncVideos(t,true);render(t);$("#scrub").value=Math.round(t*1000);$("#tm").textContent=t.toFixed(1).replace(".",",")+" с";raf=requestAnimationFrame(loop)}
+$("#play").onclick=()=>{if(playing){playing=false;cancelAnimationFrame(raf);TL.clips.forEach(c=>c.m&&c.m.kind==="video"&&c.m.el.pause());$("#play").textContent="▶";return}
+  playing=true;$("#play").textContent="❚❚";t0=performance.now()-cur*1000;if(cur>=TL.dur-0.05)t0=performance.now();loop()};
+$("#scrub").oninput=e=>{if(playing)$("#play").click();draw(+e.target.value/1000)};
+// redraw while seeked frames arrive
+document.addEventListener("seeked",()=>{if(!playing)render(cur)},true);
+
+// ---------- export ----------
+function msg(t){$("#msg").textContent=t}
+function prog(p){$("#prog").style.display=p==null?"none":"block";$("#prog i").style.width=((p||0)*100)+"%"}
+const seekTo=(v,tt)=>new Promise(r=>{if(Math.abs(v.currentTime-tt)<0.001&&v.readyState>=2)return r();const done=()=>{v.removeEventListener("seeked",done);r()};v.addEventListener("seeked",done);v.currentTime=tt;setTimeout(done,1500)});
+async function prepareFrame(t){
+  const tb=Math.min(t,TL.body-1/FPS);const i=S.fmt==="reel"?clipAt(tb):0;const need=[];
+  TL.clips.forEach((c,k)=>{if(c.m&&c.m.kind==="video"&&(k===i||(k===i-1&&tb-TL.clips[i].start<WIPE)))need.push(seekTo(c.m.el,cl(tb-c.start,0,c.dur-0.04)))});
+  await Promise.all(need);
+}
+function needAudio(){return S.fmt==="reel"?S.o.sound&&TL.clips.some(c=>c.m&&c.m.kind==="video"):TL.clips.some(c=>c.m&&c.m.kind==="video")}
+async function mixAudio(sr){ // returns Float32Array[2] for whole timeline
+  const len=Math.ceil(TL.dur*sr);const L=new Float32Array(len),R=new Float32Array(len);
+  const ac=new (window.AudioContext||window.webkitAudioContext)({sampleRate:sr});
+  for(const c of TL.clips){if(!c.m||c.m.kind!=="video")continue;
+    try{const buf=c.m.file?await c.m.file.arrayBuffer():await (await fetch(c.m.src)).arrayBuffer();
+      const ab=await new Promise((res,rej)=>ac.decodeAudioData(buf,res,rej));
+      const l=ab.getChannelData(0),r=ab.numberOfChannels>1?ab.getChannelData(1):l;const n=Math.min(Math.floor(c.dur*sr),l.length);const o=Math.floor(c.start*sr);
+      for(let k=0;k<n&&o+k<len;k++){const f=Math.min(1,k/(sr*0.03),(n-k)/(sr*0.03));L[o+k]+=l[k]*f;R[o+k]+=r[k]*f}}catch(e){console.warn("no audio",e)}}
+  // fade out under outro
+  if(TL.outroDur){const a=Math.floor(TL.outroAt*sr);for(let k=a;k<len;k++){const f=Math.max(0,1-(k-a)/(sr*0.8));L[k]*=f;R[k]*=f}}
+  ac.close&&ac.close();return[L,R];
+}
+async function exportVideo(){
+  const audio=needAudio();
+  const vcfg={codec:"avc1.640028",width:W,height:H,bitrate:8_000_000,framerate:FPS};
+  const okV=window.VideoEncoder&&(await VideoEncoder.isConfigSupported(vcfg).catch(()=>({}))).supported;
+  let okA=!audio;const acfg={codec:"mp4a.40.2",sampleRate:48000,numberOfChannels:2,bitrate:160000};
+  if(audio&&window.AudioEncoder)okA=(await AudioEncoder.isConfigSupported(acfg).catch(()=>({}))).supported;
+  if(okV&&okA)return exportWebCodecs(audio,vcfg,acfg);
+  return exportRecorder(audio);
+}
+async function exportWebCodecs(audio,vcfg,acfg){
+  const muxer=new Mp4Muxer.Muxer({target:new Mp4Muxer.ArrayBufferTarget(),video:{codec:"avc",width:W,height:H},audio:audio?{codec:"aac",sampleRate:48000,numberOfChannels:2}:undefined,fastStart:"in-memory"});
+  let err=null;const ve=new VideoEncoder({output:(c,m)=>muxer.addVideoChunk(c,m),error:e=>err=e});ve.configure(vcfg);
+  const N=Math.round(TL.dur*FPS);
+  for(let f=0;f<N;f++){if(err)throw err;const t=f/FPS;await prepareFrame(t);render(t);
+    const vf=new VideoFrame(cv,{timestamp:Math.round(f*1e6/FPS),duration:Math.round(1e6/FPS)});ve.encode(vf,{keyFrame:f%60===0});vf.close();
+    if(ve.encodeQueueSize>8)await new Promise(r=>setTimeout(r,5));
+    if(f%5===0){prog(f/N*(audio?0.85:1));msg(`Собираю видео: ${Math.round(f/N*100)}%`);await new Promise(r=>setTimeout(r))}}
+  await ve.flush();
+  if(audio){msg("Добавляю звук");const sr=48000;const[L,R]=await mixAudio(sr);
+    const ae=new AudioEncoder({output:(c,m)=>muxer.addAudioChunk(c,m),error:e=>err=e});ae.configure(acfg);
+    const step=1024*8;for(let k=0;k<L.length;k+=step){const n=Math.min(step,L.length-k);const data=new Float32Array(n*2);data.set(L.subarray(k,k+n),0);data.set(R.subarray(k,k+n),n);
+      const ad=new AudioData({format:"f32-planar",sampleRate:sr,numberOfFrames:n,numberOfChannels:2,timestamp:Math.round(k*1e6/sr),data});ae.encode(ad);ad.close()}
+    await ae.flush();if(err)throw err}
+  muxer.finalize();return new Blob([muxer.target.buffer],{type:"video/mp4"});
+}
+async function exportRecorder(audio){ // realtime fallback
+  const types=["video/mp4;codecs=avc1,mp4a.40.2","video/mp4;codecs=avc1","video/mp4","video/webm;codecs=vp9,opus","video/webm"];
+  const mt=types.find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported(t));if(!mt)throw new Error("Это устройство не умеет сохранять видео, открой студию в Telegram на телефоне");
+  const stream=cv.captureStream(FPS);let ac=null;
+  if(audio){ac=new (window.AudioContext||window.webkitAudioContext)();const dst=ac.createMediaStreamDestination();
+    TL.clips.forEach(c=>{if(c.m&&c.m.kind==="video"){c.m.el.muted=false;if(!c.m.node){c.m.node=ac.createMediaElementSource(c.m.el)}c.m.node.connect(dst)}});dst.stream.getAudioTracks().forEach(tr=>stream.addTrack(tr))}
+  const rec=new MediaRecorder(stream,{mimeType:mt,videoBitsPerSecond:8_000_000});const parts=[];rec.ondataavailable=e=>e.data.size&&parts.push(e.data);
+  const done=new Promise(r=>rec.onstop=r);rec.start(500);
+  msg("Записываю видео в реальном времени, не сворачивай");
+  await new Promise(res=>{const st=performance.now();(function tick(){const t=(performance.now()-st)/1000;if(t>=TL.dur){res();return}syncVideos(t,true);render(t);prog(t/TL.dur);requestAnimationFrame(tick)})()});
+  rec.stop();await done;TL.clips.forEach(c=>{if(c.m&&c.m.kind==="video"){c.m.el.pause();c.m.el.muted=true}});ac&&ac.close();
+  return new Blob(parts,{type:mt.split(";")[0]});
+}
+async function send(blob,name,caption){
+  if(!TG||!TG.initData){const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();return}
+  if(blob.size>48*1024*1024)throw new Error("Файл больше 48 МБ, сделай видео короче");
+  const fd=new FormData();fd.append("initData",TG.initData);fd.append("file",blob,name);fd.append("name",name);fd.append("caption",caption||"");
+  const r=await fetch(SB+"/functions/v1/studio-send",{method:"POST",body:fd});const j=await r.json().catch(()=>({}));if(!j.ok)throw new Error(j.error||("ошибка "+r.status));
+}
+$("#go").onclick=async()=>{
+  const b=$("#go");if(b.disabled)return;b.disabled=true;if(playing)$("#play").click();
+  try{await document.fonts.ready;await Promise.all(S.media.map(m=>m.ready));build();
+    const ts=new Date().toISOString().slice(0,16).replace(/[-:T]/g,"");const base=(S.fmt==="reel"?"reel":"story")+"-"+S.tpl.replace("s_","")+"-"+ts;
+    let blob,name;
+    if(S.fmt==="story"&&TL.still){render(0);blob=await new Promise(r=>cv.toBlob(r,"image/png"));name=base+".png"}
+    else{blob=await exportVideo();name=base+(blob.type.includes("webm")?".webm":".mp4")}
+    prog(1);msg("Отправляю в бот");
+    await send(blob,name,[S.f.jk,S.f.title,S.f.price].filter(Boolean).join(" · "));
+    msg("Готово, файл в чате с ботом");TG&&TG.HapticFeedback&&TG.HapticFeedback.notificationOccurred("success");
+  }catch(e){console.error(e);msg("Не получилось: "+(e.message||e))}
+  finally{b.disabled=false;setTimeout(()=>prog(null),1500);draw(0)}
+};
+
+// ---------- init ----------
+(async()=>{
+  try{await Promise.all([["PF","normal"],["PF","italic"]].map(([f,s])=>document.fonts.load(`${s} 400 40px ${f}`)).concat([400,600,700].map(w=>document.fonts.load(`${w} 40px MR`))))}catch(e){}
+  await loadObjects();onTpl();renderMediaList();
+  const first=OBJ.find(o=>!o.sold);if(first)setObj(first);
+})();
+</script>
+</body>
+</html>
