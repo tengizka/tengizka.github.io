@@ -81,20 +81,34 @@ function panel(soft){const p=document.getElementById('lyPanel');if(!p)return;con
  act('По центру',()=>{l.x=cvs.width/2});act('Вперёд',()=>{if(sel<ls.length-1){[ls[sel],ls[sel+1]]=[ls[sel+1],ls[sel]];sel++}});act('Назад',()=>{if(sel>0){[ls[sel],ls[sel-1]]=[ls[sel-1],ls[sel]];sel--}});
  act('Копия',()=>{ls.push({...l,x:l.x+40,y:l.y+40});sel=ls.length-1});act('Удалить',()=>{ls.splice(sel,1);sel=-1});p.appendChild(acts)}
 function add(l){if(!cvs)cvs=document.getElementById('cv');l.x??=cvs.width/2;l.y??=cvs.height/2;l.rot=0;layers().push(l);sel=layers().length-1;panel();schedule();document.getElementById('cv').scrollIntoView({behavior:'smooth',block:'center'})}
-async function emojiSheet(){const sh=document.getElementById('lySheet');if(!emojiList)emojiList=await (await fetch('stickers/emoji.json')).json();const g=sh.querySelector('.lgrid');g.innerHTML='';
- const extra=[['gorilla','stickers/gorilla.png','Банка Gorilla']];
- for(const [n,src,t] of extra){const i=el('img');i.src=src;i.title=t;i.onclick=()=>{close();add({t:'img',src,name:t,w:360,shadow:true})};g.appendChild(i)}
- for(const n of emojiList){const i=el('img');i.src='stickers/emoji/'+n+'.webp';i.loading='lazy';i.onclick=()=>{close();add({t:'img',src:'stickers/emoji/'+n+'.webp',name:'Эмодзи',w:240})};g.appendChild(i)}
+let list3d=null;
+const MY_KEY='ly_my_png';
+function myPngs(){try{return JSON.parse(localStorage.getItem(MY_KEY)||'[]')}catch(e){return[]}}
+function saveMy(src,name){try{const a=myPngs().filter(x=>x.src!==src);a.unshift({src,name});while(a.length){try{localStorage.setItem(MY_KEY,JSON.stringify(a.slice(0,12)));break}catch(e){a.pop()}}}catch(e){}}
+function delMy(src){try{localStorage.setItem(MY_KEY,JSON.stringify(myPngs().filter(x=>x.src!==src)))}catch(e){}}
+// shrink big uploads so they fit in storage and stay fast
+function shrink(dataUrl,max=900){return new Promise(r=>{const i=new Image();i.onload=()=>{const k=Math.min(1,max/Math.max(i.width,i.height));if(k===1&&dataUrl.length<700000)return r({src:dataUrl,w:i.width});const c=document.createElement('canvas');c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);r({src:c.toDataURL('image/webp',.9),w:c.width})};i.src=dataUrl})}
+async function emojiSheet(){const sh=document.getElementById('lySheet');
+ if(!emojiList)emojiList=await (await fetch('stickers/emoji.json')).json();if(!list3d)list3d=await (await fetch('stickers/3d.json')).json();
+ const g=sh.querySelector('.lgrid');g.innerHTML='';
+ const sec=t=>{const h=el('div','lsec',t);g.appendChild(h)};
+ const tile=(src,t,fn,big)=>{const i=el('img');i.src=src;i.title=t;i.loading='lazy';if(big)i.className='big';i.onclick=()=>{close();fn()};g.appendChild(i);return i};
+ const my=myPngs();sec('Мои PNG');
+ const up=el('button','lup','+ Загрузить PNG');up.onclick=()=>{close();document.getElementById('lyFile').click()};g.appendChild(up);
+ for(const m of my){const w=el('div','lmy');const i=el('img');i.src=m.src;i.onclick=()=>{close();add({t:'img',src:m.src,name:m.name||'PNG',w:420})};const x=el('button','lx','×');x.onclick=e=>{e.stopPropagation();delMy(m.src);emojiSheet()};w.append(i,x);g.appendChild(w)}
+ sec('3D объекты');for(const [k,t] of list3d)tile('stickers/3d/'+k+'.webp',t,()=>add({t:'img',src:'stickers/3d/'+k+'.webp',name:t,w:420,shadow:true}),1);
+ sec('Банки');tile('stickers/gorilla.png','Банка Gorilla',()=>add({t:'img',src:'stickers/gorilla.png',name:'Банка Gorilla',w:360,shadow:true}),1);
+ sec('Эмодзи');for(const n of emojiList)tile('stickers/emoji/'+n+'.webp','Эмодзи',()=>add({t:'img',src:'stickers/emoji/'+n+'.webp',name:'Эмодзи',w:240}));
  sh.classList.add('on');function close(){sh.classList.remove('on')}sh.querySelector('.lclose').onclick=close}
-function ui(){const host=document.getElementById('lyHost');host.innerHTML=`<div class="lab">Слои: свой текст, эмодзи, маскот, PNG</div>
-<div class="chips"><button class="chip" id="lyT">+ Текст</button><button class="chip" id="lyE">+ Эмодзи и банка</button><button class="chip" id="lyM">+ Маскот</button><button class="chip" id="lyP">+ Своя PNG</button></div>
-<div class="chips f" id="lyList"></div><div id="lyPanel" class="lpanel"></div><input type="file" id="lyFile" accept="image/png,image/webp,image/*" hidden>`;
- const sheet=el('div','lsheet');sheet.id='lySheet';sheet.innerHTML='<div class="lsheet-in"><div class="lsheet-h"><b>Эмодзи</b><button class="lclose">Готово</button></div><div class="lgrid"></div></div>';document.body.appendChild(sheet);
+function ui(){const host=document.getElementById('lyHost');host.innerHTML=`<div class="lab">Слои: текст, 3D, стикеры, маскот, свои PNG</div>
+<div class="chips"><button class="chip" id="lyT">+ Текст</button><button class="chip" id="lyE">+ 3D и стикеры</button><button class="chip" id="lyM">+ Маскот</button><button class="chip" id="lyP">+ Своя PNG</button></div>
+<div class="chips f" id="lyList"></div><div id="lyPanel" class="lpanel"></div><input type="file" id="lyFile" accept="image/png,image/webp,image/*" multiple hidden>`;
+ const sheet=el('div','lsheet');sheet.id='lySheet';sheet.innerHTML='<div class="lsheet-in"><div class="lsheet-h"><b>3D, стикеры и твои PNG</b><button class="lclose">Готово</button></div><div class="lgrid"></div></div>';document.body.appendChild(sheet);
  document.getElementById('lyT').onclick=()=>add({t:'text',text:'Твой текст',font:'ub9',col:'#FFFFFF',plate:null,size:84});
  document.getElementById('lyE').onclick=emojiSheet;
  document.getElementById('lyM').onclick=()=>add({t:'masc',emo:'happy',col:'#A3FF10',w:320});
  document.getElementById('lyP').onclick=()=>document.getElementById('lyFile').click();
- document.getElementById('lyFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const src=r.result;const i=new Image();i.onload=()=>add({t:'img',src,name:f.name.slice(0,14),w:Math.min(700,i.width)});i.src=src};r.readAsDataURL(f);e.target.value=''};
+ document.getElementById('lyFile').onchange=e=>{const fs=[...e.target.files];e.target.value='';fs.forEach((f,n)=>{const r=new FileReader();r.onload=async()=>{const {src,w}=await shrink(r.result);const name=f.name.replace(/\.[^.]+$/,'').slice(0,14);saveMy(src,name);add({t:'img',src,name,w:Math.min(560,w),x:cvs.width/2+n*40,y:cvs.height/2+n*40})};r.readAsDataURL(f)})};
  const css=el('style');css.textContent=`.lsel{position:absolute;display:none;border:2px dashed #A3FF10;pointer-events:none;transform-origin:center;box-shadow:0 0 0 1px rgba(0,0,0,.5)}
 .lgv,.lgh{position:absolute;display:none;background:#E93E97;pointer-events:none}.lgv{top:0;bottom:0;left:50%;width:1px}.lgh{left:0;right:0;top:50%;height:1px}
 .lpanel{margin-top:10px;background:#16161A;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px}
@@ -102,6 +116,9 @@ function ui(){const host=document.getElementById('lyHost');host.innerHTML=`<div 
 .lsl{display:flex;align-items:center;gap:10px;margin-top:10px;color:rgba(255,255,255,.6);font:700 11px JB;text-transform:uppercase;letter-spacing:.1em}.lsl span{width:70px}.lsl input{flex:1}
 .lsheet{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:30;display:none;align-items:flex-end}.lsheet.on{display:flex}
 .lsheet-in{background:#16161A;width:100%;max-height:70vh;border-radius:18px 18px 0 0;padding:14px;overflow:auto}.lsheet-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.lclose{background:#A3FF10;border:0;border-radius:999px;padding:8px 14px;font-weight:800}.lgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.lgrid img{width:100%;aspect-ratio:1;object-fit:contain;background:#0f0f12;border-radius:10px;padding:6px}`;
+.lclose{background:#A3FF10;border:0;border-radius:999px;padding:8px 14px;font-weight:800}.lgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.lgrid img{width:100%;aspect-ratio:1;object-fit:contain;background:#0f0f12;border-radius:10px;padding:6px;cursor:pointer}.lgrid img.big{grid-column:span 2;padding:10px}
+.lsec{grid-column:1/-1;font:700 11px JB,monospace;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.55);margin:10px 0 2px}
+.lup{grid-column:span 2;aspect-ratio:2/1;border:2px dashed #A3FF10;background:transparent;color:#A3FF10;border-radius:10px;font:800 13px system-ui}
+.lmy{position:relative;grid-column:span 2}.lmy img{padding:10px}.lx{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;border:0;background:#E93E97;color:#fff;font-weight:900;line-height:1}`;
  document.head.appendChild(css);cvs=document.getElementById('cv');ctx=cvs.getContext('2d');setupOverlay();gestures();panel()}
 return {after,ui,add,mascotSrc,EMO,composite}})();

@@ -40,9 +40,9 @@ button.b{flex:1;border:0;border-radius:12px;padding:15px 10px;font:800 14px UB;c
 .toast.on{opacity:1}
 </style><script src="nav.js" data-cur="posts" data-root=""></script>
 </head><body>
-<div id="lock" style="position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px"><div><div style="font:800 20px UB">1SHOT</div><div id="lockT" style="color:var(--mut);margin-top:10px">Проверяю доступ…</div></div></div>
+<div id="lock" style="position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px"><div><img src="logo.svg" alt="" style="width:160px;display:block;margin:0 auto"><div id="lockT" style="color:var(--mut);margin-top:10px">Проверяю доступ…</div></div></div>
 <main>
-<div style="display:flex;align-items:center;justify-content:space-between;margin:4px 0 14px"><h1 style="margin:0">Конструктор постов 1SHOT</h1></div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin:4px 0 14px"><h1 style="margin:0">Конструктор постов</h1></div>
 <div class="prev"><canvas id="cv"></canvas></div>
 <button class="b b1" id="rnd" style="width:100%;margin-top:10px">🎲 Случайный пост</button>
 <button class="b b2" id="presetsBtn" style="width:100%;margin-top:8px">🗓 Готовые посты на праздники</button>
@@ -98,6 +98,9 @@ const LAYOUTS={
  terminal:{n:'Терминал',f:[['h','Заголовок','system.log'],['li','Строки через « ; »','загрузка выходных... ok; поиск друзей... 3 найдено; бронь ПК на 22:00... ok; сон... отключён']]},
  vs:{n:'Сравнение',f:[['l','Левый заголовок','Дома'],['r','Правый заголовок','В 1SHOT'],['li','Пары « слева | справа » через « ; »','Комп гудит | RTX 4070; «Выключай уже!» | Открыто 24/7; Стул с кухни | Игровое кресло']]},
  ticker:{n:'Лента',f:[['tape','Текст ленты','1SHOT · 24/7 · МЫТИЩИ'],['h','Заголовок','Мы не / *закрываемся*'],['s','Текст','Вообще. Даже в праздники']]},
+ blank:{n:'✨ С нуля · фото',blank:1,f:[]},
+ blankc:{n:'✨ С нуля · цвет',blank:1,solid:1,f:[]},
+ blankd:{n:'✨ С нуля · тёмный',blank:1,solid:1,f:[]},
  poster:{n:'Постер',solid:1,f:[['kick','Надпись сверху','Пятница'],['h','Заголовок','Неделя / пройдена'],['s','Текст','Награда: ночь в клубе от 899 ₽']]},
  split:{n:'Половина',solid:1,f:[['kick','Надпись сверху','VIP 1'],['h','Заголовок','RTX 4070 / и тишина'],['s','Текст','MSI MAG 27″ 2K 240 Hz']]},
  light:{n:'Светлый',solid:1,f:[['kick','Надпись сверху','Простая математика'],['h','Заголовок','Час в клубе / *189 ₽*'],['s','Текст','Игровой ПК домой: от 100 000 ₽']]},
@@ -168,7 +171,7 @@ const BANK={
 const FOOT=[['Мира, 37','24/7'],['Ночь от 899 ₽','22:00 → 8:00'],['Компьютерный клуб','Мытищи'],['1SHOT','Мира, 37'],['Словарь геймера','1SHOT']];
 const pick=(a,not)=>{let x;do{x=a[Math.floor(Math.random()*a.length)]}while(a.length>1&&x===not);return x};
 let lastRnd={};
-async function randomize(list){const lay=pick(Object.keys(LAYOUTS),lastRnd.lay);const txt=pick(BANK[lay],lastRnd.txt);
+async function randomize(list){const lay=pick(Object.keys(LAYOUTS).filter(k=>!LAYOUTS[k].blank),lastRnd.lay);const txt=pick(BANK[lay],lastRnd.txt);
  st.lay=lay;LAYOUTS[lay].f.forEach(([k],i)=>st.v[lay+'_'+k]=txt[i]||'');st.custom=null;st.img=pick(list,st.img);st.dim=45+Math.round(Math.random()*30);
  st.acc=pick(Object.keys(ACC),st.acc);
  const f=lay==='word'?FOOT[4]:pick(FOOT.slice(0,4));document.getElementById('fl').value=f[0];document.getElementById('fr').value=f[1];
@@ -181,7 +184,7 @@ const loadImg=src=>imgCache[src]||(imgCache[src]=new Promise(r=>{const i=new Ima
 async function logos(){if(logoW)return;logoW=await loadImg('logo.svg');const t=await (await fetch('logo.svg')).text();logoB=await loadImg('data:image/svg+xml;charset=utf-8,'+encodeURIComponent(t.replace(/fill="white"/g,'fill="#0B0B0C"')))}
 
 function chips(el,obj,key,label){el.innerHTML='';for(const k in obj){const b=document.createElement('button');b.className='chip'+(st[key]===k?' on':'');b.textContent=label(obj[k]);b.onclick=()=>{st[key]=k;if(key==='lay')fields();chips(el,obj,key,label);draw()};el.appendChild(b)}}
-function fields(){const box=document.getElementById('fields');box.innerHTML='';for(const [k,lab,def] of LAYOUTS[st.lay].f){const id=st.lay+'_'+k;if(st.v[id]===undefined)st.v[id]=def;
+function fields(){const box=document.getElementById('fields');box.innerHTML='';if(LAYOUTS[st.lay].blank){const h=document.createElement('div');h.className='hint';h.style.marginTop='0';h.textContent='Чистый холст: добавляй текст, стикеры, 3D и свои PNG через «Слои» сверху.';box.appendChild(h);const b=document.createElement('button');b.className='chip'+(st.bare?'':' on');b.style.marginTop='8px';b.textContent=st.bare?'Логотип и низ: выкл':'Логотип и низ: вкл';b.onclick=()=>{st.bare=!st.bare;fields();draw()};box.appendChild(b)}for(const [k,lab,def] of LAYOUTS[st.lay].f){const id=st.lay+'_'+k;if(st.v[id]===undefined)st.v[id]=def;
  const t=document.createElement('textarea');t.rows=k==='li'||k==='d'||k==='s'?2:1;t.placeholder=lab;t.value=st.v[id];t.setAttribute('enterkeyhint','done');
  t.oninput=()=>{st.v[id]=t.value;draw()};const i=LAYOUTS[st.lay].f.findIndex(x=>x[0]===k);
  box.appendChild(withDice(t,()=>{const opts=[...new Set((BANK[st.lay]||[]).map(x=>x[i]).filter(Boolean))];if(!opts.length)return;t.value=st.v[id]=pick(opts,t.value);draw()}))}}
@@ -230,9 +233,9 @@ async function drawBase(){const [W,H]=FORMATS[st.fmt];cv.width=W;cv.height=H;con
  if(!solid){ctx.fillStyle='#0B0B0C';ctx.fillRect(0,0,W,H);cover(im,0,0,W,H,L==='terminal'?dim*.35:dim);
   if(L==='top'){const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'rgba(0,0,0,.95)');g.addColorStop(.55,'rgba(0,0,0,.2)');g.addColorStop(.8,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.6)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H)}
   else if(L==='center'){ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(0,0,W,H)}
-  else grad(W,H,.5,.95);
+  else if(L!=='blank')grad(W,H,.5,.95);
   if(['list','todo','chat','vs','terminal'].includes(L)){ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(0,0,W,H)}
-  head('#fff',false,'rgba(255,255,255,.7)');foot('rgba(255,255,255,.75)','rgba(255,255,255,.22)')}
+  if(!(L==='blank'&&st.bare)){head('#fff',false,'rgba(255,255,255,.7)');foot('rgba(255,255,255,.75)','rgba(255,255,255,.22)')}}
  const T=(L2,x,y,s,lh,w,col,o)=>paint(L2,x,y+s*.8,s,lh,`${w} ${s}px UB`,col,o);
  const hlD={hl:A};
  if(L==='headline'){const s=fit(val('s'),500,40,'UB',MW,4,26),h=fit(val('h'),900,104,'UB',MW,4,48);
@@ -279,6 +282,9 @@ async function drawBase(){const [W,H]=FORMATS[st.fmt];cv.width=W;cv.height=H;con
    ctx.fillStyle='rgba(255,255,255,.16)';ctx.fillRect(X,y,MW,2);paint(fa.L,X,y+24+fa.s*.85,fa.s,1.25,`500 ${fa.s}px UB`,'rgba(255,255,255,.7)');paint(fb.L,half+40,y+24+fb.s*.85,fb.s,1.25,`800 ${fb.s}px UB`,'#fff');y+=rh}}
  if(L==='ticker'){const tape=(val('tape')||'1SHOT')+'  ·  ';const band=(cy,ang,rev)=>{ctx.save();ctx.translate(W/2,cy);ctx.rotate(ang*Math.PI/180);ctx.fillStyle=rev?'#0B0B0C':A;ctx.fillRect(-W,-50,W*2,100);ctx.font='800 40px UB';ctx.fillStyle=rev?A:OA;const tw=ctx.measureText(tape).width;for(let x=-W;x<W;x+=tw)ctx.fillText(tape,x,14);ctx.restore()};
   band(H*.36,-7,0);band(H*.36+40,5,1);const s=fit(val('s'),500,40,'UB',MW,3,26),h=fit(val('h'),900,110,'UB',MW,3,48);const sy=base-blockH(s.L,s.s,1.3);T(h.L,X,sy-30-blockH(h.L,h.s,.98),h.s,.98,900,'#fff',hlD);paint(s.L,X,sy+s.s*.9,s.s,1.3,`500 ${s.s}px UB`,'rgba(255,255,255,.88)',hlD)}
+ if(L==='blankc'){ctx.fillStyle=A;ctx.fillRect(0,0,W,H);if(!st.bare){head(OA,OA==='#000');foot(OA,OA==='#000'?'rgba(0,0,0,.25)':'rgba(255,255,255,.3)')}}
+ if(L==='blankd'){ctx.fillStyle='#0B0B0C';ctx.fillRect(0,0,W,H);ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=1;for(let x=0;x<=W;x+=54){ctx.beginPath();ctx.moveTo(x+.5,0);ctx.lineTo(x+.5,H);ctx.stroke()}for(let y=0;y<=H;y+=54){ctx.beginPath();ctx.moveTo(0,y+.5);ctx.lineTo(W,y+.5);ctx.stroke()}
+  const rg=ctx.createRadialGradient(W*.2,H*.15,0,W*.2,H*.15,W*.9);rg.addColorStop(0,A+'33');rg.addColorStop(1,A+'00');ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);if(!st.bare){head('#fff',false,'rgba(255,255,255,.7)');foot('rgba(255,255,255,.75)','rgba(255,255,255,.22)')}}
  if(L==='poster'){ctx.fillStyle=A;ctx.fillRect(0,0,W,H);const ph=Math.round(H*(story?.4:.42)),py=top+110;ctx.save();rrect(X,py,MW,ph,28);ctx.clip();cover(im,X,py,MW,ph,Math.min(1,dim+.25));ctx.restore();
   head(OA,OA==='#000');foot(OA,OA==='#000'?'rgba(0,0,0,.25)':'rgba(255,255,255,.3)');let y=py+ph+60;mono(val('kick'),X,y+20,OA);const h=fit(val('h'),900,104,'UB',MW,3,44);y=T(h.L,X,y+50,h.s,.98,900,OA,{hl:A,mark:OA});
   const s=fit(val('s'),600,38,'UB',MW,3,26);paint(s.L,X,y+16+s.s*.9,s.s,1.3,`600 ${s.s}px UB`,OA)}

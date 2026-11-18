@@ -56,9 +56,9 @@ body.screen #scr{display:flex}
 #scr canvas{max-width:100vw;max-height:100vh;width:auto;height:100vh;aspect-ratio:9/16}
 </style><script src="../nav.js" data-cur="price" data-root="../"></script>
 </head><body>
-<div id="lock" style="position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px"><div><div style="font:800 20px UB">1SHOT</div><div id="lockT" style="color:var(--mut);margin-top:10px">Проверяю доступ…</div></div></div>
+<div id="lock" style="position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px"><div><img src="../logo.svg" alt="" style="width:160px;display:block;margin:0 auto"><div id="lockT" style="color:var(--mut);margin-top:10px">Проверяю доступ…</div></div></div>
 <main>
-<div class="top"><h1>Прайс 1SHOT</h1></div>
+<div class="top"><h1>Прайс</h1></div>
 <div class="prev" id="prev"></div>
 <div class="warn" id="warn">Не влезает по высоте: убери строку или блок</div>
 
@@ -94,7 +94,7 @@ const DEFAULT={anim:'rise',dur:16,blocks:[
   {k:'h',n:'1 час',a:'189',b:'229'},{k:'h',n:'3 часа',a:'499',b:'599'},{k:'h',n:'5 часов',a:'699',b:'799'},{k:'h',n:'12 часов',a:'1399',b:'1599'},
   {k:'m',n:'Утро',s:'8:00-13:00',a:'399',b:'499'},{k:'n',n:'Ночь',s:'22:00-8:00',a:'899',b:'999'}]},
  {t:'plate',on:true,ic:'tv',title:'TV-ЗОНА PS5',sub:'Samsung 65″ 4K · диван на двоих',price:'299',unit:'/h'},
- {t:'promo',on:true,img:'gorilla',c:'lime',title:'Банка Gorilla / в подарок',text:'При пополнении баланса / от *600₽*'},
+ {t:'promo',on:true,img:'clock',c:'lime',title:'+1 час / в любом зале',text:'с каждой *1000₽* пополнения / и так до бесконечности'},
  {t:'qr',on:true,l1:'Наш канал',l2:'Бронь ПК'}]};
 const NEW={
  promo:()=>({t:'promo',on:true,img:'none',c:'orange',title:'Новая акция',text:'Условия акции / *от 600₽*'}),
@@ -106,6 +106,8 @@ const ADDN={promo:'Акция',plate:'Плашка с ценой',band:'Поло
 const NAMES={logo:'Логотип',stats:'Карточки',table:'Таблица тарифов',plate:'Плашка с ценой',promo:'Акция',band:'Полоса',qr:'QR-коды'};
 let cfg;try{cfg=JSON.parse(localStorage.getItem('price_cfg')||'null')}catch{}
 if(!cfg?.blocks)cfg=JSON.parse(JSON.stringify(DEFAULT));
+// November swap: the Gorilla promo became the top-up promo with the 3D clock
+for(const b of cfg.blocks)if(b.t==='promo'&&/Gorilla/i.test(b.title||'')){b.img='clock';b.title='+1 час / в любом зале';b.text='с каждой *1000₽* пополнения / и так до бесконечности'}
 const save=()=>{try{localStorage.setItem('price_cfg',JSON.stringify(cfg))}catch{}};
 
 // ---------- canvas helpers ----------
@@ -168,20 +170,20 @@ const B={
   c.font='400 18px UB';c.fillText(b.sub||'',192,78);if(b.price)price(c,num(b.price,k),974,74,58,'#000','right',b.unit||'')}},
  band:{h:()=>84,draw(c,b){const col=COL[b.c]?.[0]||'#A3FF10';c.fillStyle=col;c.fillRect(X0,0,CW,84);c.fillStyle=b.c==='blue'?'#fff':'#000';
   let s=36;c.font=`800 ${s}px UB`;while(c.measureText(b.text).width>CW-60&&s>20){s-=2;c.font=`800 ${s}px UB`}c.textAlign='center';c.fillText(b.text,X0+CW/2,42+s*.36);c.textAlign='left'}},
- promo:{lay(b){const img=b.img==='gorilla'&&IMG.can;const tl=lines(b.title),pl=lines(b.text);const th=tl.length*47,ph=pl.length*43;const inner=th+(pl.length?14+ph:0);return {img,tl,pl,th,inner,h:Math.max(img?262:150,inner+60)+6}},
-  h(b){return this.lay(b).h},over:b=>b.img==='gorilla'?16:0,
+ promo:{lay(b){const img=b.img==='gorilla'?IMG.can:b.img==='clock'?IMG.clock:b.img==='custom'?b.png&&IMG['u'+b.png]:null;const tl=lines(b.title),pl=lines(b.text);const th=tl.length*47,ph=pl.length*43;const inner=th+(pl.length?14+ph:0);return {img,tl,pl,th,inner,h:Math.max(img?262:150,inner+60)+6}},
+  h(b){return this.lay(b).h},over:b=>b.img==='gorilla'||(b.img==='custom'&&b.png)?16:0,
   draw(c,b,k){const L=this.lay(b),col=COL[b.c]?.[0]||'#A3FF10',rgb=hexRgb(col),h=L.h;
    glowRect(c,X0,0,CW,h,`rgba(${rgb},.3)`,30,'rgba(10,12,8,1)');c.fillStyle='rgba(10,12,8,.92)';c.fillRect(X0,0,CW,h);
    const g=c.createRadialGradient(X0+CW*.15,h/2,0,X0+CW*.15,h/2,CW*.6*.7);g.addColorStop(0,`rgba(${rgb},.22)`);g.addColorStop(1,`rgba(${rgb},0)`);c.save();c.translate(0,0);c.fillStyle=g;c.fillRect(X0,0,CW,h);c.restore();
    c.lineWidth=3;c.strokeStyle=col;c.strokeRect(X0+1.5,1.5,CW-3,h-3);
-   const tx=L.img?379:X0+40;let y=(h-L.inner)/2;
+   const tx=L.img?(b.img==='gorilla'?379:X0+330):X0+40;let y=(h-L.inner)/2;
    c.fillStyle='#fff';c.font='900 46px UB';L.tl.forEach((t,i)=>c.fillText(t,tx,y+38+i*47));y+=L.th+14;
    L.pl.forEach((t,i)=>{let x=tx;const by=y+32+i*43;runs(t).forEach(r=>{if(r.h){const m=r.t.match(/^(.*?)(\d[\d\s]*)\s*₽(.*)$/);
       if(m){c.fillStyle=col;c.font='500 26px UB';c.fillText(m[1],x,by);x+=c.measureText(m[1]).width;x+=price(c,num(m[2].trim(),k),x,by+2,40,col,'left');c.font='500 26px UB';c.fillText(m[3],x,by);x+=c.measureText(m[3]).width}
       else{c.fillStyle=col;c.font='800 26px UB';c.fillText(r.t,x,by);x+=c.measureText(r.t).width}}
      else{c.fillStyle='#fff';c.font='500 26px UB';c.fillText(r.t,x,by);x+=c.measureText(r.t).width}})});
-   if(L.img){const ih=286,iw=ih*IMG.can.width/IMG.can.height,cx=X0+3+70+iw/2,cy=h-3+12-ih/2;c.save();c.translate(cx,cy);c.rotate(-9*Math.PI/180);
-    c.shadowColor='rgba(0,0,0,.7)';c.shadowBlur=30;c.shadowOffsetY=18;c.drawImage(IMG.can,-iw/2,-ih/2,iw,ih);c.shadowColor=`rgba(${rgb},.35)`;c.shadowOffsetY=0;c.drawImage(IMG.can,-iw/2,-ih/2,iw,ih);c.restore()}}},
+   if(L.img){const I=L.img,can=b.img==='gorilla';let ih=can?286:210,iw=ih*I.width/I.height;if(!can&&iw>290){iw=290;ih=iw*I.height/I.width}const cx=can?X0+3+70+iw/2:X0+24+iw/2,cy=can?h-3+12-ih/2:h/2;c.save();c.translate(cx,cy);c.rotate((can?-9:-4)*Math.PI/180);
+    c.shadowColor='rgba(0,0,0,.7)';c.shadowBlur=30;c.shadowOffsetY=18;c.drawImage(I,-iw/2,-ih/2,iw,ih);c.shadowColor=`rgba(${rgb},.35)`;c.shadowOffsetY=0;c.drawImage(I,-iw/2,-ih/2,iw,ih);c.restore()}}},
  qr:{h:()=>338,draw(c,b){const x1=242,x2=622;glowRect(c,x1,0,270,270,'rgba(163,255,16,.3)',50,'#fff');if(IMG.q1)c.drawImage(IMG.q1,x1+20,20,230,230);
   c.fillStyle='#fff';c.font='900 32px UB';c.textAlign='center';c.fillText(b.l1||'',x1+135,332);
   c.fillStyle='#A3FF10';c.fillText(b.l2||'',x2+108,28);c.textAlign='left';
@@ -237,6 +239,8 @@ function inp(val,ph,on,cls=''){const i=document.createElement('input');i.type='t
 function chipRow(obj,cur,on){const d=document.createElement('div');d.className='chips f';for(const k in obj){const b=document.createElement('button');b.className='chip'+(cur===k?' on':'');b.textContent=Array.isArray(obj[k])?obj[k][1]:obj[k];b.onclick=()=>{on(k);changed();render()};d.appendChild(b)}return d}
 const sub=t=>{const d=document.createElement('div');d.className='sub';d.textContent=t;return d};
 const row=(...els)=>{const d=document.createElement('div');d.className='row';els.forEach(e=>d.appendChild(e));return d};
+async function prepPngs(){for(const b of cfg.blocks||[])if(b.t==='promo'&&b.png&&!IMG['u'+b.png])IMG['u'+b.png]=await loadImg(b.png)}
+function pickPng(b){const f=document.createElement('input');f.type='file';f.accept='image/png,image/webp,image/*';f.onchange=()=>{const file=f.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=async()=>{const k=Math.min(1,600/Math.max(i.width,i.height));const c=document.createElement('canvas');c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);b.png=c.toDataURL('image/webp',.9);b.img='custom';await prepPngs();changed();render()};i.src=r.result};r.readAsDataURL(file)};f.click()}
 let tmr=0;function changed(){save();clearTimeout(tmr);tmr=setTimeout(still,60)}
 function render(){const box=document.getElementById('blocks');box.innerHTML='';
  cfg.blocks.forEach((b,i)=>{const el=document.createElement('div');el.className='blk'+(b.on?'':' off')+(open.has(i)?' open':'');
@@ -266,8 +270,8 @@ function editor(bb,b){
   bb.appendChild(sub('Добавить строку'));bb.appendChild(chipRow({h:'Обычная',m:'Фиолетовая',n:'Тёмная'},'',k=>{const r={k,n:k==='h'?'2 часа':k==='m'?'Утро':'Ночь',a:'0',b:'0'};if(k!=='h')r.s='00:00-00:00';
    if(k==='h'){const li=b.rows.map(x=>x.k).lastIndexOf('h');b.rows.splice(li+1,0,r)}else b.rows.push(r)}))}
  if(b.t==='plate'){bb.appendChild(inp(b.title,'Заголовок',v=>b.title=v));bb.appendChild(row(inp(b.sub,'Подпись',v=>b.sub=v)));bb.appendChild(row(inp(b.price,'Цена (пусто, если без цены)',v=>b.price=v,'w2'),inp(b.unit,'/h',v=>b.unit=v,'w1')));bb.appendChild(chipRow(ICONS,b.ic,k=>b.ic=k))}
- if(b.t==='promo'){bb.appendChild(inp(b.title,'Заголовок: Банка Gorilla / в подарок',v=>b.title=v));bb.appendChild(row(inp(b.text,'Условия: от *600₽*',v=>b.text=v)));
-  bb.appendChild(sub('Картинка'));bb.appendChild(chipRow({gorilla:'Банка Gorilla',none:'Без картинки'},b.img,k=>b.img=k));bb.appendChild(sub('Цвет'));bb.appendChild(chipRow(COL,b.c,k=>b.c=k))}
+ if(b.t==='promo'){bb.appendChild(inp(b.title,'Заголовок: +1 час / в любом зале',v=>b.title=v));bb.appendChild(row(inp(b.text,'Условия: с каждой *1000₽* пополнения',v=>b.text=v)));
+  bb.appendChild(sub('Картинка'));bb.appendChild(chipRow({clock:'Часы 3D',gorilla:'Банка Gorilla',custom:b.png?'Своя PNG':'+ Своя PNG',none:'Без картинки'},b.img,k=>{b.img=k;if(k==='custom'&&!b.png)setTimeout(()=>pickPng(b),0)}));if(b.png){const x=document.createElement('button');x.className='add';x.textContent='Заменить свою PNG';x.onclick=()=>pickPng(b);bb.appendChild(x)}bb.appendChild(sub('Цвет'));bb.appendChild(chipRow(COL,b.c,k=>b.c=k))}
  if(b.t==='band'){bb.appendChild(inp(b.text,'Текст полосы',v=>b.text=v));bb.appendChild(chipRow(COL,b.c,k=>b.c=k))}
  if(b.t==='qr'){bb.appendChild(row(inp(b.l1,'Под белым QR',v=>b.l1=v),inp(b.l2,'Над лаймовым QR',v=>b.l2=v)));const h=document.createElement('div');h.className='hint';h.textContent='Белый ведёт на канал, лаймовый в мини-апп. QR-коды всегда внизу.';bb.appendChild(h)}}
 // Enter only hides the keyboard.
@@ -293,13 +297,13 @@ document.getElementById('play').onclick=()=>playing?still():play();
 document.getElementById('reset').onclick=()=>{cfg=JSON.parse(JSON.stringify(DEFAULT));open=new Set();changed();render();toast('Прайс как на ресепшене')};
 
 // ---------- start ----------
-async function assets(){const [logo,can,q1,q2,sh]=await Promise.all(['../logo.svg','img/gorilla.png','img/qr_channel_logo.svg','img/qr_miniapp.svg','img/shape.svg'].map(loadImg));IMG={logo,can,q1,q2};
+async function assets(){const [logo,can,q1,q2,sh,clock]=await Promise.all(['../logo.svg','img/gorilla.png','img/qr_channel_logo.svg','img/qr_miniapp.svg','img/shape.svg','img/clock3d.png'].map(loadImg));IMG={logo,can,q1,q2,clock};await prepPngs();
  if(sh){shapeC=mk(760,760);shapeC.getContext('2d').drawImage(sh,0,0,760,760)}
  await Promise.all(['900 40px UB','800 40px UB','500 40px UB','400 40px UB','500 27px RS','700 30px RS','700 40px RSN','700 20px JB'].map(f=>document.fonts.load(f,'АБВ abc 123 ₽')))}
 async function access(){const t=document.getElementById('lockT');if(!tg?.initData){t.textContent='Доступ только для команды 1SHOT';return false}
  try{await post({mode:'check'});document.getElementById('lock').remove();return true}catch{}t.textContent='Доступ только для команды 1SHOT';return false}
 async function screen(){document.body.classList.add('screen');let last='';
- const load=async()=>{try{const j=await (await fetch(FN+'?price=reception',{cache:'no-store'})).json();if(j?.cfg?.blocks){const s=JSON.stringify(j.cfg);if(s!==last){last=s;cfg=j.cfg;cache.clear();return true}}}catch{}return false};
+ const load=async()=>{try{const j=await (await fetch(FN+'?price=reception',{cache:'no-store'})).json();if(j?.cfg?.blocks){const s=JSON.stringify(j.cfg);if(s!==last){last=s;cfg=j.cfg;cache.clear();if(IMG.logo)await prepPngs();return true}}}catch{}return false};
  await load();await assets();let t0=performance.now(),tb0=t0;
  const step=now=>{frame((now-t0)/1000,(now-tb0)/1000);raf=requestAnimationFrame(step)};raf=requestAnimationFrame(step);
  setInterval(async()=>{if(await load())t0=performance.now()},120000);setInterval(()=>{t0=performance.now()},300000);

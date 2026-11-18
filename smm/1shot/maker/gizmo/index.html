@@ -39,7 +39,7 @@ button.b{border:0;border-radius:12px;padding:14px 8px;font:800 13px UB;cursor:po
 .lsheet-in{background:#16161A;width:100%;max-height:70vh;border-radius:18px 18px 0 0;padding:14px;overflow:auto}.lsheet-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .lclose{background:var(--lime);border:0;border-radius:999px;padding:8px 14px;font-weight:800}.lgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.lgrid img{width:100%;aspect-ratio:1;object-fit:contain;background:#0f0f12;border-radius:10px;padding:6px}
 </style></head><body>
-<div id="lock" style="position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px"><div><div style="font:800 20px UB">1SHOT</div><div id="lockT" style="color:var(--mut);margin-top:10px">Проверяю доступ…</div></div></div>
+<div id="lock" style="position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px"><div><img src="../logo.svg" alt="" style="width:160px;display:block;margin:0 auto"><div id="lockT" style="color:var(--mut);margin-top:10px">Проверяю доступ…</div></div></div>
 <main>
 <h1>Баннеры для Gizmo</h1>
 <div class="prev"><iframe id="pv" title="Превью"></iframe></div>
@@ -72,18 +72,21 @@ const EMOS=Object.fromEntries(Object.entries(LY.EMO).map(([k,v])=>[k,v[0]]));
 // ---------- templates: default content = what hangs now ----------
 const T={
  cards:{n:'Цветные карточки',file:'tpl/cards.html',def:{title:'Акции ноября',fn:'* только с 18 лет',foot:'Подробности у администратора',cards:[
-  {col:'g',k:'Подарок',h:'Банка / Gorilla',age:true,pre:'от',num:'600',suf:'₽',items:'Одна банка за пополнение / баланса от 600 ₽',can:true},
+  {col:'g',k:'Пополнение',h:'+1 час / в любом зале',age:false,pre:'за',num:'1 000',suf:'₽',items:'С каждой / 1 000 ₽; И так до / бесконечности',pic:'clock'},
   {col:'n',k:'Пятница · 20 и 27 ноября',h:'Ночь / до 13:00',age:true,pre:'',num:'+5',suf:'ч',items:'Ночной пакет с пятницы / длится до 13:00 субботы; Покупается только в ночь / с пятницы на субботу',can:false},
   {col:'p',k:'Чёрная пятница · 27–29 ноября',h:'+500 ₽ / на баланс',age:false,pre:'от',num:'2 000',suf:'₽',items:'Пополнение одним чеком; Раз в день на гостя; Не суммируется с часами / за пополнение',can:false}]}},
  three:{n:'Карточки лайм',file:'tpl/three.html',def:{tag:'Бессрочно',title:'Акции *всегда*',emo:'stars',cards:[
   {k:'День рождения',h:'Часы / в подарок',type:'chips',chips:'3 часа STANDART тебе; по 1 часу STANDART / трём друзьям',big:'',bigsub:'',lines:'',qr1:'',qr2:'',note:'Отмечай в день рождения. / Возьми с собой документ.'},
   {k:'Одним чеком',h:'Пополняй / получай часы',type:'big',chips:'',big:'+1 час',bigsub:'с каждой 1 000 ₽',lines:'2 000 ₽ = 2 часа / 5 000 ₽ = 5 часов / и так до бесконечности',qr1:'',qr2:'',note:'В любом зале: STANDART, / VIP или TV-зона.'},
   {k:'Яндекс Карты и 2ГИС',h:'+1 час / за отзыв',type:'qr',chips:'',big:'',bigsub:'',lines:'',qr1:'Яндекс | https://yandex.ru/profile/204221279175',qr2:'2ГИС | https://2gis.ru/mytishchi/search/1SHOT%20%D0%9C%D0%B8%D1%80%D0%B0%2037',note:'Покажи отзыв админу / и получи 1 час STANDART.'}]}},
- promo:{n:'Одна акция',file:'tpl/promo.html',def:{tag:'До 30 ноября',title:'Банка *Gorilla* / в подарок',sub:'За пополнение баланса *от 600 ₽*',pill:'1 банка за пополнение',badge:'18+',note:'Только с 18 лет. Возьми с собой документ. / Одна банка на одно пополнение.',img:'tpl',emo:'bolt'}},
+ promo:{n:'Одна акция',file:'tpl/promo.html',def:{tag:'Бессрочно',title:'*+1 час* / в любом зале',sub:'С каждой *1 000 ₽* пополнения',pill:'И так до бесконечности',badge:'',note:'STANDART, VIP или TV-зона. / Подробности у администратора.',img:'clock',emo:'bolt'}},
  qr:{n:'QR-код',file:'tpl/qr.html',def:{tag:'Бесплатные минуты',title:'Подпишись / и *играй*',big:'*+30 минут* за подписку / на наш Telegram-канал',note:'Наведи камеру на QR-код / и покажи подписку администратору',label:'Telegram',tgicon:true,url:'https://t.me/oneshotmira17',pill:'+30 мин',emo:'stars'}}};
 let cur='cards',M={},tplText={},layersOf={};
 try{const s=JSON.parse(localStorage.getItem('gz_state')||'null');if(s){cur=s.cur||cur;M=s.M||{};layersOf=s.L||{}}}catch{}
 for(const k in T){if(!M[k])M[k]=JSON.parse(JSON.stringify(T[k].def))}
+// cards: old «can» flag becomes a picture choice; the November Gorilla card turns into the top-up card
+for(const c of M.cards.cards||[]){if(c.pic===undefined)c.pic=c.can?'gorilla':'none';delete c.can;if(/Gorilla/i.test(c.h||'')){Object.assign(c,JSON.parse(JSON.stringify(T.cards.def.cards[0])))}}
+if(/Gorilla/i.test(M.promo.title||''))M.promo=JSON.parse(JSON.stringify(T.promo.def));
 const save=()=>{try{localStorage.setItem('gz_state',JSON.stringify({cur,M,L:layersOf}))}catch{toast('Память браузера заполнена: свои PNG могут не сохраниться')}};
 // review links: take them from the template so they stay exactly as printed
 async function tpl(k){if(!tplText[k])tplText[k]=await (await fetch(T[k].file)).text();return tplText[k]}
@@ -94,15 +97,16 @@ async function build(k,forExport){const src=await tpl(k);const doc=new DOMParser
  const css=doc.createElement('style');let extra='';
  if(k==='cards'){const top=doc.querySelector('.top h1');top.textContent=m.title;
   const box=doc.querySelector('.cards');const can=box.querySelector('img.can')?.getAttribute('src')||'';box.innerHTML='';
-  extra+=`.cards{grid-template-columns:repeat(${m.cards.length},1fr)!important}.o{--a:#FF8A1F;--g:rgba(255,138,31,.3)}.b{--a:#5B7BFF;--g:rgba(91,123,255,.3)}`;
-  m.cards.forEach((c,i)=>{const d=.35+i*.2,el=doc.createElement('div');el.className='c '+c.col;el.style.animationDelay=d+'s';
+  extra+=`.can.pic{height:180px;top:auto;bottom:40px;right:30px}.cards{grid-template-columns:repeat(${m.cards.length},1fr)!important}.o{--a:#FF8A1F;--g:rgba(255,138,31,.3)}.b{--a:#5B7BFF;--g:rgba(91,123,255,.3)}`;
+  for(const [i,c] of m.cards.entries()){const d=.35+i*.2,el=doc.createElement('div');el.className='c '+c.col;el.style.animationDelay=d+'s';
    const items=String(c.items||'').split(/\s*;\s*/).filter(Boolean);
-   el.innerHTML=(c.can&&can?`<img class="can" src="${can}">`:'')+`<div class="k">${esc(c.k)}</div><h2>${md(c.h)}${c.age?' <span class="age">18+</span><span class="ast">*</span>':''}</h2>`+
+   let ps=c.pic==='gorilla'?can:c.pic==='clock'?CLOCK:c.pic==='custom'?c.png:'';if(ps&&forExport&&!ps.startsWith('data:'))ps=await toData(ps);
+   el.innerHTML=(ps?`<img class="can${c.pic==='gorilla'?'':' pic'}" src="${ps}">`:'')+`<div class="k">${esc(c.k)}</div><h2>${md(c.h)}${c.age?' <span class="age">18+</span><span class="ast">*</span>':''}</h2>`+
     (c.num?`<div class="big" style="animation-delay:${d+.55}s">${c.pre?`<i>${esc(c.pre)}</i>`:''}${esc(c.num)}<small>${esc(c.suf)}</small></div>`:'')+
-    `<ul>${items.map((t,j)=>`<li style="animation-delay:${(d+.85+j*.15).toFixed(2)}s">${md(t)}</li>`).join('')}</ul>`;box.appendChild(el)});
+    `<ul>${items.map((t,j)=>`<li style="animation-delay:${(d+.85+j*.15).toFixed(2)}s">${md(t)}</li>`).join('')}</ul>`;box.appendChild(el)}
   const bot=doc.querySelector('.bot span');bot.innerHTML=(m.fn?`<em class="fn">${esc(m.fn)}</em>`:'')+esc(m.foot)}
  if(k==='three'){doc.querySelector('.tag').textContent=m.tag;doc.querySelector('.head h1').innerHTML=titleHtml(m.title);setEmotion(doc,doc.querySelector('.head svg.mascot'),m.emo);
-  const box=doc.querySelector('.cards');box.innerHTML='';extra+=`.cards{grid-template-columns:repeat(${m.cards.length},1fr)!important}`;
+  const box=doc.querySelector('.cards');box.innerHTML='';extra+=`.can.pic{height:180px;top:auto;bottom:40px;right:30px}.cards{grid-template-columns:repeat(${m.cards.length},1fr)!important}`;
   m.cards.forEach((c,i)=>{const el=doc.createElement('div');el.className='card';el.style.animationDelay=(.6+i*.2)+'s';
    const parts=String(c.h).split(/\s+\/\s+/);let body='';
    if(c.type==='chips')body=`<div class="chips">${String(c.chips).split(/\s*;\s*/).filter(Boolean).map((t,j)=>`<span class="chip${j%2?' w':''}">${md(t)}</span>`).join('')}</div>`;
@@ -112,7 +116,7 @@ async function build(k,forExport){const src=await tpl(k);const doc=new DOMParser
    el.innerHTML=`<i class="glow" style="animation-delay:${i*1.5}s"></i><span class="d">${esc(c.k)}</span><h2>${esc(parts[0]||'')}<br><span class="lime">${esc(parts.slice(1).join(' '))}</span></h2>${body}<p class="note">${md(c.note)}</p>`;box.appendChild(el)})}
  if(k==='promo'){doc.querySelector('.tag').textContent=m.tag;doc.querySelector('.copy h1').innerHTML=titleHtml(m.title);doc.querySelector('.copy .sub').innerHTML=md(m.sub);
   doc.querySelector('.pills').innerHTML=`<span class="pill">${esc(m.pill)}</span>`+(m.badge?`<span class="age">${esc(m.badge)}</span>`:'');doc.querySelector('.copy .note').innerHTML=md(m.note);
-  const cw=doc.querySelector('.canwrap');if(m.img==='none')cw.remove();else if(m.img==='custom'&&m.custom)cw.querySelector('img').src=m.custom;
+  const cw=doc.querySelector('.canwrap');if(m.img==='none')cw.remove();else if(m.img==='custom'&&m.custom)cw.querySelector('img').src=m.custom;else if(m.img==='clock'){cw.querySelector('img').src=forExport?await toData(CLOCK):CLOCK;cw.classList.add('clk');extra+='.canwrap.clk img{height:62%!important;width:auto}'}
   setEmotion(doc,doc.querySelector('svg.mascot'),m.emo)}
  if(k==='qr'){doc.querySelector('.tag').textContent=m.tag;doc.querySelector('.copy h1').innerHTML=titleHtml(m.title);doc.querySelector('.copy .big').innerHTML=md(m.big);doc.querySelector('.copy .note').innerHTML=md(m.note);
   const h2=doc.querySelector('.card h2');const ico=h2.querySelector('svg');h2.textContent=m.label;if(m.tgicon&&ico)h2.prepend(ico);
@@ -127,6 +131,8 @@ async function build(k,forExport){const src=await tpl(k);const doc=new DOMParser
  css.textContent=extra;doc.head.appendChild(css);
  if(!forExport){const s=doc.createElement('script');s.textContent='window.__edit=1';doc.head.appendChild(s)}
  return '<!doctype html>'+doc.documentElement.outerHTML}
+const CLOCK='../stickers/3d/clock_oct.webp';
+function pickPng(cb){const f=document.createElement('input');f.type='file';f.accept='image/png,image/webp,image/*';f.onchange=()=>{const x=f.files[0];if(!x)return;const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const k=Math.min(1,700/Math.max(i.width,i.height));const c=document.createElement('canvas');c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);cb(c.toDataURL('image/webp',.9))};i.src=r.result};r.readAsDataURL(x)};f.click()}
 async function toData(url){const b=await (await fetch(url)).blob();return await new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)})}
 // ---------- preview + dragging layers inside the iframe ----------
 const pv=document.getElementById('pv');let tmr=0,sel=-1;
@@ -150,8 +156,8 @@ function form(){const f=document.getElementById('form');f.innerHTML='';const m=M
    const cols=el('div','cols f');for(const k in CARDCOL){const x=el('button','col'+(c.col===k?' on':''));x.style.background=CARDCOL[k][0];x.title=CARDCOL[k][1];x.onclick=()=>{c.col=k;refresh();form()};cols.appendChild(x)}
    b.append(cols,inp(c,'k','Надпись сверху'),inp(c,'h','Заголовок ( / вторая строка)'));
    const r=el('div','row');r.append(inp(c,'pre','от'),inp(c,'num','Крупно: 600'),inp(c,'suf','₽'));b.append(el('div','sub','Крупная цифра'),r,el('div','sub','Пункты через « ; »'),inp(c,'items','Пункт; пункт',true));
-   const tg2=el('div','chips f');tg2.append(toggle(c,'age','18+'),toggle(c,'can','Банка Gorilla'));b.appendChild(tg2);f.appendChild(b)});
-  if(m.cards.length<4){const a=el('button','sm f','+ Карточка');a.onclick=()=>{m.cards.push({col:'o',k:'Новая акция',h:'Заголовок / акции',age:false,pre:'',num:'+1',suf:'ч',items:'Условие акции',can:false});refresh();form()};add(a)}}
+   const tg2=el('div','chips f');tg2.append(toggle(c,'age','18+'));b.appendChild(tg2);b.append(el('div','sub','Картинка в углу'),chipRow({none:'Без картинки',clock:'Часы 3D',gorilla:'Банка Gorilla',custom:c.png?'Своя PNG':'+ Своя PNG'},c.pic||'none',k=>{c.pic=k;if(k==='custom'&&!c.png)pickPng(u=>{c.png=u;refresh();form()})}));f.appendChild(b)});
+  if(m.cards.length<4){const a=el('button','sm f','+ Карточка');a.onclick=()=>{m.cards.push({col:'o',k:'Новая акция',h:'Заголовок / акции',age:false,pre:'',num:'+1',suf:'ч',items:'Условие акции',pic:'none'});refresh();form()};add(a)}}
  if(cur==='three'){add(el('div','lab','Шапка'),inp(m,'tag','Плашка справа'),inp(m,'title','Заголовок, *слово* лаймом'),hint,el('div','sub','Эмоция маскота'),chipRow(EMOS,m.emo,k=>m.emo=k));
   m.cards.forEach((c,i)=>{const b=el('div','blk');const h=el('h3',null,'Карточка '+(i+1));const del=el('button','sm','Убрать');del.onclick=()=>{m.cards.splice(i,1);refresh();form()};if(m.cards.length>1)h.appendChild(del);b.appendChild(h);
    b.append(inp(c,'k','Надпись сверху'),inp(c,'h','Заголовок ( / вторая строка лаймом)'),chipRow({chips:'Плашки',big:'Крупно',lines:'Строки',qr:'QR-коды'},c.type,k=>c.type=k));
@@ -162,7 +168,7 @@ function form(){const f=document.getElementById('form');f.innerHTML='';const m=M
    b.append(inp(c,'note','Мелкий текст внизу'));f.appendChild(b)});
   if(m.cards.length<4){const a=el('button','sm f','+ Карточка');a.onclick=()=>{m.cards.push({k:'Новое',h:'Заголовок / акции',type:'lines',chips:'',big:'',bigsub:'',lines:'Условие',qr1:'',qr2:'',note:''});refresh();form()};add(a)}}
  if(cur==='promo'){add(el('div','lab','Тексты'),inp(m,'tag','Плашка справа'),inp(m,'title','Заголовок'),inp(m,'sub','Подзаголовок'),inp(m,'pill','Лаймовая плашка'),inp(m,'badge','Значок рядом (18+ или пусто)'),inp(m,'note','Мелкий текст',true),hint,
-  el('div','lab','Картинка справа'),chipRow({tpl:'Банка Gorilla',custom:'Своя PNG',none:'Без картинки'},m.img,k=>{m.img=k;if(k==='custom')document.getElementById('imgIn').click()}),el('div','sub','Эмоция маскота'),chipRow(EMOS,m.emo,k=>m.emo=k))}
+  el('div','lab','Картинка справа'),chipRow({clock:'Часы 3D',tpl:'Банка Gorilla',custom:'Своя PNG',none:'Без картинки'},m.img,k=>{m.img=k;if(k==='custom')document.getElementById('imgIn').click()}),el('div','sub','Эмоция маскота'),chipRow(EMOS,m.emo,k=>m.emo=k))}
  if(cur==='qr'){add(el('div','lab','Тексты'),inp(m,'tag','Плашка справа'),inp(m,'title','Заголовок'),inp(m,'big','Главная строка'),inp(m,'note','Мелкий текст',true),hint,
   el('div','lab','QR-карточка'),inp(m,'label','Подпись над QR'),toggle(m,'tgicon','Значок Telegram'),inp(m,'url','Ссылка для QR'),inp(m,'pill','Плашка под QR'),el('div','sub','Эмоция маскота'),chipRow(EMOS,m.emo,k=>m.emo=k))}}
 document.getElementById('imgIn').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{M.promo.custom=r.result;M.promo.img='custom';refresh();form()};r.readAsDataURL(f);e.target.value=''};
